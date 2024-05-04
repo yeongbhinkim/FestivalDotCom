@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Title</title>
+</head>
+
+<body>
+<th:block th:fragment="beforeLoginUpm">
+  <div class="header-wrap">
+    <div class="header-box">
+      <div class="header-content header-login">
+        <a class="login-btn" href="" th:href="@{/oauthlogin}">로그인</a>
+      </div>
+    </div>
+  </div>
+</th:block>
+
+<th:block th:fragment="afterLoginUpm">
+  <div class="header-wrap">
+    <div class="header-box">
+      <div class="header-content header-login">
+          <!-- 로그아웃 버튼 -->
+          <a href="#" class="login-btn" id="logoutButton" role="button">로그아웃</a>
+
+      </div>
+    </div>
+  </div>
+</th:block>
+</body>
+</html>

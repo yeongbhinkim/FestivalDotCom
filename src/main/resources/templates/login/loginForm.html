@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>로그인</title>
+    <link rel="stylesheet" href="" th:href="@{/css/page/login-page-style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="container-content">
+        <div class="container-title">
+            <img src="../img/logo/logo-color.png" onclick="location.href='http://localhost:8080'"/>
+        </div>
+
+        <div class="container-body">
+            <ul class="form-wrap">
+                <li>
+                    <!-- Google Login Button -->
+                    <a href="/oauth2/authorization/google?redirect_uri=http://localhost:8080">
+                        <img src="/img/google.png" alt="Google 로그인" style="width: 185px; height: 40px;">
+                    </a>
+                </li>
+                <li>
+                    <!-- Naver Login Button -->
+                    <a href="/oauth2/authorization/naver?redirect_uri=http://localhost:8080">
+                        <img src="/img/naver.png" alt="네이버 로그인" style="width: 185px; height: 40px;">
+                    </a>
+                </li>
+                <li>
+                    <!-- Kakao Login Button -->
+                    <a href="/oauth2/authorization/kakao?redirect_uri=http://localhost:8080">
+                        <img src="/img/kakao.png" alt="카카오 로그인" style="width: 185px; height: 40px;">
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

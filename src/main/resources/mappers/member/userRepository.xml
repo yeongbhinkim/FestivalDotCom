@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.googoo.festivaldotcom.domain.member.infrastructure.repository.UserRepository">
+
+    <!-- Provider와 OAuth ID로 사용자 조회 -->
+    <select id="findByUserIdByProviderAndOauthId" resultType="com.googoo.festivaldotcom.domain.member.domain.model.User">
+        SELECT *
+        FROM users
+        WHERE provider = #{provider}
+          AND oauth_id = #{oauthId}
+    </select>
+
+    <!-- 랜덤 사용자 조회 -->
+    <select id="findRandom" resultType="com.googoo.festivaldotcom.domain.member.domain.model.User">
+        SELECT *
+        FROM users
+        ORDER BY RAND()
+            LIMIT #{count}
+    </select>
+
+    <!-- 사용자 ID로 사용자 조회 -->
+    <select id="findById" resultType="com.googoo.festivaldotcom.domain.member.domain.model.User">
+        SELECT *
+        FROM users
+        WHERE id = #{id}
+    </select>
+
+    <!-- 새 사용자 저장 -->
+    <insert id="insertUser" parameterType="com.googoo.festivaldotcom.domain.member.domain.model.User">
+        INSERT INTO users (nickname, introduction, profile_img_url, taste_score, manner_score,
+                           leader_count, crew_count, reported_count, enabled, provider, oauth_id,
+                           created_at, updated_at, deleted)
+        VALUES (#{nickname}, #{introduction}, #{profileImgUrl}, #{tasteScore}, #{mannerScore},
+                #{leaderCount}, #{crewCount}, #{reportedCount}, #{enabled}, #{provider}, #{oauthId},
+                now(), now(), #{deleted})
+    </insert>
+
+    <!-- 기존 사용자 정보 갱신 -->
+    <update id="updateUser" parameterType="com.googoo.festivaldotcom.domain.member.domain.model.User">
+        UPDATE users
+        SET nickname = #{nickname},
+            introduction = #{introduction},
+            profile_img_url = #{profileImgUrl},
+            taste_score = #{tasteScore},
+            manner_score = #{mannerScore},
+            leader_count = #{leaderCount},
+            crew_count = #{crewCount},
+            reported_count = #{reportedCount},
+            enabled = #{enabled},
+            updated_at = now(),
+            deleted = #{deleted}
+        WHERE provider = #{provider} AND oauth_id = #{oauthId}
+    </update>
+
+
+</mapper>
