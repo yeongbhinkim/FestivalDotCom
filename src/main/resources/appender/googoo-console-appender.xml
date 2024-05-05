@@ -1,0 +1,21 @@
+<included>
+    <!-- 콘솔 Appender 설정 -->
+    <appender name="CONSOLE_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- 파일 Appender 설정 -->
+    <appender name="FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern> <!-- 파일 로그 패턴을 CONSOLE_LOG_PATTERN으로 사용 -->
+        </encoder>
+        <file>${LOG_FILE}</file><!-- 기본 로그 파일 위치 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 매일 자정에 새 파일 생성 -->
+            <fileNamePattern>./logs/archived/application-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory> <!-- 최대 30일치 로그 파일 보관 -->
+        </rollingPolicy>
+    </appender>
+</included>
