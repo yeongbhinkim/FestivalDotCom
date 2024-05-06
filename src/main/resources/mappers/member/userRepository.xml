@@ -9,14 +9,7 @@
         FROM users
         WHERE provider = #{provider}
           AND oauth_id = #{oauthId}
-    </select>
-
-    <!-- 랜덤 사용자 조회 -->
-    <select id="findRandom" resultType="com.googoo.festivaldotcom.domain.member.domain.model.User">
-        SELECT *
-        FROM users
-        ORDER BY RAND()
-            LIMIT #{count}
+          AND deleted = 0
     </select>
 
     <!-- 사용자 ID로 사용자 조회 -->
@@ -24,42 +17,37 @@
         SELECT *
         FROM users
         WHERE id = #{id}
+          AND deleted = 0
     </select>
 
     <!-- 새 사용자 저장 -->
     <insert id="insertUser" parameterType="com.googoo.festivaldotcom.domain.member.domain.model.User">
-        INSERT INTO users (nickname, introduction, profile_img_url, taste_score, manner_score,
-                           leader_count, crew_count, reported_count, enabled, provider, oauth_id,
-                           created_at, updated_at, deleted)
-        VALUES (#{nickname}, #{introduction}, #{profileImgUrl}, #{tasteScore}, #{mannerScore},
-                #{leaderCount}, #{crewCount}, #{reportedCount}, #{enabled}, #{provider}, #{oauthId},
-                now(), now(), #{deleted})
+        INSERT INTO users (
+           nickname, introduction, profile_img_url, taste_score, manner_score,
+           leader_count, crew_count, reported_count, enabled, provider, oauth_id,
+           created_at, updated_at, deleted
+        ) VALUES (
+            #{nickname}, #{introduction}, #{profileImgUrl}, #{tasteScore}, #{mannerScore},
+            #{leaderCount}, #{crewCount}, #{reportedCount}, #{enabled}, #{provider}, #{oauthId},
+            now(), now(), #{deleted}
+         )
     </insert>
 
+    <!--  사용자 수정  -->
     <update id="updateUserProfile" parameterType="com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest">
         UPDATE users
         SET nickname = #{nickName},
             profile_img_url = #{profileImgUrl},
             introduction = #{introduction}
         WHERE id = #{userId}
+          AND deleted = 0
     </update>
 
-    <!-- 기존 사용자 정보 갱신 -->
-    <update id="updateUser" parameterType="com.googoo.festivaldotcom.domain.member.domain.model.User">
+    <!--  사용자 삭제  -->
+    <update id="deleteUserProfile" parameterType="com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest">
         UPDATE users
-        SET nickname = #{nickname},
-            introduction = #{introduction},
-            profile_img_url = #{profileImgUrl},
-            taste_score = #{tasteScore},
-            manner_score = #{mannerScore},
-            leader_count = #{leaderCount},
-            crew_count = #{crewCount},
-            reported_count = #{reportedCount},
-            enabled = #{enabled},
-            updated_at = now(),
-            deleted = #{deleted}
-        WHERE provider = #{provider} AND oauth_id = #{oauthId}
+        SET deleted = 1
+        WHERE id = #{userId}
     </update>
-
 
 </mapper>

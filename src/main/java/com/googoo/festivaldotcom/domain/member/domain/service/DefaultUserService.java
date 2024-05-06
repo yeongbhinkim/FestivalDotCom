@@ -96,6 +96,7 @@ public class DefaultUserService implements UserService {
 	@Transactional
 	@CacheEvict(value = "User", key = "#userId")
 	public void deleteUser(Long userId, String refreshToken) {
+
 		userRepository.findById(userId)
 			.ifPresentOrElse(user -> {
 				user.deleteInfo();
@@ -103,5 +104,8 @@ public class DefaultUserService implements UserService {
 			}, () -> {
 				throw new UserNotFoundException(userId);
 			});
+
+		//탈퇴 로직 추가
+		userRepository.deleteUserProfile(userId);
 	}
 }
