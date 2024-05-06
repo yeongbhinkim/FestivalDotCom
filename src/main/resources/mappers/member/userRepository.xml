@@ -36,6 +36,14 @@
                 now(), now(), #{deleted})
     </insert>
 
+    <update id="updateUserProfile" parameterType="com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest">
+        UPDATE users
+        SET nickname = #{nickName},
+            profile_img_url = #{profileImgUrl},
+            introduction = #{introduction}
+        WHERE id = #{userId}
+    </update>
+
     <!-- 기존 사용자 정보 갱신 -->
     <update id="updateUser" parameterType="com.googoo.festivaldotcom.domain.member.domain.model.User">
         UPDATE users
