@@ -5,9 +5,7 @@ public record UserProfileResponse(
 	String nickname,
 	String profileImgUrl,
 	String introduction,
-	Integer leaderCount,
-	Integer crewCount,
-	Integer tasteScore,
+	Integer festivalCount,
 	String mannerScore
 ) {
 }

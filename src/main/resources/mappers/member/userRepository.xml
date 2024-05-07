@@ -23,12 +23,12 @@
     <!-- 새 사용자 저장 -->
     <insert id="insertUser" parameterType="com.googoo.festivaldotcom.domain.member.domain.model.User">
         INSERT INTO users (
-           nickname, introduction, profile_img_url, taste_score, manner_score,
-           leader_count, crew_count, reported_count, enabled, provider, oauth_id,
+           nickname, introduction, profile_img_url, manner_score,
+           festival_count, enabled, provider, oauth_id,
            created_at, updated_at, deleted
         ) VALUES (
-            #{nickname}, #{introduction}, #{profileImgUrl}, #{tasteScore}, #{mannerScore},
-            #{leaderCount}, #{crewCount}, #{reportedCount}, #{enabled}, #{provider}, #{oauthId},
+            #{nickname}, #{introduction}, #{profileImgUrl}, #{mannerScore},
+            #{festivalCount}, #{enabled}, #{provider}, #{oauthId},
             now(), now(), #{deleted}
          )
     </insert>

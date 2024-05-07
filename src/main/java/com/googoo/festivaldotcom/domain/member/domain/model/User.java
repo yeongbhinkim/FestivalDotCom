@@ -34,10 +34,7 @@ public class User extends BaseEntity {
 	private String provider;
 	private String oauthId;
 	private BigDecimal mannerScore;
-	private Integer tasteScore;
-	private Integer leaderCount;
-	private Integer crewCount;
-	private Integer reportedCount;
+	private Integer festivalCount;
 	private boolean enabled;
 
 	@Builder
@@ -48,10 +45,7 @@ public class User extends BaseEntity {
 		this.oauthId = oauthId;
 		this.introduction = DEFAULT_INTRODUCE;
 		this.mannerScore = new BigDecimal("36.5");
-		this.tasteScore = ZERO;
-		this.leaderCount = ZERO;
-		this.crewCount = ZERO;
-		this.reportedCount = ZERO;
+		this.festivalCount = ZERO;
 	}
 
 	private String validateNickName(String nickName) {
@@ -86,9 +80,7 @@ public class User extends BaseEntity {
 		this.provider = "NONE";
 		this.oauthId = "NONE : " + (this.id * RANDOM.nextInt(1000));
 		this.mannerScore = new BigDecimal("36.5");
-		this.tasteScore = ZERO;
-		this.leaderCount = ZERO;
-		this.crewCount = ZERO;
+		this.festivalCount = ZERO;
 		return this;
 	}
 
@@ -101,14 +93,6 @@ public class User extends BaseEntity {
 		BigDecimal score = CRITERIA.multiply(new BigDecimal(mannerScore));
 		BigDecimal result = this.mannerScore.add(score);
 		this.mannerScore = checkMinusMannerScore(result);
-	}
-
-	public void addTasteScore(Integer tasteScore) {
-		this.tasteScore += tasteScore;
-	}
-
-	public void updateCrewCount() {
-		this.crewCount++;
 	}
 
 	public BigDecimal checkMinusMannerScore(BigDecimal mannerScore) {
