@@ -13,7 +13,7 @@
   <div class="header-wrap">
     <div class="header-box">
       <div class="header-content header-login">
-        <a class="login-btn" href="" th:href="@{/oauthlogin}">로그인</a>
+        <a class="header -btn" href="" th:href="@{/oauthlogin}">로그인</a>
       </div>
     </div>
   </div>
@@ -23,8 +23,13 @@
   <div class="header-wrap">
     <div class="header-box">
       <div class="header-content header-login">
+          <!-- 마이페이지   -->
+          <a href="/api/v1/user/myPage" class="header-btn" id="myPageButton" role="button">마이페이지</a>
+      </div>
+
+      <div class="header-content header-login">
           <!-- 로그아웃 버튼 -->
-          <a href="#" class="login-btn" id="logoutButton" role="button">로그아웃</a>
+          <a href="#" class="header-btn" id="logoutButton" role="button">로그아웃</a>
 
       </div>
     </div>

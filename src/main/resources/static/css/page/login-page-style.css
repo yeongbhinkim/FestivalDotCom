@@ -199,7 +199,7 @@ form {
   font-size: 16px;
 }
 
-.login-btn {
+.header-btn {
   border: 1px solid transparent;
   border-radius: 30px;
   background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
