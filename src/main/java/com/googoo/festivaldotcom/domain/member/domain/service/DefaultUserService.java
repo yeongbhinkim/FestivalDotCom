@@ -55,7 +55,7 @@ public class DefaultUserService implements UserService {
 		log.info("Mapped User: {}", user);
 		log.info("DEFAULT_ROLE: {}", DEFAULT_ROLE);
 
-		return new AuthUserInfo(user.getId(), DEFAULT_ROLE, user.getNickname());
+		return new AuthUserInfo(user.getId(), DEFAULT_ROLE, user.getNickName());
 	}
 
 
@@ -74,7 +74,8 @@ public class DefaultUserService implements UserService {
 	@Transactional
 	@CachePut(value = "User", key = "#userId")
 	public UserProfileResponse updateUserProfile(UpdateUserRequest updateUserRequest, Long userId) {
-		 userRepository.updateUserProfile(updateUserRequest, userId);
+		 userRepository.updateUserProfile(updateUserRequest.nickName(), updateUserRequest.profileImgUrl(), updateUserRequest.introduction(), userId);
+//		 userRepository.updateUserProfile(updateUserRequest, userId);
 
 		return userRepository.findById(userId)
 				.map(user -> userMapper.toSingleUserResponse(user))  // User를 UserProfileResponse로 변환

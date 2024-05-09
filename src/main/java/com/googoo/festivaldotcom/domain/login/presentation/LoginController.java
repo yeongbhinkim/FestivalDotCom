@@ -34,8 +34,8 @@ public class LoginController {
 //        log.info("user.id() = " + user.id());
         //        UpdateUserRequest initialData = userService.getUserProfile(user.id());
 //        UserProfileResponse initialData = userService.getUserProfile(user.id());
-        UpdateUserRequest initialData = new UpdateUserRequest("", "", "");
-        model.addAttribute("updateUserRequest", initialData);
+//        UpdateUserRequest initialData = new UpdateUserRequest("", "", "","", "");
+        model.addAttribute("updateUserRequest", "");
         log.info("info={}", "test0() 호출 종료됨========================");
 
         String view = DetermineUtil.determineView(request, "login/beforeLogin", "login/afterLoginUpdate");

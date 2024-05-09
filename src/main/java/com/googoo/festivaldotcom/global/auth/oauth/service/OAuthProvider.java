@@ -24,7 +24,7 @@ public enum OAuthProvider {
 			return OAuthUserInfo.builder()
 				.provider(KAKAO.name)
 				.oauthId(String.valueOf(attributes.get("id")))
-				.nickname(String.valueOf(properties.get("nickname")))
+				.nickName(String.valueOf(properties.get("nickName")))
 				.profileImgUrl(String.valueOf(properties.get("profile_image")))
 				.build();
 		}
@@ -39,7 +39,7 @@ public enum OAuthProvider {
 			return OAuthUserInfo.builder()
 					.provider(NAVER.name)
 					.oauthId(String.valueOf(response.get("id")))
-					.nickname(String.valueOf(response.get("nickname")))
+					.nickName(String.valueOf(response.get("nickName")))
 					.profileImgUrl(String.valueOf(response.get("profile_image")))
 					.build();
 		}
@@ -53,7 +53,7 @@ public enum OAuthProvider {
 			return OAuthUserInfo.builder()
 				.provider(GOOGLE.name)
 				.oauthId(String.valueOf(oauth2User.getName()))
-				.nickname(String.valueOf(attributes.get("name")))
+				.nickName(String.valueOf(attributes.get("name")))
 				.profileImgUrl(String.valueOf(attributes.get("picture")))
 				.build();
 		}

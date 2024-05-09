@@ -23,11 +23,11 @@
     <!-- 새 사용자 저장 -->
     <insert id="insertUser" parameterType="com.googoo.festivaldotcom.domain.member.domain.model.User">
         INSERT INTO users (
-           nickname, introduction, profile_img_url, manner_score,
+            nick_name, introduction, profile_img_url, manner_score,
            festival_count, enabled, provider, oauth_id,
            created_at, updated_at, deleted
         ) VALUES (
-            #{nickname}, #{introduction}, #{profileImgUrl}, #{mannerScore},
+            #{nickName}, #{introduction}, #{profileImgUrl}, #{mannerScore},
             #{festivalCount}, #{enabled}, #{provider}, #{oauthId},
             now(), now(), #{deleted}
          )
@@ -36,10 +36,10 @@
     <!--  사용자 수정  -->
     <update id="updateUserProfile" parameterType="com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest">
         UPDATE users
-        SET nickname = #{nickName},
+        SET nick_name = #{nickName},
             profile_img_url = #{profileImgUrl},
             introduction = #{introduction}
-        WHERE id = #{userId}
+        WHERE id = #{id}
           AND deleted = 0
     </update>
 
@@ -47,7 +47,7 @@
     <update id="deleteUserProfile" parameterType="com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest">
         UPDATE users
         SET deleted = 1
-        WHERE id = #{userId}
+        WHERE id = #{id}
     </update>
 
 </mapper>

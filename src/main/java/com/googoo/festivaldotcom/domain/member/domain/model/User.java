@@ -28,7 +28,7 @@ public class User extends BaseEntity {
 	private static final Random RANDOM = new Random();
 
 	private Long id;
-	private String nickname;
+	private String nickName;
 	private String profileImgUrl;
 	private String introduction;
 	private String provider;
@@ -38,8 +38,8 @@ public class User extends BaseEntity {
 	private boolean enabled;
 
 	@Builder
-	protected User(String nickname, String profileImgUrl, String provider, String oauthId) {
-		this.nickname = validateNickName(nickname);
+	protected User(String nickName, String profileImgUrl, String provider, String oauthId) {
+		this.nickName = validateNickName(nickName);
 		this.profileImgUrl = validateProfileImgUrl(profileImgUrl);
 		this.provider = provider;
 		this.oauthId = oauthId;
@@ -67,14 +67,14 @@ public class User extends BaseEntity {
 	}
 
 	public User changeProfile(UpdateUserRequest updateUserRequest) {
-		this.nickname = validateNickName(updateUserRequest.nickName());
+		this.nickName = validateNickName(updateUserRequest.nickName());
 		this.profileImgUrl = validateProfileImgUrl(updateUserRequest.profileImgUrl());
 		this.introduction = validateIntroduction(updateUserRequest.introduction());
 		return this;
 	}
 
 	public User deleteInfo() {
-		this.nickname = "탈퇴한 유저";
+		this.nickName = "탈퇴한 유저";
 		this.profileImgUrl = "None";
 		this.introduction = "탈퇴한 유저입니다.";
 		this.provider = "NONE";

@@ -2,7 +2,10 @@ package com.googoo.festivaldotcom.domain.member.presentation;
 
 import com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest;
 import com.googoo.festivaldotcom.domain.member.application.dto.response.UserProfileResponse;
+import com.googoo.festivaldotcom.domain.member.domain.model.ModifyForm;
+import com.googoo.festivaldotcom.domain.member.domain.model.User;
 import com.googoo.festivaldotcom.domain.member.domain.service.UserService;
+import com.googoo.festivaldotcom.domain.member.infrastructure.repository.UserRepository;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.base.dto.ApiResponse;
 import com.googoo.festivaldotcom.global.log.annotation.Trace;
@@ -11,13 +14,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -32,29 +44,92 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class UserController {
 
-	private final UserService userService;
-	// UserService를 의존성 주입을 통해 컨트롤러에 연결합니다. UserService 클래스는 사용자 관련 비즈니스 로직을 처리합니다.
+    private final UserService userService;
+    private final UserRepository userRepository;
+    // UserService를 의존성 주입을 통해 컨트롤러에 연결합니다. UserService 클래스는 사용자 관련 비즈니스 로직을 처리합니다.
 
-	@Trace
-	@RequestMapping("/myPage")
-	public String myPage(HttpServletRequest request
-			, @AuthenticationPrincipal JwtAuthentication user
-			, Model model) {
-		log.info("info={}", "myPage() 호출 시작됨========================");
+
+    /**
+     * 회원 수정 화면
+     *
+     * @param request
+     * @param user
+     * @param model
+     * @return
+     */
+    @Trace
+    @RequestMapping("/myPage")
+    public String myPage(HttpServletRequest request
+            , @AuthenticationPrincipal JwtAuthentication user
+            , Model model) {
+        log.info("info={}", "myPage() 호출 시작됨========================");
 
         log.info("user.id() = " + user.id());
-		UserProfileResponse response = userService.getUserProfile(user.id());
+        UserProfileResponse modifyForm = userService.getUserProfile(user.id());
 
 //		UpdateUserRequest initialData = new UpdateUserRequest("", "", "");
-		model.addAttribute("updateUserRequest", response);
-		model.addAttribute("modifyForm", response);
+//		model.addAttribute("updateUserRequest", response);
+        model.addAttribute("modifyForm", modifyForm);
 
-		log.info("info={}", "myPage() 호출 종료됨========================");
+        log.info("response={}", modifyForm);
 
-		String view = DetermineUtil.determineView(request, "login/beforeLogin", "myPage/mypage");
-		return view;
-	}
+        log.info("info={}", "myPage() 호출 종료됨========================");
 
+        String view = DetermineUtil.determineView(request, "login/beforeLogin", "memberJoin/memberModifypage");
+        return view;
+    }
+
+    /*
+     * 업데이트 ->  재조회 ->  화면
+     *
+     */
+    //회원수정 처리
+    @PostMapping("/modify")
+    public String modify(@Valid @ModelAttribute UpdateUserRequest modifyForm,
+                         @AuthenticationPrincipal JwtAuthentication user) throws IOException {
+        MultipartFile file = modifyForm.file();
+        if (file != null && !file.isEmpty()) {
+            // 사용자별 이미지 저장 디렉터리 설정
+            String uploadDir = "C:/profileImgUrl/" + user.id();
+            Path uploadPath = Paths.get(uploadDir);
+
+            // 디렉터리가 존재하지 않는 경우 생성
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // 파일 확장자 검증
+            String originalFileName = file.getOriginalFilename();
+            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            if (!fileExtension.matches("\\.(jpg|jpeg|png)")) {
+                throw new IllegalStateException("Invalid file type.");
+            }
+
+            // 랜덤 파일 이름 생성
+            String fileName = UUID.randomUUID().toString() + fileExtension;
+            String filePath = Paths.get(uploadDir, fileName).toString();
+            File dest = new File(filePath);
+            file.transferTo(dest);
+
+            // Web 접근 가능한 URL로 변환
+            String fileUrl = uploadDir + "/" + fileName;
+            UpdateUserRequest updateUserRequest = new UpdateUserRequest(
+                    modifyForm.nickName(),
+                    fileUrl,
+                    modifyForm.introduction(),
+                    file
+            );
+
+            userService.updateUserProfile(updateUserRequest, user.id());
+        }
+
+        return "redirect:/api/v1/user/myPage";
+    }
+
+
+
+
+}
 
 
 //	@GetMapping(value = "/{userId}", produces = APPLICATION_JSON_VALUE)
@@ -127,5 +202,5 @@ public class UserController {
 //		userService.deleteUser(user.id(), refreshToken);
 //		// 사용자 삭제 요청을 처리합니다.
 //	}
-}
+
 
