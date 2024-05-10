@@ -75,6 +75,7 @@ public class DefaultUserService implements UserService {
 	@CachePut(value = "User", key = "#userId")
 	public UserProfileResponse updateUserProfile(UpdateUserRequest updateUserRequest, Long userId) {
 		 userRepository.updateUserProfile(updateUserRequest.nickName(), updateUserRequest.profileImgUrl(), updateUserRequest.introduction(), userId);
+		 log.info("Updated user profile: {}", updateUserRequest);
 //		 userRepository.updateUserProfile(updateUserRequest, userId);
 
 		return userRepository.findById(userId)

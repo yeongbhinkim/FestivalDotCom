@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마이페이지</title>
+  <style>
+    .first-row{
+      background-Color:yellow;
+    }
+  </style>
+
+</head>
+
+<body>
+  <main th:fragment="mypageList" class="page-main-wrap">
+
+    <div class="main-sub">
+      <div class="main-nav-title">
+        <span>내가 찜한 축제</span>
+      </div>
+
+      <ul class="shop-box">
+        <li class="shop-each" th:each="item : ${BookmarkList}">
+          <div class="shop-container">
+            <div class="shop-container-util shop-each_img shop-img-rd ">
+              <img th:src="@{|/attach/${item.shopId}/B0105/${item.store_filename}|}"/>
+            </div>
+            <div class="shop-container-util shop-each_title">
+              <span><a href="" th:href="@{/coffeeShop/detail/{shopId}(shopId=${item.shopId})}" th:text="${item.shopName}">축제이름</a></span>
+            </div>
+            <div class="shop-container-util shop-each_hashtag">
+              <ul>
+                <li class="shop-hashtag-rep rep1">
+                  <div>
+                    <span class="mainHashtag" th:text="${item.hcategoryh0101}">#콜드브루</span>
+                    <span class="mainHashtag" th:text="${item.hcategoryh0102}">#울산중구</span>
+                  </div>
+                </li>
+                <br>
+                <li class="shop-hashtag-rep rep2">
+                  <div>
+                    <span class="mainHashtag" th:text="${item.hcategoryh0103}">#포근함</span>
+                    <span class="mainHashtag" th:text="${item.hcategoryh0104}">#공원뷰</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  <script>
+    // 대표 해시태그 정보 텍스트 앞에 # 붙이기
+    const $mainHashtag = document.querySelectorAll('.mainHashtag');
+
+    $mainHashtag.forEach(ele => {
+      if(ele.textContent.trim().length > 1) {
+        const $hashtagView = "#" + ele.textContent;
+        ele.textContent = $hashtagView;
+      }
+    });
+  </script>
+  </main>
+</body>
+
+</html>

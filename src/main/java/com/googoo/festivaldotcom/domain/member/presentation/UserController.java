@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
@@ -87,6 +90,7 @@ public class UserController {
     @PostMapping("/modify")
     public String modify(@Valid @ModelAttribute UpdateUserRequest modifyForm,
                          @AuthenticationPrincipal JwtAuthentication user) throws IOException {
+
         MultipartFile file = modifyForm.file();
         if (file != null && !file.isEmpty()) {
             // 사용자별 이미지 저장 디렉터리 설정
@@ -112,18 +116,31 @@ public class UserController {
             file.transferTo(dest);
 
             // Web 접근 가능한 URL로 변환
-            String fileUrl = uploadDir + "/" + fileName;
+            String fileUrl = "/profileImgUrl/" + user.id() + "/" + fileName;
             UpdateUserRequest updateUserRequest = new UpdateUserRequest(
                     modifyForm.nickName(),
                     fileUrl,
                     modifyForm.introduction(),
-                    file
+                    null
             );
-
+            log.info("Updated user profile 1 : {}", updateUserRequest);
             userService.updateUserProfile(updateUserRequest, user.id());
+        } else {
+            log.info("Updated user profile 2 : {}", modifyForm);
+            userService.updateUserProfile(modifyForm, user.id());
         }
 
         return "redirect:/api/v1/user/myPage";
+    }
+
+
+    @Configuration
+    public class WebConfig implements WebMvcConfigurer {
+        @Override
+        public void addResourceHandlers(ResourceHandlerRegistry registry) {
+            registry.addResourceHandler("/profileImgUrl/**")
+                    .addResourceLocations("file:///C:/profileImgUrl/");
+        }
     }
 
 

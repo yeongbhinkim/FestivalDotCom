@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마이페이지</title>
+
+
+
+</head>
+
+<body>
+<nav th:fragment="mypageSide">
+  <aside class="page-aside-wrap">
+    <div class="aside-menu-tab">
+      <div class="aside-title">
+        <a href="javascript:void(0)">
+          <span>마이페이지</span>
+        </a>
+      </div>
+      <nav class="nav-tab">
+        <ul class="nav-list-wrap">
+          <li class="nav-list-each my-history " >
+            <a href="javascript:void(0)" class="my-history">나의 활동 내역</a>
+            <ul>
+              <li>
+                <a href="" th:href="@{|/members/myinfo/${s_id}|}">- 내가 찜한 축제</a>
+              </li>
+              <li>
+                <a href=""  th:href="@{|/members/review/${s_id}|}">- 내가 작성한 리뷰</a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-list-each my-history " >
+            <a href="javascript:void(0)" class="my-history">회원정보</a>
+            <ul>
+              <li>
+                <a href="" th:href="@{/members/{MemberEmail}/memberModify(MemberEmail=${s_email})}">- 회원 정보 수정</a>
+              </li>
+              <li>
+                <a href="" th:href="@{/members/{email}/memberDel(email=${s_email})}">- 회원 탈퇴</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </aside>
+</nav>
+</body>
+
+</html>

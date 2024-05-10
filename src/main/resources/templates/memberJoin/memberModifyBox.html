@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 수정</title>
+    <style>
+        p.errmsg {
+            display: none;
+            margin: 0;
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+
+</head>
+
+<body>
+<main th:fragment="memberModifyBox">
+    <div class="main-sub">
+        <div class="main-nav-title">
+            <span>회원 정보 수정</span>
+        </div>
+
+        <form action="/api/v1/user/modify" id="modifyForm" method="post" th:object="${modifyForm}"
+              enctype="multipart/form-data">
+            <!--  <form id="modifyForm" method="post" th:object="${modifyForm}" >-->
+
+            <div class="container">
+                <div class="container-body">
+                    <div class="inputInfo">
+
+                        <!--            <div>-->
+                        <!--                <label>프로필 사진:</label>-->
+                        <!--                <input type="file" name="file" accept="image/*" onchange="showImage(this)">-->
+                        <!--                <img id="profileImgUrl"-->
+                        <!--                     th:src="*{profileImgUrl}"-->
+                        <!--                     alt="Selected Image"-->
+                        <!--                     style="max-width: 300px; max-height: 300px; display: block;">-->
+                        <!--                <input type="hidden" name="profileImgUrl" th:value="*{profileImgUrl}" />-->
+                        <!--            </div>-->
+
+                        <div>
+                            <div style="position: relative; display: block; text-align: center;">
+                                <input type="file" id="file" name="file" accept="image/*" onchange="showImage(this)" style="display: none;">
+                                <img id="profileImgUrl"
+                                     th:src="*{profileImgUrl}"
+                                     alt="Selected Image"
+                                     style="max-width: 300px; max-height: 300px; display: block; margin: auto; object-fit: contain;">
+
+                                <button type="button" onclick="deleteImage();" style="position: absolute; top: 0; right: 0;">X</button>
+                                <button type="button" onclick="document.getElementById('file').click();"
+                                        style="display: block; margin: 10px auto 0;">사진 수정</button>
+                            </div>
+                            <input type="hidden" name="profileImgUrl" th:value="*{profileImgUrl}"/>
+                        </div>
+
+                        <div class="member_nickname">
+                            <li>
+                                <label for="nickName"> 별명:</label>
+                                <input type="text" name="nickName" id="nickName" th:field="*{nickName}"
+                                       placeholder="이름을 입력해주세요."/>
+                                <!--              <input type="text" name="memberName" id="memberName" th:field="*{memberName}" placeholder="이름을 입력해주세요."-->
+                                <!--                     th:class="${#fields.hasErrors('memberName') ? 'fieldError' : 'fieldSuccess'}">-->
+                            </li>
+                            <!--            <li th:if="${#fields.hasErrors('memberName')}">-->
+                            <!--              <p th:errors="*{memberName}" th:errorclass="fieldError"></p>-->
+                            <!--            </li>-->
+                        </div>
+
+
+                        <!--          <div class="member_gender">-->
+                        <!--            <li>-->
+                        <!--              <th:block th:each=" ele : ${memberGender} ">-->
+                        <!--                <label for="male" th:for="${#ids.next('memberGender')}" th:text="${ele.description}"></label>-->
+                        <!--                <input type="radio" th:field="*{memberGender}" th:value="${ele.name()}">-->
+                        <!--              </th:block>-->
+                        <!--              <th:block th:remove="all">-->
+                        <!--                <label for="male">남자</label>-->
+                        <!--                <input type="radio" name="gender" id="male" value="남자">-->
+                        <!--                <label for="female">여자</label>-->
+                        <!--                <input type="radio" name="gender" id="female" value="여자">-->
+                        <!--              </th:block>-->
+                        <!--            </li>-->
+                        <!--            <li th:if="${#fields.hasErrors('memberGender')}">-->
+                        <!--              <p th:errors="*{memberGender}" th:errorclass="fieldError"></p>-->
+                        <!--            </li>-->
+                        <!--          </div>-->
+
+
+                        <div class="member_manner_score">
+                            <li>
+                                <label for="mannerScore">매너 점수:</label>
+                                <input type="text" name="mannerScore" id="mannerScore" th:field="*{mannerScore}"
+                                       readonly="readonly"/>
+                                <!--              <input type="text" placeholder="8자리 생년월일을 입력해주세요. (20220101)" name="memberAge" id="memberAge"-->
+                                <!--                     th:field="*{memberAge}"-->
+                                <!--                     th:class="${#fields.hasErrors('memberAge') ? 'fieldError' : 'fieldSuccess'}" readonly="readonly">-->
+                            </li>
+                            <!--            <li th:if="${#fields.hasErrors('memberAge')}">-->
+                            <!--              <p th:errors="*{memberAge}" th:errorclass="fieldError"></p>-->
+                            <!--            </li>-->
+                        </div>
+
+
+                        <div class="member_introduction">
+                            <li>
+                                <label for="introduction"> 자기소개:</label>
+                                <input type="text" name="introduction" id="introduction" th:field="*{introduction}"
+                                       placeholder="자기소개를 작성해주세요."/>
+                                <!--              <input type="text" name="memberName" id="memberName" th:field="*{memberName}" placeholder="이름을 입력해주세요."-->
+                                <!--                     th:class="${#fields.hasErrors('memberName') ? 'fieldError' : 'fieldSuccess'}">-->
+                            </li>
+                            <!--            <li th:if="${#fields.hasErrors('memberName')}">-->
+                            <!--              <p th:errors="*{memberName}" th:errorclass="fieldError"></p>-->
+                            <!--            </li>-->
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="Btn">
+                        <button type="button" id="modifyBtn">수정</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // function showImage(input) {
+        //     var file = input.files[0];
+        //     var reader = new FileReader();
+        //     reader.onload = function(e) {
+        //         document.getElementById('profileImgUrl').src = e.target.result;
+        //     }
+        //     reader.readAsDataURL(file);
+        // }
+
+        function showImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('profileImgUrl').src = e.target.result;
+                    document.getElementById('profileImgUrl').style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function deleteImage() {
+            var img = document.getElementById('profileImgUrl');
+            img.removeAttribute('src');  // 이미지 경로 제거
+            img.style.display = 'none';  // 이미지 숨김
+        }
+
+        document.getElementById('modifyBtn').addEventListener('click', function() {
+            document.getElementById('modifyForm').submit();
+        });
+
+    </script>
+
+    <script>
+        // 수정 버튼 클릭시
+        modifyBtn.addEventListener('click', e => {
+            modifyForm.submit();
+        });
+    </script>
+</main>
+</body>
+</html>
