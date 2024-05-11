@@ -32,17 +32,7 @@
                 <div class="container-body">
                     <div class="inputInfo">
 
-                        <!--            <div>-->
-                        <!--                <label>프로필 사진:</label>-->
-                        <!--                <input type="file" name="file" accept="image/*" onchange="showImage(this)">-->
-                        <!--                <img id="profileImgUrl"-->
-                        <!--                     th:src="*{profileImgUrl}"-->
-                        <!--                     alt="Selected Image"-->
-                        <!--                     style="max-width: 300px; max-height: 300px; display: block;">-->
-                        <!--                <input type="hidden" name="profileImgUrl" th:value="*{profileImgUrl}" />-->
-                        <!--            </div>-->
-
-                        <div>
+                        <div class="member_profileImgUrl">
                             <div style="position: relative; display: block; text-align: center;">
                                 <input type="file" id="file" name="file" accept="image/*" onchange="showImage(this)" style="display: none;">
                                 <img id="profileImgUrl"
@@ -50,7 +40,7 @@
                                      alt="Selected Image"
                                      style="max-width: 300px; max-height: 300px; display: block; margin: auto; object-fit: contain;">
 
-                                <button type="button" onclick="deleteImage();" style="position: absolute; top: 0; right: 0;">X</button>
+                                <button type="button" onclick="deleteImage();" style="position: absolute; top: 0; right: 0; padding: 5px;">X</button>
                                 <button type="button" onclick="document.getElementById('file').click();"
                                         style="display: block; margin: 10px auto 0;">사진 수정</button>
                             </div>
@@ -59,7 +49,7 @@
 
                         <div class="member_nickname">
                             <li>
-                                <label for="nickName"> 별명:</label>
+                                <label for="nickName">사용자명:</label>
                                 <input type="text" name="nickName" id="nickName" th:field="*{nickName}"
                                        placeholder="이름을 입력해주세요."/>
                                 <!--              <input type="text" name="memberName" id="memberName" th:field="*{memberName}" placeholder="이름을 입력해주세요."-->
@@ -92,7 +82,7 @@
 
                         <div class="member_manner_score">
                             <li>
-                                <label for="mannerScore">매너 점수:</label>
+                                <label for="mannerScore">매너점수:</label>
                                 <input type="text" name="mannerScore" id="mannerScore" th:field="*{mannerScore}"
                                        readonly="readonly"/>
                                 <!--              <input type="text" placeholder="8자리 생년월일을 입력해주세요. (20220101)" name="memberAge" id="memberAge"-->
