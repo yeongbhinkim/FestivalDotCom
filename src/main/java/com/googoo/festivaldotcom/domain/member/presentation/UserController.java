@@ -87,9 +87,12 @@ public class UserController {
      *
      */
     //회원수정 처리
+    @Trace
     @PostMapping("/modify")
     public String modify(@Valid @ModelAttribute UpdateUserRequest modifyForm,
                          @AuthenticationPrincipal JwtAuthentication user) throws IOException {
+
+
 
         MultipartFile file = modifyForm.file();
         if (file != null && !file.isEmpty()) {

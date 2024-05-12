@@ -1,5 +1,6 @@
 package com.googoo.festivaldotcom;
 
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -7,6 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 @SpringBootApplication
 public class FestivalDotComApplication {
@@ -20,13 +23,14 @@ public class FestivalDotComApplication {
         System.setProperty("LOG_FILE", "C:/Users/yb/Desktop/logs/" + logFileName);
     }
 
-
-    private static final Logger logger = LoggerFactory.getLogger(FestivalDotComApplication.class);
-
     public static void main(String[] args) {
-
-        logger.info("Starting FestivalDotComApplication...");
         SpringApplication.run(FestivalDotComApplication.class, args);
+    }
+
+    @PostConstruct
+    void started() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+        Locale.setDefault(Locale.KOREA);
     }
 
 }
