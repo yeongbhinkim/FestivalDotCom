@@ -1,5 +1,6 @@
 package com.googoo.festivaldotcom;
 
+import io.sentry.Sentry;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,21 @@ public class FestivalDotComApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(FestivalDotComApplication.class, args);
+
+
+        //sentry 에러 체크용
+//        Sentry.init(options -> {
+//            options.setDsn("<your-public-dsn>");
+//            // 세부적인 설정들을 추가할 수 있어
+//        });
+//
+//        try {
+//            throw new Exception("This is a test!");
+//        } catch (Exception e) {
+//            Sentry.captureException(e);
+//        }
+
+
     }
 
     @PostConstruct

@@ -13,22 +13,6 @@
     <!-- 로그 파일 저장 위치 설정 -->
     <property name="LOGS" value="./logs"/>
 
-    <!-- 콘솔 출력을 위한 Appender 설정 -->
-    <appender name="CONSOLE_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
-        </encoder>
-    </appender>
-
-    <!-- MyBatis SQL Logger -->
-<!--    <logger name="com.p6spy" level="INFO"/>-->
-<!--    <logger name="com.p6spy" level="DEBUG"/>-->
-
-    <logger name="com.p6spy" level="DEBUG" additivity="true">
-        <appender-ref ref="CONSOLE_APPENDER"/>
-        <appender-ref ref="FILE_APPENDER"/>
-    </logger>
-
     <!-- 로컬 환경 설정 -->
     <springProfile name="local">
         <include resource="appender/googoo-console-appender.xml"/>
