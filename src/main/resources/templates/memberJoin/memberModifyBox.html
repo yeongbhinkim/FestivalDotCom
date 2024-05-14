@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,10 +12,11 @@
             font-weight: bold;
             color: red;
         }
+        p.errmsg.visible {
+            display: block;
+        }
     </style>
-
 </head>
-
 <body>
 <main th:fragment="memberModifyBox">
     <div class="main-sub">
@@ -26,12 +26,13 @@
 
         <form action="/api/v1/user/modify" id="modifyForm" method="post" th:object="${modifyForm}"
               enctype="multipart/form-data">
-            <!--  <form id="modifyForm" method="post" th:object="${modifyForm}" >-->
-
             <div class="container">
                 <div class="container-body">
+<!--                    &lt;!&ndash; 전체적인 폼 오류 메시지 &ndash;&gt;-->
+<!--                    <div th:if="${#fields.hasErrors()}">-->
+<!--                        <p th:each="err : ${#fields.errors('*')}" th:text="${err}" class="errmsg visible">오류 메시지</p>-->
+<!--                    </div>-->
                     <div class="inputInfo">
-
                         <div class="member_profileImgUrl">
                             <div style="position: relative; display: block; text-align: center;">
                                 <input type="file" id="file" name="file" accept="image/*" onchange="showImage(this)" style="display: none;">
@@ -44,7 +45,7 @@
                                 <button type="button" onclick="document.getElementById('file').click();"
                                         style="display: block; margin: 10px auto 0;">사진 수정</button>
                             </div>
-                            <input type="hidden" name="profileImgUrl" th:value="*{profileImgUrl}"/>
+                            <input type="hidden" id="hiddenProfileImgUrl" name="profileImgUrl" th:value="*{profileImgUrl}"/>
                         </div>
 
                         <div class="member_nickname">
@@ -52,65 +53,27 @@
                                 <label for="nickName">사용자명:</label>
                                 <input type="text" name="nickName" id="nickName" th:field="*{nickName}"
                                        placeholder="이름을 입력해주세요."/>
-                                <!--              <input type="text" name="memberName" id="memberName" th:field="*{memberName}" placeholder="이름을 입력해주세요."-->
-                                <!--                     th:class="${#fields.hasErrors('memberName') ? 'fieldError' : 'fieldSuccess'}">-->
+                                <p th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}" class="errmsg visible"></p>
                             </li>
-                            <!--            <li th:if="${#fields.hasErrors('memberName')}">-->
-                            <!--              <p th:errors="*{memberName}" th:errorclass="fieldError"></p>-->
-                            <!--            </li>-->
                         </div>
-
-
-                        <!--          <div class="member_gender">-->
-                        <!--            <li>-->
-                        <!--              <th:block th:each=" ele : ${memberGender} ">-->
-                        <!--                <label for="male" th:for="${#ids.next('memberGender')}" th:text="${ele.description}"></label>-->
-                        <!--                <input type="radio" th:field="*{memberGender}" th:value="${ele.name()}">-->
-                        <!--              </th:block>-->
-                        <!--              <th:block th:remove="all">-->
-                        <!--                <label for="male">남자</label>-->
-                        <!--                <input type="radio" name="gender" id="male" value="남자">-->
-                        <!--                <label for="female">여자</label>-->
-                        <!--                <input type="radio" name="gender" id="female" value="여자">-->
-                        <!--              </th:block>-->
-                        <!--            </li>-->
-                        <!--            <li th:if="${#fields.hasErrors('memberGender')}">-->
-                        <!--              <p th:errors="*{memberGender}" th:errorclass="fieldError"></p>-->
-                        <!--            </li>-->
-                        <!--          </div>-->
-
 
                         <div class="member_manner_score">
                             <li>
                                 <label for="mannerScore">매너점수:</label>
                                 <input type="text" name="mannerScore" id="mannerScore" th:field="*{mannerScore}"
                                        readonly="readonly"/>
-                                <!--              <input type="text" placeholder="8자리 생년월일을 입력해주세요. (20220101)" name="memberAge" id="memberAge"-->
-                                <!--                     th:field="*{memberAge}"-->
-                                <!--                     th:class="${#fields.hasErrors('memberAge') ? 'fieldError' : 'fieldSuccess'}" readonly="readonly">-->
                             </li>
-                            <!--            <li th:if="${#fields.hasErrors('memberAge')}">-->
-                            <!--              <p th:errors="*{memberAge}" th:errorclass="fieldError"></p>-->
-                            <!--            </li>-->
                         </div>
-
 
                         <div class="member_introduction">
                             <li>
-                                <label for="introduction"> 자기소개:</label>
+                                <label for="introduction">자기소개:</label>
                                 <input type="text" name="introduction" id="introduction" th:field="*{introduction}"
                                        placeholder="자기소개를 작성해주세요."/>
-                                <!--              <input type="text" name="memberName" id="memberName" th:field="*{memberName}" placeholder="이름을 입력해주세요."-->
-                                <!--                     th:class="${#fields.hasErrors('memberName') ? 'fieldError' : 'fieldSuccess'}">-->
+                                <p th:if="${#fields.hasErrors('introduction')}" th:errors="*{introduction}" class="errmsg visible"></p>
                             </li>
-                            <!--            <li th:if="${#fields.hasErrors('memberName')}">-->
-                            <!--              <p th:errors="*{memberName}" th:errorclass="fieldError"></p>-->
-                            <!--            </li>-->
                         </div>
-
-
                     </div>
-
 
                     <div class="Btn">
                         <button type="button" id="modifyBtn">수정</button>
@@ -121,15 +84,6 @@
     </div>
 
     <script>
-        // function showImage(input) {
-        //     var file = input.files[0];
-        //     var reader = new FileReader();
-        //     reader.onload = function(e) {
-        //         document.getElementById('profileImgUrl').src = e.target.result;
-        //     }
-        //     reader.readAsDataURL(file);
-        // }
-
         function showImage(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -142,21 +96,11 @@
         }
 
         function deleteImage() {
-            var img = document.getElementById('profileImgUrl');
-            img.removeAttribute('src');  // 이미지 경로 제거
-            img.style.display = 'none';  // 이미지 숨김
+            document.getElementById('profileImgUrl').src = '/img/default.png'; // 기본 이미지로 변경
         }
 
         document.getElementById('modifyBtn').addEventListener('click', function() {
             document.getElementById('modifyForm').submit();
-        });
-
-    </script>
-
-    <script>
-        // 수정 버튼 클릭시
-        modifyBtn.addEventListener('click', e => {
-            modifyForm.submit();
         });
     </script>
 </main>

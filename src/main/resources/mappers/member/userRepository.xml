@@ -4,7 +4,7 @@
 <mapper namespace="com.googoo.festivaldotcom.domain.member.infrastructure.repository.UserRepository">
 
     <!-- Provider와 OAuth ID로 사용자 조회 -->
-    <select id="findByUserIdByProviderAndOauthId" resultType="com.googoo.festivaldotcom.domain.member.domain.model.User">
+    <select id="selectOauthId" resultType="com.googoo.festivaldotcom.domain.member.domain.model.User">
         SELECT *
         FROM users
         WHERE provider = #{provider}
@@ -13,7 +13,7 @@
     </select>
 
     <!-- 사용자 ID로 사용자 조회 -->
-    <select id="findById" resultType="com.googoo.festivaldotcom.domain.member.domain.model.User">
+    <select id="selectId" resultType="com.googoo.festivaldotcom.domain.member.domain.model.User">
         SELECT *
         FROM users
         WHERE id = #{id}
@@ -34,7 +34,7 @@
     </insert>
 
     <!--  사용자 수정  -->
-    <update id="updateUserProfile" parameterType="com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest">
+    <update id="updateUser" parameterType="com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest">
         UPDATE users
         SET nick_name = #{nickName},
             profile_img_url = #{profileImgUrl},
@@ -44,10 +44,16 @@
     </update>
 
     <!--  사용자 삭제  -->
-    <update id="deleteUserProfile" parameterType="com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest">
+    <update id="deleteUser" parameterType="com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest">
         UPDATE users
         SET deleted = 1
         WHERE id = #{id}
     </update>
+
+    <select id="selectNickName" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM users
+        WHERE nick_name = #{nickName}
+    </select>
 
 </mapper>
