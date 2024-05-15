@@ -28,30 +28,24 @@ public class User extends BaseEntity {
 	private static final Random RANDOM = new Random();
 
 	private Long id;
-	private String nickname;
+	private String nickName;
 	private String profileImgUrl;
 	private String introduction;
 	private String provider;
 	private String oauthId;
 	private BigDecimal mannerScore;
-	private Integer tasteScore;
-	private Integer leaderCount;
-	private Integer crewCount;
-	private Integer reportedCount;
+	private Integer festivalCount;
 	private boolean enabled;
 
 	@Builder
-	protected User(String nickname, String profileImgUrl, String provider, String oauthId) {
-		this.nickname = validateNickName(nickname);
+	protected User(String nickName, String profileImgUrl, String provider, String oauthId) {
+		this.nickName = validateNickName(nickName);
 		this.profileImgUrl = validateProfileImgUrl(profileImgUrl);
 		this.provider = provider;
 		this.oauthId = oauthId;
 		this.introduction = DEFAULT_INTRODUCE;
 		this.mannerScore = new BigDecimal("36.5");
-		this.tasteScore = ZERO;
-		this.leaderCount = ZERO;
-		this.crewCount = ZERO;
-		this.reportedCount = ZERO;
+		this.festivalCount = ZERO;
 	}
 
 	private String validateNickName(String nickName) {
@@ -73,22 +67,20 @@ public class User extends BaseEntity {
 	}
 
 	public User changeProfile(UpdateUserRequest updateUserRequest) {
-		this.nickname = validateNickName(updateUserRequest.nickName());
+		this.nickName = validateNickName(updateUserRequest.nickName());
 		this.profileImgUrl = validateProfileImgUrl(updateUserRequest.profileImgUrl());
 		this.introduction = validateIntroduction(updateUserRequest.introduction());
 		return this;
 	}
 
 	public User deleteInfo() {
-		this.nickname = "탈퇴한 유저";
+		this.nickName = "탈퇴한 유저";
 		this.profileImgUrl = "None";
 		this.introduction = "탈퇴한 유저입니다.";
 		this.provider = "NONE";
 		this.oauthId = "NONE : " + (this.id * RANDOM.nextInt(1000));
 		this.mannerScore = new BigDecimal("36.5");
-		this.tasteScore = ZERO;
-		this.leaderCount = ZERO;
-		this.crewCount = ZERO;
+		this.festivalCount = ZERO;
 		return this;
 	}
 
@@ -101,14 +93,6 @@ public class User extends BaseEntity {
 		BigDecimal score = CRITERIA.multiply(new BigDecimal(mannerScore));
 		BigDecimal result = this.mannerScore.add(score);
 		this.mannerScore = checkMinusMannerScore(result);
-	}
-
-	public void addTasteScore(Integer tasteScore) {
-		this.tasteScore += tasteScore;
-	}
-
-	public void updateCrewCount() {
-		this.crewCount++;
 	}
 
 	public BigDecimal checkMinusMannerScore(BigDecimal mannerScore) {

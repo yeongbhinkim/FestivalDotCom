@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record OAuthUserInfo(
-	String nickname,
+	String nickName,
 	String profileImgUrl,
 	String provider,
 	String oauthId

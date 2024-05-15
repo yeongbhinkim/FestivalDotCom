@@ -105,17 +105,21 @@ nav,
 section {
   display: block;
 }
+
 body {
   line-height: 1;
 }
+
 ol,
 ul {
   list-style: none;
 }
+
 blockquote,
 q {
   quotes: none;
 }
+
 blockquote:before,
 blockquote:after,
 q:before,
@@ -123,10 +127,7 @@ q:after {
   content: '';
   content: none;
 }
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
+
 a {
   text-decoration: none;
   color: #000000;
@@ -149,36 +150,46 @@ input:focus {
   outline: 0;
 }
 
+.member_email {
+  display: inline-flex;
+}
+
+.member_tel {
+  display: inline-flex;
+}
+
 .container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
-  margin-top: -100px;
-}
-
-.container-content{
-  outline: 3px ridge #00d0ff;
-  border-radius: 2rem;
-}
-
-.container-title {
-  margin: 30px;
-}
-
-.container-title > img {
-  width: 240px;
-  height: 40px;
-  cursor: pointer;
 }
 
 .container-body {
   text-align: center;
-  margin-bottom: 30px;
+}
+
+.inputInfo {
+  width: 100%;
+}
+
+.inputInfo li {
+  width: 100%;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 form {
+  position: relative;
+  top: 135px;
+  left: 235px;
   border: 1px solid transparent;
   border-radius: 10px;
   background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
@@ -186,12 +197,16 @@ form {
   background-clip: padding-box, border-box;
   padding: 10px;
   box-shadow: 0 15px 10px -7px #eee;
+  width: 700px;
 }
 
-#memberEmail,
-#memberPasswd {
+li {
+  list-style: none;
+}
+
+input {
   padding: 10px 30px;
-  width: 360px;
+  width: 250px;
   border: 1px solid #ccc;
   border-radius: 20px;
   margin: 20px 20px 0;
@@ -199,18 +214,17 @@ form {
   font-size: 16px;
 }
 
-.header-btn {
-  border: 1px solid transparent;
-  border-radius: 30px;
+button {
   background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
   background-origin: border-box;
   background-clip: padding-box, border-box;
-  padding: 10px;
-  width: 422px;
-  margin: 40px 0;
-  font-size: 16px;
+  /*width: 125px;*/
   font-family: 'Jeju Gothic', sans-serif;
   cursor: pointer;
+  padding: 10px 30px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  font-size: 16px;
 }
 
 .form-wrap > li:last-child > a {
@@ -233,4 +247,35 @@ p.fieldError {
   color: red;
   font-size: 0.8em;
   font-weight: bold;
+}
+
+.Btn {
+  display: flex;
+  justify-content: center;
+  margin: 40px;
+}
+
+#modifyBtn {
+  margin: 0 15px;
+}
+
+.member_gender label {
+  width: 25%;
+}
+
+.member_gender li {
+  display: flex;
+  padding: 10px 30px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  margin: 20px 20px 0;
+  letter-spacing: 1 px;
+  font-size: 16px;
+}
+
+#memberGender1,
+#memberGender2 {
+  margin: 0;
+  width: 25%;
 }

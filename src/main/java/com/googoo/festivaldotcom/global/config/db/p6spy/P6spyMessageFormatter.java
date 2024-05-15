@@ -56,9 +56,9 @@ public class P6spyMessageFormatter implements MessageFormattingStrategy {
 	private String[] stackTrace() {
 		return Arrays.stream(new Throwable().getStackTrace())
 				.map(StackTraceElement::toString)
-				.filter(string -> string.startsWith("com.prgrms.mukvengers")
-						&& !string.startsWith("com.prgrms.mukvengers.global.config.p6spy")
-						&& !string.startsWith("com.prgrms.mukvengers.MukvengersApplication.main"))
+				.filter(string -> string.startsWith("com.googoo.festivaldotcom")
+						&& !string.startsWith("com.googoo.festivaldotcom.global.config.db.p6spy")
+						&& !string.startsWith("com.googoo.festivaldotcom.FestivalDotComApplication.main"))
 				.toArray(String[]::new);
 	}
 

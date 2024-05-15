@@ -29,7 +29,7 @@ public enum ErrorCode {
     CREW_ILLEGAL_STATUS(HttpStatus.BAD_REQUEST, "CR002", "올바르지 않는 모임의 상태입니다."),
 
     // CrewMember
-    LEADER_NOT_FOUND(HttpStatus.NOT_FOUND, "CM001", "해당 밥모임에 존재하지 않는 리더입니다."),
+//    LEADER_NOT_FOUND(HttpStatus.NOT_FOUND, "CM001", "해당 밥모임에 존재하지 않는 리더입니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "CM002", "해당 밥모임에 존재하지 않는 밥모임원입니다."),
     CREW_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "CM003", "해당 밥모임에 존재하지 않는 유저입니다.."),
 
