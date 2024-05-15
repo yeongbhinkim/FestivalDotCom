@@ -48,7 +48,9 @@ public class SecurityConfig {
 						.requestMatchers("/test0").permitAll()
 								.requestMatchers("fstv").permitAll()
 								.requestMatchers("pm10").permitAll()
-						.anyRequest().authenticated()
+								.requestMatchers("/api/v1/chat-gpt/**").permitAll()
+								.requestMatchers("/api/**").permitAll()
+								.anyRequest().authenticated()
 				)
 
 
