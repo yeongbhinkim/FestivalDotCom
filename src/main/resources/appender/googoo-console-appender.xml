@@ -18,4 +18,5 @@
             <maxHistory>30</maxHistory> <!-- 최대 30일치 로그 파일 보관 -->
         </rollingPolicy>
     </appender>
+
 </included>

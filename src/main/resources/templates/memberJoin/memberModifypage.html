@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<!--copyParam(title,styles,scripts,style,script,upm,header,nav,main,footer)   &lt;!&ndash;1) 순서를 지켜서 넣거나, 2) 파라미터 이름과 값을 일치시키면 됨&ndash;&gt;-->
+
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{memberJoin/memberModify::memberModify(
+        ~{::title},       <!--/* title */-->
+        ~{},              <!--/* styles */-->
+        ~{::script},      <!--/* scripts */-->
+        ~{},              <!--/* style */-->
+        ~{},              <!--/* script */-->
+        ~{::.upm-inner},  <!--/* upm */-->
+        ~{::header},      <!--/* header */-->
+        ~{::nav},         <!--/* nav */-->
+        ~{::main},        <!--/* main */-->
+        ~{::footer}       <!--/* footer default*/-->
+      )}">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원 수정</title>
+
+</head>
+<body>
+  <div class="global-wrap">
+    <div class="upm">
+      <div class="inner upm-inner">
+        <th:block th:replace="~{fragment/uppermost::myPage}"></th:block>
+      </div>
+    </div>
+    <div class="hdr">
+      <div class="inner hdr-inner">
+        <header></header>
+      </div>
+    </div>
+    <div class="gnb">
+      <div class="inner gnb-inner">
+        <nav th:replace="~{fragment/mypageSide::mypageSide}"></nav>
+      </div>
+    </div>
+    <div class="main">
+      <div class="inner main-inner">
+        <main th:replace="~{memberJoin/memberModifyBox::memberModifyBox}"></main>
+      </div>
+    </div>
+      <div class="foot">
+        <div class="inner foot-inner">
+          <footer></footer>
+        </div>
+      </div>
+  </div>
+</body>
+</html>

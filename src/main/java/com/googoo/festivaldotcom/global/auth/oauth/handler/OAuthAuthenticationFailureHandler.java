@@ -17,32 +17,32 @@ import java.net.URLDecoder;
 
 import static com.googoo.festivaldotcom.global.auth.oauth.repository.HttpCookieOAuthAuthorizationRequestRepository.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class OAuthAuthenticationFailureHandler
-	extends SimpleUrlAuthenticationFailureHandler {
+        extends SimpleUrlAuthenticationFailureHandler {
 
-	private static final String DEFAULT_TARGET_URL = "/";
-	private final HttpCookieOAuthAuthorizationRequestRepository httpCookieOAuthAuthorizationRequestRepository;
+    private static final String DEFAULT_TARGET_URL = "/";
+    private final HttpCookieOAuthAuthorizationRequestRepository httpCookieOAuthAuthorizationRequestRepository;
 
-	@Override
-	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-		AuthenticationException exception) throws IOException {
-//		log.info("3 request={} response={} exception={}", request, response,exception);
-		String redirectUrl = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-			.map(Cookie::getValue)
-			.map(cookie -> URLDecoder.decode(cookie, UTF_8))
-			.orElse(DEFAULT_TARGET_URL);
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+                                        AuthenticationException exception) throws IOException {
+        String redirectUrl = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+                .map(Cookie::getValue)
+                .map(cookie -> URLDecoder.decode(cookie, UTF_8))
+                .orElse(DEFAULT_TARGET_URL);
 
-		String targetUrl = UriComponentsBuilder.fromUriString(redirectUrl)
-			.queryParam("error", exception.getMessage()) // TODO: exception.getMessage() -> error code
-			.build().toUriString();
+        String targetUrl = UriComponentsBuilder.fromUriString(redirectUrl)
+                .queryParam("error", exception.getMessage()) // TODO: exception.getMessage() -> error code
+                .build().toUriString();
 
-		httpCookieOAuthAuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
+        httpCookieOAuthAuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
 
-		getRedirectStrategy().sendRedirect(request, response, targetUrl);
-	}
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+    }
 }
 
 

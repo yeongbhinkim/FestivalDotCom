@@ -17,8 +17,15 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -26,86 +33,149 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class DefaultUserService implements UserService {
 
-	public static final String DEFAULT_ROLE = "ROLE_USER";
+    public static final String DEFAULT_ROLE = "ROLE_USER";
 
-	private final UserMapper userMapper;
-	private final UserRepository userRepository;
-	private final TokenService tokenService;
+    private final UserMapper userMapper;
+    private final UserRepository userRepository;
+    private final TokenService tokenService;
 
-	/* [회원 인증 정보 조회 및 저장] 등록된 유저 정보 찾아서 제공하고 없으면 등록합니다. */
-	@Override
-	@Transactional
-	@Cacheable(value = "User", key = "#oauthUserInfo.oauthId")
-	public AuthUserInfo getOrRegisterUser(OAuthUserInfo oauthUserInfo) {
-		Optional<User> optionalUser = userRepository.findByUserIdByProviderAndOauthId(oauthUserInfo.provider(), oauthUserInfo.oauthId());
+    /* [회원 인증 정보 조회 및 저장] 등록된 유저 정보 찾아서 제공하고 없으면 등록합니다. */
+    @Override
+    @Transactional
+    @Cacheable(value = "User", key = "#oauthUserInfo.oauthId")
+    public AuthUserInfo getOauthId(OAuthUserInfo oauthUserInfo) {
+        Optional<User> optionalUser = userRepository.selectOauthId(oauthUserInfo.provider(), oauthUserInfo.oauthId());
 
-		User user = optionalUser.orElseGet(() -> {
-			// 새로운 User 객체를 생성하고 데이터베이스에 저장
-			User newUser = userMapper.toUser(oauthUserInfo);
-			userRepository.insertUser(newUser);
-			return userRepository.findByUserIdByProviderAndOauthId(oauthUserInfo.provider(), oauthUserInfo.oauthId())
-					.orElseThrow(() -> new IllegalStateException("User could not be created"));
-		});
+        User user = optionalUser.orElseGet(() -> {
+            // 새로운 User 객체를 생성하고 데이터베이스에 저장
+            User newUser = userMapper.toUser(oauthUserInfo);
+            userRepository.insertUser(newUser);
+            return userRepository.selectOauthId(oauthUserInfo.provider(), oauthUserInfo.oauthId())
+                    .orElseThrow(() -> new IllegalStateException("User could not be created"));
+        });
 
 //		if(optionalUser.isPresent()) {
 //			// 기존 사용자 정보를 갱신
 //			userRepository.updateUser(user);
 //		}
 
-		log.info("Mapped User: {}", user);
-		log.info("DEFAULT_ROLE: {}", DEFAULT_ROLE);
+        log.info("Mapped User: {}", user);
+        log.info("DEFAULT_ROLE: {}", DEFAULT_ROLE);
 
-		return new AuthUserInfo(user.getId(), DEFAULT_ROLE, user.getNickname());
-	}
+        return new AuthUserInfo(user.getId(), DEFAULT_ROLE, user.getNickName());
+    }
 
 
-	/* [회원 조회] 사용자 ID를 통해 등록된 유저 정보 찾아서 제공하고 없으면 예외가 발생합니다. */
-	@Override
-	@Cacheable(value = "User", key = "#userId")
-	public UserProfileResponse getUserProfile(Long userId) {
-		return userRepository.findById(userId)
-			.map(userMapper::toSingleUserResponse)
-			.orElseThrow(() -> new UserNotFoundException(userId));
-	}
+    /* [회원 조회] 사용자 ID를 통해 등록된 유저 정보 찾아서 제공하고 없으면 예외가 발생합니다. */
+    @Override
+    @Cacheable(value = "User", key = "#userId")
+    public UserProfileResponse getUser(Long userId) {
+        return userRepository.selectId(userId)
+                .map(userMapper::toSingleUserResponse)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+    }
 
-	/* [회원 프로필 수정] UpdateUserRequest DTO를 사용해서 사용자의 프로필(닉네임, 프로필 이미지, 자기소개)를 한번에 수정합니다. */
+    /* [회원 프로필 수정] UpdateUserRequest DTO를 사용해서 사용자의 프로필(닉네임, 프로필 이미지, 자기소개)를 한번에 수정합니다. */
 
-	@Override
-	@Transactional
-	@CachePut(value = "User", key = "#userId")
-	public UserProfileResponse updateUserProfile(UpdateUserRequest updateUserRequest, Long userId) {
-		 userRepository.updateUserProfile(updateUserRequest, userId);
+    @Override
+    @Transactional
+    @CachePut(value = "User", key = "#userId")
+    public UserProfileResponse setUser(UpdateUserRequest updateUserRequest, Long userId) throws IOException {
 
-		return userRepository.findById(userId)
-				.map(user -> userMapper.toSingleUserResponse(user))  // User를 UserProfileResponse로 변환
-				.orElseThrow(() -> new UserNotFoundException(userId));
-	}
+        MultipartFile file = updateUserRequest.file();
+        if (file != null && !file.isEmpty()) {
+            String uploadDir = "C:/profileImgUrl/" + userId;
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            String originalFileName = file.getOriginalFilename();
+            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            if (!fileExtension.matches("\\.(jpg|jpeg|png)")) {
+                throw new IllegalStateException("Invalid file type.");
+            }
+
+            String fileName = UUID.randomUUID().toString() + fileExtension;
+            String filePath = Paths.get(uploadDir, fileName).toString();
+            File dest = new File(filePath);
+            file.transferTo(dest);
+
+            String fileUrl = "/profileImgUrl/" + userId + "/" + fileName;
+            updateUserRequest = new UpdateUserRequest(
+                    updateUserRequest.nickName(),
+                    fileUrl,
+                    updateUserRequest.introduction(),
+                    null,
+                    updateUserRequest.mannerScore()
+            );
+        } else {
+			// 파일이 없거나 비어있는 경우 기본 이미지 경로를 설정
+			String defaultImgUrl = "/img/default.png";
+			updateUserRequest = new UpdateUserRequest(
+					updateUserRequest.nickName(),
+					defaultImgUrl,
+					updateUserRequest.introduction(),
+					null,
+                    updateUserRequest.mannerScore()
+			);
+        }
+
+        userRepository.updateUser(updateUserRequest.nickName(), updateUserRequest.profileImgUrl(), updateUserRequest.introduction(), userId);
+
+        return userRepository.selectId(userId)
+                .map(user -> userMapper.toSingleUserResponse(user))
+                .orElseThrow(() -> new UserNotFoundException(userId));
+    }
+
 
 //	@Override
 //	@Transactional
 //	@CachePut(value = "User", key = "#userId")
-//	public UserProfileResponse updateUserProfile(UpdateUserRequest updateUserRequest, Long userId) {
-//		return userRepository.findById(userId)
+//	public UserProfileResponse updateUser(UpdateUserRequest updateUserRequest, Long userId) {
+//		 userRepository.updateUser(updateUserRequest.nickName(), updateUserRequest.profileImgUrl(), updateUserRequest.introduction(), userId);
+////		 log.info("Updated user profile: {}", updateUserRequest);
+////		 userRepository.updateUser(updateUserRequest, userId);
+//
+//		return userRepository.selectId(userId)
+//				.map(user -> userMapper.toSingleUserResponse(user))  // User를 UserProfileResponse로 변환
+//				.orElseThrow(() -> new UserNotFoundException(userId));
+//	}
+
+//	@Override
+//	@Transactional
+//	@CachePut(value = "User", key = "#userId")
+//	public UserProfileResponse updateUser(UpdateUserRequest updateUserRequest, Long userId) {
+//		return userRepository.selectId(userId)
 //			.map(user -> user.changeProfile(updateUserRequest))
 //			.map(userMapper::toSingleUserResponse)
 //			.orElseThrow(() -> new UserNotFoundException(userId));
 //	}
 
-	/* [회원 탈퇴] 계정을 삭제합니다. soft delete가 적용됩니다.*/
-	@Override
-	@Transactional
-	@CacheEvict(value = "User", key = "#userId")
-	public void deleteUser(Long userId, String refreshToken) {
+    /* [회원 탈퇴] 계정을 삭제합니다. soft delete가 적용됩니다.*/
+    @Override
+    @Transactional
+    @CacheEvict(value = "User", key = "#userId")
+    public void removeUser(Long userId, String refreshToken) {
 
-		userRepository.findById(userId)
-			.ifPresentOrElse(user -> {
-				user.deleteInfo();
-				tokenService.deleteRefreshToken(refreshToken);
-			}, () -> {
-				throw new UserNotFoundException(userId);
-			});
+        userRepository.selectId(userId)
+                .ifPresentOrElse(user -> {
+                    user.deleteInfo();
+                    tokenService.deleteRefreshToken(refreshToken);
+                }, () -> {
+                    throw new UserNotFoundException(userId);
+                });
 
-		//탈퇴 로직 추가
-		userRepository.deleteUserProfile(userId);
-	}
+        //탈퇴 로직 추가
+        userRepository.deleteUser(userId);
+    }
+
+    /**
+     * 닉네임 중복체크
+     * @param nickName
+     * @return
+     */
+    public boolean getNickName(String nickName) {
+        return userRepository.selectNickName(nickName);
+    }
 }

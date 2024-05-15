@@ -1,5 +1,7 @@
 package com.googoo.festivaldotcom;
 
+import io.sentry.Sentry;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -7,6 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 @SpringBootApplication
 public class FestivalDotComApplication {
@@ -20,13 +24,29 @@ public class FestivalDotComApplication {
         System.setProperty("LOG_FILE", "C:/Users/yb/Desktop/logs/" + logFileName);
     }
 
-
-    private static final Logger logger = LoggerFactory.getLogger(FestivalDotComApplication.class);
-
     public static void main(String[] args) {
-
-        logger.info("Starting FestivalDotComApplication...");
         SpringApplication.run(FestivalDotComApplication.class, args);
+
+
+        //sentry 에러 체크용
+//        Sentry.init(options -> {
+//            options.setDsn("<your-public-dsn>");
+//            // 세부적인 설정들을 추가할 수 있어
+//        });
+//
+//        try {
+//            throw new Exception("This is a test!");
+//        } catch (Exception e) {
+//            Sentry.captureException(e);
+//        }
+
+
+    }
+
+    @PostConstruct
+    void started() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+        Locale.setDefault(Locale.KOREA);
     }
 
 }

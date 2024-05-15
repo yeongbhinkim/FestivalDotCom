@@ -1,24 +1,44 @@
 package com.googoo.festivaldotcom.domain.login.presentation;
 
+import com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest;
+import com.googoo.festivaldotcom.domain.member.application.dto.response.UserProfileResponse;
+import com.googoo.festivaldotcom.domain.member.domain.service.UserService;
+import com.googoo.festivaldotcom.domain.member.infrastructure.repository.UserRepository;
+import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.log.annotation.Trace;
+import com.googoo.festivaldotcom.global.utils.DetermineUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class LoginController {
+
+//    private final UserService userService;
 
     @Trace
     @RequestMapping("/test0")
-    public String test0(HttpServletRequest request) {
+    public String test0(HttpServletRequest request
+    , @AuthenticationPrincipal JwtAuthentication user
+    , Model model) {
         log.info("info={}", "test0() 호출 시작됨========================");
 
+
+//        log.info("user.id() = " + user.id());
+        //        UpdateUserRequest initialData = userService.getUserProfile(user.id());
+//        UserProfileResponse initialData = userService.getUserProfile(user.id());
+//        UpdateUserRequest initialData = new UpdateUserRequest("", "", "","", "");
+        model.addAttribute("updateUserRequest", "");
         log.info("info={}", "test0() 호출 종료됨========================");
 
-        String view = determineView(request, "login/beforeLogin", "login/afterLogin");
+        String view = DetermineUtil.determineView(request, "login/beforeLogin", "login/afterLoginUpdate");
         return view;
     }
 
@@ -27,7 +47,7 @@ public class LoginController {
     public String home(HttpServletRequest request){
         log.info("info={}","home()호출됨");
 
-        String view = determineView(request, "login/beforeLogin", "login/afterLogin");
+        String view = DetermineUtil.determineView(request, "login/beforeLogin", "login/afterLogin");
         return view;
     }
 
@@ -39,20 +59,7 @@ public class LoginController {
     }
 
 
-    public String determineView(HttpServletRequest request, String beforeLoginView, String afterLoginView) {
-        Cookie[] cookies = request.getCookies();
-        String view = beforeLoginView;  // 기본적으로 로그인 전 화면으로 설정
 
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("refreshToken".equals(cookie.getName())) {
-                    view = afterLoginView;  // refreshToken 쿠키가 있으면 로그인 후 화면으로 설정
-                    break;
-                }
-            }
-        }
-        return view;
-    }
 
 
 }

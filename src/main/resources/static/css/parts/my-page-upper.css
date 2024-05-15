@@ -1,0 +1,123 @@
+.header_top_wrap {
+  position: fixed;
+  width: 100%;
+  height: 120px;
+  background-color: #fff;
+  z-index: 1000;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Jeju Gothic', sans-serif;
+}
+.header_logo_home_evt {
+  width: 220px;
+  height: 37px;
+  text-align: center;
+  margin-left: 40px;
+}
+.logo {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-image: url('/img/logo/logo-color.png');
+  display: block;
+  overflow: hidden;
+  text-indent: -20000px;
+}
+.header_util_wrap {
+  margin-right: 40px;
+  display: flex;
+}
+.header_util_evt {
+  width: 100px;
+  height: 37px;
+  margin: 0 10px;
+  text-align: center;
+  border: 1px solid transparent;
+  border-radius: 30px;
+  background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+.header_util_evt > a {
+  line-height: 38px;
+}
+.util-wrap {
+  margin-bottom: 50px;
+}
+.search-box-wrap {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.detail-box {
+  display: inline-block;
+  height: 100%;
+}
+.detail-icon {
+  width: 19px;
+  height: 16px;
+  background-size: cover;
+  background-image: url('/img/icon/icon-triangle_inverted.png');
+  display: block;
+  overflow: hidden;
+  text-indent: -20000px;
+}
+.search-box {
+  display: flex;
+  justify-content: space-between;
+}
+#searchBtn {
+  width: 24px;
+  height: 26px;
+  background-size: cover;
+  background-image: url('/img/icon/icon-search.png');
+  display: block;
+  overflow: hidden;
+  text-indent: -20000px;
+  color: white;
+  background-color: white;
+  border: none;
+}
+#hashtags {
+  display: inline-flex;
+}
+.input_tag {
+  width: 100%;
+  min-width: 500px;
+  max-width: 650px;
+  flex: 1 1 0%;
+  border-radius: 54px;
+  padding: 1rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid transparent;
+  background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+#keyword {
+  width: 530px;
+  height: 30px;
+  border: none;
+}
+#keyword:focus {
+  outline: none;
+}
+.input_tag__tags {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.hashtagbox {
+  width: 100%;
+}
+ul {
+  padding: 0;
+}
+li {
+  list-style: none;
+}

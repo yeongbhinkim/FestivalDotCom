@@ -4,20 +4,28 @@ import com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUse
 import com.googoo.festivaldotcom.domain.member.application.dto.response.UserProfileResponse;
 import com.googoo.festivaldotcom.domain.member.domain.service.UserService;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
-import com.googoo.festivaldotcom.global.base.dto.ApiResponse;
+import com.googoo.festivaldotcom.global.log.annotation.Trace;
+import com.googoo.festivaldotcom.global.utils.DetermineUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import java.io.IOException;
 
-@RestController
-// 이 클래스를 REST API 컨트롤러로 선언합니다. Spring은 이 클래스의 메소드를 HTTP 요청 처리기로 매핑합니다.
+
+@Slf4j
+@Controller
 @RequestMapping("/api/v1/user")
 // 이 컨트롤러의 모든 요청 URL이 '/api/v1/user'로 시작하도록 설정합니다.
 @RequiredArgsConstructor
@@ -25,31 +33,83 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class UserController {
 
-	private final UserService userService;
-	// UserService를 의존성 주입을 통해 컨트롤러에 연결합니다. UserService 클래스는 사용자 관련 비즈니스 로직을 처리합니다.
+    private final UserService userService;
 
-	@GetMapping(value = "/{userId}", produces = APPLICATION_JSON_VALUE)
-	// HTTP GET 요청을 '/api/v1/user/{userId}' URL로 매핑하고, 응답은 JSON 형식으로 반환합니다.
-	public ResponseEntity<ApiResponse<UserProfileResponse>> getUserProfile(@PathVariable Long userId) {
-		// 특정 사용자 ID를 받아 그 사용자의 프로필 정보를 조회합니다.
-		UserProfileResponse response = userService.getUserProfile(userId);
-		// UserService를 통해 사용자 프로필 정보를 가져옵니다.
+    /**
+     * 회원 수정 화면
+     *
+     * @param request
+     * @param user
+     * @param model
+     * @return
+     */
+    @Trace
+    @RequestMapping("/myPage")
+    public String myPage(HttpServletRequest request
+            , @AuthenticationPrincipal JwtAuthentication user
+            , Model model) {
+        UserProfileResponse modifyForm = userService.getUser(user.id());
 
-		return ResponseEntity.ok().body(new ApiResponse<>(response));
-		// ApiResponse 객체를 통해 UserProfileResponse 정보를 JSON 형태로 클라이언트에게 반환합니다.
-	}
+        model.addAttribute("modifyForm", modifyForm);
 
-	//MyProfileEditPagec 참고
-	@GetMapping(value = "/me", produces = APPLICATION_JSON_VALUE)
-	// 현재 인증된 사용자의 프로필 정보를 반환하는 엔드포인트입니다.
-	public ResponseEntity<ApiResponse<UserProfileResponse>> getMyProfile(@AuthenticationPrincipal JwtAuthentication user) {
-		// 인증된 사용자의 정보를 JwtAuthentication 객체를 통해 가져옵니다.
-		UserProfileResponse response = userService.getUserProfile(user.id());
-		// 인증된 사용자의 ID를 사용하여 프로필 정보를 조회합니다.
+        String view = DetermineUtil.determineView(request, "login/beforeLogin", "memberJoin/memberModifypage");
+        return view;
+    }
 
-		return ResponseEntity.ok().body(new ApiResponse<>(response));
-		// 조회된 사용자 정보를 ApiResponse 객체를 통해 JSON 형태로 반환합니다.
-	}
+    /**
+     * 회원 정보 수정
+     *
+     * @param modifyForm
+     * @param user
+     * @return
+     * @throws IOException
+     */
+    @Trace
+    @PostMapping("/modify")
+    public String modify(@Valid @ModelAttribute UpdateUserRequest modifyForm,
+                         BindingResult bindingResult,
+                         @AuthenticationPrincipal JwtAuthentication user,
+                         Model model) throws IOException {
+        // 검증 결과 처리
+        if (bindingResult.hasErrors()) {
+            // 검증 오류가 있으면 폼을 다시 보여줌
+            model.addAttribute("modifyForm", modifyForm);
+            model.addAttribute("org.springframework.validation.BindingResult.modifyForm", bindingResult);
+            return "memberJoin/memberModifypage";
+        }
+
+        // 검증 로직 추가 (예: 닉네임 중복 체크)
+        if (userService.getNickName(modifyForm.nickName())) {
+            bindingResult.rejectValue("nickName", "duplicate", "이미 사용 중인 닉네임입니다.");
+            model.addAttribute("modifyForm", modifyForm);
+            model.addAttribute("org.springframework.validation.BindingResult.modifyForm", bindingResult);
+            return "memberJoin/memberModifypage";
+        }
+
+        userService.setUser(modifyForm, user.id());
+        return "redirect:/api/v1/user/myPage";
+    }
+
+
+
+
+    /**
+     * 프로필사진 첨부파일
+     * 공통으로 뺴야 됨.
+     *
+     */
+    @Configuration
+    public class WebConfig implements WebMvcConfigurer {
+        @Override
+        public void addResourceHandlers(ResourceHandlerRegistry registry) {
+            registry.addResourceHandler("/profileImgUrl/**")
+                    .addResourceLocations("file:///C:/profileImgUrl/");
+        }
+    }
+
+
+}
+
 
 //	@PutMapping(value = "/me", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 //	// 현재 인증된 사용자의 프로필 정보를 업데이트하는 HTTP PUT 요청을 처리합니다.
@@ -65,38 +125,38 @@ public class UserController {
 //		// 업데이트된 프로필 정보를 ApiResponse 객체를 통해 JSON 형태로 반환합니다.
 //	}
 
-	@PostMapping("/me")
-	public String updateProfile(@Valid @ModelAttribute UpdateUserRequest request, BindingResult result, RedirectAttributes redirectAttributes
-	,@AuthenticationPrincipal JwtAuthentication user) {
-		// 폼 데이터 유효성 검사
-		if (result.hasErrors()) {
-			// 유효성 검사 실패 시, 다시 프로필 수정 페이지로 이동
-			return "userUpdate";
-		}
+//	@PostMapping("/me")
+//	public String updateProfile(@Valid @ModelAttribute UpdateUserRequest request, BindingResult result, RedirectAttributes redirectAttributes
+//	,@AuthenticationPrincipal JwtAuthentication user) {
+//		// 폼 데이터 유효성 검사
+//		if (result.hasErrors()) {
+//			// 유효성 검사 실패 시, 다시 프로필 수정 페이지로 이동
+//			return "userUpdate";
+//		}
+//
+//		try {
+//			// UserService를 통해 사용자 프로필 업데이트 시도
+//			UserProfileResponse response = userService.updateUserProfile(request, user.id());
+//			// 성공 메시지 설정
+//			redirectAttributes.addFlashAttribute("successMessage", "프로필이 성공적으로 업데이트되었습니다.");
+//		} catch (Exception e) {
+//			// 업데이트 실패 시 에러 메시지 설정
+//			redirectAttributes.addFlashAttribute("errorMessage", "프로필 업데이트에 실패했습니다.");
+//		}
+//		// 리디렉션을 통해 페이지를 다시 로드함
+//		return "redirect:/userUpdate";
+//	}
 
-		try {
-			// UserService를 통해 사용자 프로필 업데이트 시도
-			UserProfileResponse response = userService.updateUserProfile(request, user.id());
-			// 성공 메시지 설정
-			redirectAttributes.addFlashAttribute("successMessage", "프로필이 성공적으로 업데이트되었습니다.");
-		} catch (Exception e) {
-			// 업데이트 실패 시 에러 메시지 설정
-			redirectAttributes.addFlashAttribute("errorMessage", "프로필 업데이트에 실패했습니다.");
-		}
-		// 리디렉션을 통해 페이지를 다시 로드함
-		return "redirect:/userUpdate";
-	}
+//	@DeleteMapping("/me")
+//	@ResponseStatus(NO_CONTENT)
+//	// 현재 인증된 사용자의 프로필을 삭제하는 HTTP DELETE 요청을 처리합니다.
+//	public void deleteMyProfile(
+//			@AuthenticationPrincipal JwtAuthentication user,
+//			@CookieValue("refreshToken") String refreshToken
+//	) {
+//		// JwtAuthentication 객체를 통해 현재 인증된 사용자의 ID와, 쿠키에서 가져온 refreshToken을 사용하여 사용자를 삭제합니다.
+//		userService.deleteUser(user.id(), refreshToken);
+//		// 사용자 삭제 요청을 처리합니다.
+//	}
 
-	@DeleteMapping("/me")
-	@ResponseStatus(NO_CONTENT)
-	// 현재 인증된 사용자의 프로필을 삭제하는 HTTP DELETE 요청을 처리합니다.
-	public void deleteMyProfile(
-			@AuthenticationPrincipal JwtAuthentication user,
-			@CookieValue("refreshToken") String refreshToken
-	) {
-		// JwtAuthentication 객체를 통해 현재 인증된 사용자의 ID와, 쿠키에서 가져온 refreshToken을 사용하여 사용자를 삭제합니다.
-		userService.deleteUser(user.id(), refreshToken);
-		// 사용자 삭제 요청을 처리합니다.
-	}
-}
 
