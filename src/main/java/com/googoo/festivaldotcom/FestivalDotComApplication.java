@@ -1,5 +1,6 @@
 package com.googoo.festivaldotcom;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.sentry.Sentry;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -16,30 +17,20 @@ import java.util.TimeZone;
 public class FestivalDotComApplication {
 
     static {
+        // .env 파일에서 환경 변수 로드
+        Dotenv dotenv = Dotenv.load();
+        String logFilePath = dotenv.get("LOG_FILE_PATH");
+
         // 현재 날짜와 시간을 포함한 로그 파일 경로 설정
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         String logFileName = sdf.format(new Date(System.currentTimeMillis())) + ".log";
 
-        // 리눅스 경로 변경 해야됨
-        System.setProperty("LOG_FILE", "C:/Users/yb/Desktop/logs/" + logFileName);
+        // 로그 파일 경로 설정
+        System.setProperty("LOG_FILE", logFilePath + logFileName);
     }
 
     public static void main(String[] args) {
         SpringApplication.run(FestivalDotComApplication.class, args);
-
-
-        //sentry 에러 체크용
-//        Sentry.init(options -> {
-//            options.setDsn("<your-public-dsn>");
-//            // 세부적인 설정들을 추가할 수 있어
-//        });
-//
-//        try {
-//            throw new Exception("This is a test!");
-//        } catch (Exception e) {
-//            Sentry.captureException(e);
-//        }
-
 
     }
 
@@ -48,5 +39,4 @@ public class FestivalDotComApplication {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
         Locale.setDefault(Locale.KOREA);
     }
-
 }

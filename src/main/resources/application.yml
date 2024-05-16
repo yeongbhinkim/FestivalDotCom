@@ -1,0 +1,96 @@
+server:
+  shutdown: graceful # 서버가 종료될 때 현재 진행 중인 작업을 마치고 종료하도록 설정합니다.
+  port: 8080 # 애플리케이션의 HTTP 포트를 8080으로 설정합니다.
+  error:
+    include-binding-errors: never # 에러 발생시 바인딩 에러 정보는 로그에 포함되지 않습니다.
+    include-exception: false # 예외의 전체 스택 추적은 로그에 포함되지 않습니다.
+    include-message: never # 예외 메시지는 로그에 포함되지 않습니다.
+    include-stacktrace: never # 예외 스택 트레이스는 로그에 포함되지 않습니다.
+
+# profiles 설정
+spring:
+  # 가상 스레드 설정 (비활성화 상태)
+  # threads:
+  #   virtual:
+  #     enabled: true
+  config:
+    import: optional:file:.env[.properties]
+
+
+  # Spring MVC 경로 매칭 전략 설정
+  mvc:
+    static:
+      static-path-pattern: /resources/** # '/resources/**' URL 패턴을 통해 접근하는 정적 자원들의 경로를 설정합니다.
+
+  # 애플리케이션 이름 설정
+  application:
+    name: festivaldotcom # 애플리케이션의 이름을 'mat'으로 설정합니다.
+
+  # 활성 프로파일 설정
+  profiles:
+    active:
+      - dev # 개발 환경용 프로파일 'dev'를 활성화합니다.
+      - prod # 운영 환경용 프로파일 'prod'를 활성화합니다.
+    include:
+      - db # 데이터베이스 관련 설정을 포함합니다.
+      - security # 보안 관련 설정을 포함합니다.
+
+      # 클라우드 설정 포함 여부 (비활성화 상태)
+      # - cloud
+
+
+  # ResourceHandler 설정 (Static Resource Mapping)
+  web:
+    resources:
+      add-mappings: true
+      static-locations:
+        - file:///C:/profileImgUrl/
+        - classpath:/static/
+
+  # MessageSource 설정
+  messages:
+    encoding: UTF-8 # 메시지 소스 파일의 인코딩을 'UTF-8'로 설정합니다.
+    basename: messages/exceptions/exception, messages/notification/messages # 메시지 소스 파일의 기본 이름을 설정합니다.
+
+  servlet:
+    multipart:
+      max-request-size: 10MB # 한 번의 요청에 대한 최대 파일 크기를 10MB로 설정합니다.
+      max-file-size: 10MB # 한 번의 요청에서 전송할 수 있는 파일의 최대 크기를 10MB로 설정합니다.
+
+  slack:
+    webhook: ${SLACK_WEBHOOK}
+
+  task:
+    scheduling:
+      pool:
+        size: 2 # 스프링 스케줄러가 사용할 스레드 풀의 크기를 2로 설정합니다.
+
+# front server
+#front:
+#  server: "http://localhost:3000"
+#  server: "https://test.vercel.app"
+
+# Actuator 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'  # 모든 Actuator 엔드포인트를 외부에 노출합니다.
+
+# sentry 설정
+sentry:
+  dsn: ${SENTRY_DSN}
+  traces-sample-rate: 1.0 # 트레이스 샘플링 비율, 1.0은 100%의 요청을 추적한다는 의미
+
+
+# MyBatis
+mybatis:
+  mapper-locations: classpath:/mappers/**/*.xml # MyBatis 매퍼 파일의 위치를 설정합니다.
+  type-aliases-package: com.googoo.festivaldotcom.domain # MyBatis에서 사용할 도메인 클래스의 패키지를 설정합니다.
+  configuration:
+    map-underscore-to-camel-case: true # 데이터베이스의 언더스코어 네이밍을 자바의 카멜케이스 네이밍으로 매핑합니다.
+
+
+# chatGPT API 연동
+chatgpt:
+  api-key: ${CHATGPT_API_KEY}

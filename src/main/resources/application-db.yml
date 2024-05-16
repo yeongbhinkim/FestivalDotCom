@@ -1,0 +1,46 @@
+# default
+spring:
+#  datasource:
+  datasource:
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mysql://localhost:3306/mat?useSSL=false&serverTimezone=UTC
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  # 커넥션 풀 설정
+  hikari:
+    minimum-idle: 1
+    maximum-pool-size: 20
+    pool-name: MYSQL_DB
+  config:
+    import: optional:file:.env[.properties]
+
+
+  # JPA 설정
+#  jpa:
+#    database: mysql
+#    generate-ddl: false
+#    open-in-view: false
+#    hibernate:
+#      jdbc:
+#        time-zone: Asia/Se oul
+#      ddl-auto: none
+
+    properties:
+      hibernate:
+        dialect: org.hibernate.spatial.dialect.mysql.MySQLSpatialDialect
+        default_batch_fetch_size: 1000
+
+  # flyway 설정
+    flyway:
+      enabled: true
+      baseline-on-migrate: true
+
+  # redis
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+
+
+
+
