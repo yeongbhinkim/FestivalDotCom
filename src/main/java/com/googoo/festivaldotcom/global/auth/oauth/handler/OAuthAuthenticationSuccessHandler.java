@@ -112,7 +112,7 @@ public class OAuthAuthenticationSuccessHandler
                 .httpOnly(true)  // 쿠키에 HttpOnly 속성을 false로 설정하여, JavaScript를 통한 접근을 허용합니다.
                 .sameSite("None")  // 쿠키의 SameSite 속성을 'None'으로 설정하여, 모든 요청에 대해 쿠키를 전송하도록 합니다.
                 .secure(true)  // Secure 속성을 true로 설정하여, HTTPS를 통해서만 쿠키가 전송되도록 합니다.
-                .maxAge(tokenService.getAccessTokenExpirySeconds())  // 쿠키의 최대 수명을 설정합니다. tokenService를 통해 만료 시간을 가져옵니다.
+//                .maxAge(tokenService.getAccessTokenExpirySeconds())  // 쿠키의 최대 수명을 설정합니다. tokenService를 통해 만료 시간을 가져옵니다.
                 .build();  // 쿠키 객체를 빌드합니다.
 
         response.addHeader("Set-Cookie", token.toString());  // 쿠키를 HTTP 응답 헤더에 추가합니다.

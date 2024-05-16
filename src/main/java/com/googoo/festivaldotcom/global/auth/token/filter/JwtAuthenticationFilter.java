@@ -1,9 +1,9 @@
 package com.googoo.festivaldotcom.global.auth.token.filter;
 
-
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthenticationToken;
 import com.googoo.festivaldotcom.global.auth.token.service.TokenService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
@@ -20,17 +20,16 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Value("${jwt.secret-key}") // 비밀 키
+    @Value("${jwt.secret-key}") // 비밀 키를 설정 파일에서 가져오기 위한 애노테이션
     private String secretKey;
 
-    private final TokenService tokenService;
+    private final TokenService tokenService; // TokenService 주입
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -44,21 +43,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("accessToken".equals(cookie.getName())) {
-                    accessToken = cookie.getValue();
+                    accessToken = cookie.getValue(); // accessToken 쿠키 값 추출
                 } else if ("refreshToken".equals(cookie.getName())) {
-                    refreshToken = cookie.getValue();
+                    refreshToken = cookie.getValue(); // refreshToken 쿠키 값 추출
                 }
             }
         }
 
-
-//        log.info("AccessToken: {}", accessToken);
-//        log.info("RefreshToken: {}", refreshToken);
-
+        // refreshToken과 accessToken이 모두 존재할 때만 처리
         if (refreshToken != null && accessToken != null) {
             try {
+                // Access Token 검증
+                try {
+                    // Access Token의 유효성을 확인
+                    Claims claimsTime = Jwts.parser()
+                            .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
+                            .build()
+                            .parseClaimsJws(accessToken)
+                            .getBody();
 
-                    // refreshToken으로검증
+                    // 액세스 토큰을 사용하여 인증 정보를 얻는다.
+                    JwtAuthenticationToken authentication = tokenService.getAuthenticationByAccessToken(accessToken);
+                    // SecurityContext에 인증 정보를 설정. 이를 통해 애플리케이션 전반에서 현재 사용자의 인증 정보를 접근할 수 있다.
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                } catch (ExpiredJwtException e) {
+
+                    // Access Token이 만료되었을 때, Refresh Token으로 새로운 Access Token 발급
                     accessToken = tokenService.getAccessTokensByRefreshToken(refreshToken);
 
                     // 새로 발행된 accessToken을 쿠키에 저장
@@ -66,16 +77,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     newAccessTokenCookie.setHttpOnly(true); // 자바스크립트를 통한 접근 방지
                     newAccessTokenCookie.setSecure(true); // HTTPS를 통해서만 쿠키 전송
                     newAccessTokenCookie.setPath("/"); // 쿠키의 유효 경로 설정
-                    newAccessTokenCookie.setMaxAge(tokenService.getAccessTokenExpirySeconds()); // 쿠키의 최대 수명 설정
                     response.addCookie(newAccessTokenCookie); // 응답에 쿠키 추가
-                    // SameSite 설정 추가
-                    response.setHeader("Set-Cookie", "accessToken=" + accessToken + "; HttpOnly; Secure; SameSite=None; Max-Age=" + tokenService.getAccessTokenExpirySeconds() + "; Path=/");
 
                     // 액세스 토큰을 사용하여 인증 정보를 얻는다.
                     JwtAuthenticationToken authentication = tokenService.getAuthenticationByAccessToken(accessToken);
-                    // SecurityContext에 인증 정보를 설정한다. 이를 통해 애플리케이션 전반에서 현재 사용자의 인증 정보를 접근할 수 있다.
+                    // SecurityContext에 인증 정보를 설정. 이를 통해 애플리케이션 전반에서 현재 사용자의 인증 정보를 접근할 수 있다.
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
+                    // 새 Access Token의 클레임을 파싱하여 로그 출력 및 유저 역할 쿠키 설정
                     Claims claims = Jwts.parser()
                             .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
                             .build()
@@ -94,7 +103,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     roleCookie.setMaxAge(60 * 60); // 쿠키 유효 시간 설정 (예: 1시간)
                     response.addCookie(roleCookie);  // 응답에 쿠키 추가
 
+                } catch (Exception e) {
+                    // 기타 예외 처리
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Authentication failed");
+                    return;
+                }
+
             } catch (Exception e) {
+                // 인증 실패 로그 출력 및 응답 상태 설정, 로그인 페이지로 리다이렉트
                 log.error("Authentication failed", e);
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setHeader("Location", "/oauthlogin");
@@ -106,9 +123,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        // 특정 경로("/tokens")에 대해서는 필터를 적용하지 않음
-        return request.getRequestURI().endsWith("tokens");
-    }
+    // 특정 경로("/tokens")에 대해서는 필터를 적용하지 않음
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) {
+//        return request.getRequestURI().endsWith("tokens");
+//    }
 }

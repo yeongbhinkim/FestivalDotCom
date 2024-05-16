@@ -13,6 +13,9 @@
 .idea/**/shelf
 
 pom.xml
+settings.xml
+.env
+
 
 # AWS User-specific
 .idea/**/aws.xml
