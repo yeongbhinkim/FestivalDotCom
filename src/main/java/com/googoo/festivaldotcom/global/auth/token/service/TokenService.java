@@ -1,6 +1,9 @@
 package com.googoo.festivaldotcom.global.auth.token.service;
 
+import com.googoo.festivaldotcom.domain.member.domain.model.User;
+import com.googoo.festivaldotcom.domain.member.infrastructure.repository.UserRepository;
 import com.googoo.festivaldotcom.global.auth.oauth.dto.AuthUserInfo;
+import com.googoo.festivaldotcom.global.auth.oauth.service.OAuthService;
 import com.googoo.festivaldotcom.global.auth.token.dto.Tokens;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthenticationToken;
@@ -9,17 +12,28 @@ import com.googoo.festivaldotcom.global.auth.token.exception.RefreshTokenNotFoun
 import com.googoo.festivaldotcom.global.auth.token.model.RefreshToken;
 import com.googoo.festivaldotcom.global.auth.token.repository.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service // 스프링 컨테이너에서 관리하는 서비스 빈으로 선언
 @RequiredArgsConstructor // 롬복을 이용하여 필수 매개변수(최종 필드)를 받는 생성자를 자동 생성
 @Transactional(readOnly = true) // 클래스 수준에서 읽기 전용 트랜잭션 설정
@@ -27,6 +41,10 @@ public class TokenService { // TODO: authService와 TokenService로 분리하는
 
     private final JwtTokenProvider jwtTokenProvider; // JWT 토큰 관리 제공자
     private final RefreshTokenRepository refreshTokenRepository; // 리프레시 토큰 저장소
+    private final OAuthService oAuthService;
+    private final UserRepository userRepository;
+
+    private final OAuth2AuthorizedClientService authorizedClientService;
 
     @Value("${jwt.expiry-seconds.refresh-token:36000}") // 리프레시 토큰의 만료 시간을 환경 변수에서 가져오거나 기본값 설정
     private int refreshTokenExpirySeconds;
@@ -65,9 +83,22 @@ public class TokenService { // TODO: authService와 TokenService로 분리하는
 
         checkRefreshToken(refreshToken); // 유효성 검증
 
+        JwtAuthentication authentication = (JwtAuthentication) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        log.info("authentication refresh token {}", authentication);
+
+        Optional<User> user = userRepository.selectId(authentication.id());
+
+        String Provider = user.get().getProvider();
+        log.info("Provider  {}", Provider );
+        log.info("authentication.accessToken()  {}", authentication.accessToken() );
+
+        oAuthService.revokeToken(Provider ,authentication.accessToken());
+
         refreshTokenRepository.findById(refreshToken)
                 .ifPresent(refreshTokenRepository::delete); // 리프레시 토큰이 존재하는 경우 삭제
     }
+
 
     public String createAccessToken(Long userId, String userRole) { // 액세스 토큰 생성
         return jwtTokenProvider.createAccessToken(userId, userRole);

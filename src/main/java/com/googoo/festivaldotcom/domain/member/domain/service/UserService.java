@@ -5,6 +5,8 @@ import com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUse
 import com.googoo.festivaldotcom.domain.member.application.dto.response.UserProfileResponse;
 import com.googoo.festivaldotcom.global.auth.oauth.dto.AuthUserInfo;
 import com.googoo.festivaldotcom.global.auth.oauth.dto.OAuthUserInfo;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.ibatis.annotations.Param;
 
 import java.io.IOException;
@@ -21,7 +23,7 @@ public interface UserService {
 	UserProfileResponse setUser(UpdateUserRequest updateUserRequest, Long userId) throws IOException;
 
 	/* 회원 탈퇴 */
-	void removeUser(Long userId, String refreshToken);
+	void removeUser(HttpServletRequest request, HttpServletResponse response, Long userId, String refreshToken);
 
 	boolean getNickName(@Param("nickName") String nickName);
 }

@@ -55,13 +55,23 @@ public class CookieUtil {
         }
     }
 
+    // 단일 쿠키 제거 메서드
+    public static void clearCookie(HttpServletResponse response, String cookieName) {
+        if (cookieName != null) {
+            Cookie cookie = new Cookie(cookieName, null);
+            cookie.setMaxAge(0); // 쿠키 즉시 삭제
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        }
+    }
+
     public static ResponseCookie getEmptyCookie(String key) {
         return ResponseCookie.from(key, "")
                 .path("/")
                 .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
                 .maxAge(0)
+                .sameSite("None")
+                .secure(true)
                 .build();
     }
 

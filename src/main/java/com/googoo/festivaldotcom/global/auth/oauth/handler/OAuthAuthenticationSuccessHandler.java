@@ -44,7 +44,6 @@ public class OAuthAuthenticationSuccessHandler
 
             String targetUrl = determineTargetUrl(request, tokens.accessToken());
             setRefreshTokenInCookie(response, tokens.refreshToken(), "refreshToken");  // 리프레시 토큰을 쿠키에 설정
-
             setAccessTokenInCookie(response, tokens.accessToken(), "accessToken");  // 엑세스 토큰을 쿠키에 설정
 
             getRedirectStrategy().sendRedirect(request, response, targetUrl);

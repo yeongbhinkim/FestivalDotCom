@@ -1,11 +1,17 @@
 package com.googoo.festivaldotcom.global.auth.token.api;
 
+import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.auth.token.dto.response.TokenResponse;
 import com.googoo.festivaldotcom.global.auth.token.service.TokenService;
 import com.googoo.festivaldotcom.global.utils.CookieUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
@@ -44,16 +50,35 @@ public class TokenController {
      */
     @DeleteMapping
     public ResponseEntity<Void> expireRefreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response,
             @CookieValue("refreshToken") String refreshToken // 리프레시 토큰을 쿠키에서 추출
     ) {
+
         // 토큰 서비스를 이용하여 리프레시 토큰 삭제
         tokenService.deleteRefreshToken(refreshToken);
 
+        // SecurityContext 초기화
+        SecurityContextHolder.clearContext();
+
+        // 세션 무효화
+        request.getSession().invalidate();
+
+        // 브라우저 캐시 삭제를 위한 헤더 설정
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+        response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+        response.setDateHeader("Expires", 0); // Proxies
+
         // 쿠키를 비워 리프레시 토큰을 클라이언트에서 제거
-        ResponseCookie emptyCookie = CookieUtil.getEmptyCookie("refreshToken");
+        ResponseCookie emptyRefreshTokenCookie = CookieUtil.getEmptyCookie("refreshToken");
+        ResponseCookie emptyAccessTokenCookie = CookieUtil.getEmptyCookie("accessToken");
+        ResponseCookie emptyJsessionidTokenCookie = CookieUtil.getEmptyCookie("JSESSIONID");
 
         // 쿠키를 비워서 응답 헤더에 설정하고, 204 No Content 응답 반환
         return ResponseEntity.noContent()
-                .header(SET_COOKIE, emptyCookie.toString()).build();
+                .header(SET_COOKIE, emptyRefreshTokenCookie.toString())
+                .header(SET_COOKIE, emptyAccessTokenCookie.toString())
+                .header(SET_COOKIE, emptyJsessionidTokenCookie.toString())
+                .build();
     }
 }

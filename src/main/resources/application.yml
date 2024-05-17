@@ -94,3 +94,8 @@ mybatis:
 # chatGPT API 연동
 chatgpt:
   api-key: ${CHATGPT_API_KEY}
+
+# 프로필 사진 첨부파일
+attach:
+  root_dir: ${PROFILE_IMG_URL_PATH}
+  handler: ${PROFILE_IMG_URL_PATH_HANDLER}
