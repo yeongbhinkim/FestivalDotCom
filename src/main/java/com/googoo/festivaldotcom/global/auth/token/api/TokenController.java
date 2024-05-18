@@ -1,12 +1,15 @@
 package com.googoo.festivaldotcom.global.auth.token.api;
 
+import com.googoo.festivaldotcom.global.auth.oauth.repository.HttpCookieOAuthAuthorizationRequestRepository;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.auth.token.dto.response.TokenResponse;
+import com.googoo.festivaldotcom.global.auth.token.service.JwtTokenProvider;
 import com.googoo.festivaldotcom.global.auth.token.service.TokenService;
 import com.googoo.festivaldotcom.global.utils.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,8 +29,14 @@ public class TokenController {
 
     private final TokenService tokenService; // 토큰 서비스 의존성 주입
 
+    @Autowired
+    private HttpCookieOAuthAuthorizationRequestRepository httpCookieOAuthAuthorizationRequestRepository;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     /**
      * 새로운 액세스 토큰을 발급받기 위한 엔드포인트.
+     *
      * @param refreshToken 쿠키에서 받아온 리프레시 토큰
      * @return 새로 발급받은 액세스 토큰과 함께 200 OK 응답
      */
@@ -45,6 +54,7 @@ public class TokenController {
 
     /**
      * 리프레시 토큰을 만료시키는 엔드포인트.
+     *
      * @param refreshToken 쿠키에서 받아온 리프레시 토큰
      * @return 빈 쿠키를 설정하여 리프레시 토큰을 클라이언트에서 제거하고 204 No Content 응답
      */
@@ -64,6 +74,12 @@ public class TokenController {
         // 세션 무효화
         request.getSession().invalidate();
 
+        // JWT 토큰 무효화
+        String token = extractTokenFromRequest(request);
+        if (token != null) {
+            jwtTokenProvider.invalidateToken(token);
+        }
+
         // 브라우저 캐시 삭제를 위한 헤더 설정
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0
@@ -81,4 +97,13 @@ public class TokenController {
                 .header(SET_COOKIE, emptyJsessionidTokenCookie.toString())
                 .build();
     }
+
+    private String extractTokenFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
 }

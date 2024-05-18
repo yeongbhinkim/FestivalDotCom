@@ -20,6 +20,12 @@ public class OAuthService {
     @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
     private String naverClientSecret;
 
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String kakaoClientId;
+
+    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
+    private String kakaoClientSecret;
+
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String googleClientId;
 
@@ -34,65 +40,33 @@ public class OAuthService {
     }
 
     public String revokeNaverToken(String accessToken) {
-        String apiURL = "https://nid.naver.com/oauth2.0/token";
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("grant_type", "delete");
-        body.add("client_id", naverClientId);
-        body.add("client_secret", naverClientSecret);
-        body.add("access_token", accessToken);
-        body.add("service_provider", "NAVER");
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(apiURL, HttpMethod.POST, request, String.class);
-
-        return response.getBody();
+        return "https://nid.naver.com/nidlogin.logout";
     }
 
     public String revokeKakaoToken(String accessToken) {
-        String apiURL = "https://kapi.kakao.com/v1/user/unlink";
+        String apiURL = "https://kauth.kakao.com/oauth/logout";
+        String logoutRedirectUri = "http://localhost:8080/oauthlogin";
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
+        // URL에 필요한 파라미터 추가
+        String logoutUrl = String.format("%s?client_id=%s&logout_redirect_uri=%s", apiURL, kakaoClientId, logoutRedirectUri);
 
-        HttpEntity<String> request = new HttpEntity<>(headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(apiURL, HttpMethod.POST, request, String.class);
-
-        return response.getBody();
+        return logoutUrl;
     }
 
     public String revokeGoogleToken(String accessToken) {
-        String apiURL = "https://oauth2.googleapis.com/revoke";
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/x-www-form-urlencoded");
-
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("token", accessToken);
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(apiURL, HttpMethod.POST, request, String.class);
-
-        return response.getBody();
+        return "https://accounts.google.com/Logout";
     }
 
-    public void revokeToken(String provider, String accessToken) {
+    public String revokeToken(String provider, String accessToken) {
         switch (provider.toLowerCase()) {
             case "naver":
-                revokeNaverToken(accessToken);
-                break;
+                return revokeNaverToken(accessToken);
             case "kakao":
-                revokeKakaoToken(accessToken);
-                break;
+                return revokeKakaoToken(accessToken);
             case "google":
-                revokeGoogleToken(accessToken);
-                break;
+                return revokeGoogleToken(accessToken);
             default:
                 throw new IllegalArgumentException("Unknown provider: " + provider);
         }

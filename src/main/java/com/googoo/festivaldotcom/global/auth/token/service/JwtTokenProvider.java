@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Component // 스프링에서 이 클래스를 빈으로 관리하도록 설정
 public class JwtTokenProvider {
@@ -75,6 +77,16 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException e) {
             throw new InvalidTokenException(); // 토큰이 유효하지 않은 경우 예외 발생
         }
+    }
+
+    private Set<String> blacklistedTokens = new HashSet<>();
+
+    public void invalidateToken(String token) {
+        blacklistedTokens.add(token);
+    }
+
+    public boolean isTokenValid(String token) {
+        return !blacklistedTokens.contains(token);
     }
 
 }

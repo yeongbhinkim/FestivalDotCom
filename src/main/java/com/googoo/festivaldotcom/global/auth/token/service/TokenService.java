@@ -41,8 +41,6 @@ public class TokenService { // TODO: authService와 TokenService로 분리하는
 
     private final JwtTokenProvider jwtTokenProvider; // JWT 토큰 관리 제공자
     private final RefreshTokenRepository refreshTokenRepository; // 리프레시 토큰 저장소
-    private final OAuthService oAuthService;
-    private final UserRepository userRepository;
 
     private final OAuth2AuthorizedClientService authorizedClientService;
 
@@ -82,19 +80,6 @@ public class TokenService { // TODO: authService와 TokenService로 분리하는
     public void deleteRefreshToken(String refreshToken) {
 
         checkRefreshToken(refreshToken); // 유효성 검증
-
-        JwtAuthentication authentication = (JwtAuthentication) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        log.info("authentication refresh token {}", authentication);
-
-        Optional<User> user = userRepository.selectId(authentication.id());
-
-        String Provider = user.get().getProvider();
-        log.info("Provider  {}", Provider );
-        log.info("authentication.accessToken()  {}", authentication.accessToken() );
-
-        oAuthService.revokeToken(Provider ,authentication.accessToken());
-
         refreshTokenRepository.findById(refreshToken)
                 .ifPresent(refreshTokenRepository::delete); // 리프레시 토큰이 존재하는 경우 삭제
     }
