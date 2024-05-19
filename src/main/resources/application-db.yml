@@ -1,19 +1,28 @@
 # default
 spring:
 #  datasource:
+#    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+#    url: jdbc:p6spy:mysql://localhost:3306/mat?useSSL=false&serverTimezone=UTC
+#    username: ${DB_USERNAME}
+#    password: ${DB_PASSWORD}
+#  # 커넥션 풀 설정
+#  hikari:
+#    minimum-idle: 1
+#    maximum-pool-size: 20
+#    pool-name: MYSQL_DB
+
+#  h2 추가
   datasource:
-    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
-    url: jdbc:p6spy:mysql://localhost:3306/mat?useSSL=false&serverTimezone=UTC
+    url: jdbc:h2:tcp://localhost/~/festival
+    driver-class-name: org.h2.Driver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-  # 커넥션 풀 설정
-  hikari:
-    minimum-idle: 1
-    maximum-pool-size: 20
-    pool-name: MYSQL_DB
+
+  h2:
+    console:
+      enabled: true
   config:
     import: optional:file:.env[.properties]
-
 
   # JPA 설정
 #  jpa:

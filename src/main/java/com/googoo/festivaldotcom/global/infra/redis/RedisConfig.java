@@ -21,10 +21,10 @@ import java.util.Map;
 @RequiredArgsConstructor  // Lombok을 사용하여 필요한 생성자를 자동으로 생성
 public class RedisConfig {
 
-	@Value("${spring.config.redis.host}")  // application.properties에서 Redis 호스트 주소를 주입
+	@Value("${spring.config.redis.host}")  // application.yml Redis 호스트 주소를 주입
 	private String redisHost;
 
-	@Value("${spring.config.redis.port}")  // application.properties에서 Redis 포트를 주입
+	@Value("${spring.config.redis.port}")  // application.yml Redis 포트를 주입
 	private int redisPort;
 
 	@Bean  // 스프링 빈으로 등록
