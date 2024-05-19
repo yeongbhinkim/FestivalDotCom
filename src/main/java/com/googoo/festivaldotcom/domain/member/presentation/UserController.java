@@ -5,6 +5,8 @@ import com.googoo.festivaldotcom.domain.member.application.dto.response.UserProf
 import com.googoo.festivaldotcom.domain.member.domain.model.OutForm;
 import com.googoo.festivaldotcom.domain.member.domain.service.UserService;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
+import com.googoo.festivaldotcom.global.auth.token.service.JwtTokenProvider;
+import com.googoo.festivaldotcom.global.auth.token.service.TokenService;
 import com.googoo.festivaldotcom.global.log.annotation.Trace;
 import com.googoo.festivaldotcom.global.utils.DetermineUtil;
 import jakarta.servlet.http.Cookie;
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,6 +39,8 @@ import java.io.IOException;
 public class UserController {
 
     private final UserService userService;
+    private final TokenService tokenService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Value("${attach.root_dir}")
     private String ROOT_DIR;
@@ -142,6 +147,18 @@ public class UserController {
 
         // JwtAuthentication 객체를 통해 현재 인증된 사용자의 ID와, 쿠키에서 가져온 refreshToken을 사용하여 사용자를 삭제합니다.
         userService.removeUser(request, response, user.id(), refreshToken);
+
+        // SecurityContext 초기화
+        SecurityContextHolder.clearContext();
+
+        // 세션 무효화
+        request.getSession().invalidate();
+
+        // JWT 토큰 무효화
+        String token = tokenService.extractTokenFromRequest(request);
+        if (token != null) {
+            jwtTokenProvider.invalidateToken(token);
+        }
 
         return "login/beforeLogin";
     }

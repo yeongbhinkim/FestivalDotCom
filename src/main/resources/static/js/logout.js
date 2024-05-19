@@ -49,8 +49,6 @@ async function oauthlogOut() {
         if (response.ok) {
             const logoutUrl = await response.text();
 
-            console.log(logoutUrl);
-
             // URL에 따라 분기 처리
             if (logoutUrl.includes('kakao')) {
                 logout();
