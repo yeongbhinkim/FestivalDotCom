@@ -1,7 +1,5 @@
 package com.googoo.festivaldotcom.global.auth.token.api;
 
-import com.googoo.festivaldotcom.global.auth.oauth.repository.HttpCookieOAuthAuthorizationRequestRepository;
-import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.auth.token.dto.response.TokenResponse;
 import com.googoo.festivaldotcom.global.auth.token.service.JwtTokenProvider;
 import com.googoo.festivaldotcom.global.auth.token.service.TokenService;
@@ -9,12 +7,9 @@ import com.googoo.festivaldotcom.global.utils.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
@@ -29,9 +24,6 @@ public class TokenController {
 
     private final TokenService tokenService; // 토큰 서비스 의존성 주입
 
-    @Autowired
-    private HttpCookieOAuthAuthorizationRequestRepository httpCookieOAuthAuthorizationRequestRepository;
-    @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
     /**
@@ -75,7 +67,7 @@ public class TokenController {
         request.getSession().invalidate();
 
         // JWT 토큰 무효화
-        String token = extractTokenFromRequest(request);
+        String token = tokenService.extractTokenFromRequest(request);
         if (token != null) {
             jwtTokenProvider.invalidateToken(token);
         }
@@ -98,12 +90,6 @@ public class TokenController {
                 .build();
     }
 
-    private String extractTokenFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }
+
 
 }

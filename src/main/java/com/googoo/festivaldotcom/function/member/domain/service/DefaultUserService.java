@@ -50,9 +50,11 @@ public class DefaultUserService implements UserService {
     /* [회원 인증 정보 조회 및 저장] 등록된 유저 정보 찾아서 제공하고 없으면 등록합니다. */
     @Override
     @Transactional
-    @Cacheable(value = "User", key = "#oauthUserInfo.oauthId")
+//    @Cacheable(value = "User", key = "#oauthUserInfo.oauthId")
     public AuthUserInfo getOauthId(OAuthUserInfo oauthUserInfo) {
         Optional<User> optionalUser = userRepository.selectOauthId(oauthUserInfo.provider(), oauthUserInfo.oauthId());
+
+        log.info(" getOauthId user = {}", optionalUser);
 
         User user = optionalUser.orElseGet(() -> {
             // 새로운 User 객체를 생성하고 데이터베이스에 저장
@@ -61,8 +63,6 @@ public class DefaultUserService implements UserService {
             return userRepository.selectOauthId(oauthUserInfo.provider(), oauthUserInfo.oauthId())
                     .orElseThrow(() -> new IllegalStateException("User could not be created"));
         });
-        log.info("Mapped User: {}", user);
-        log.info("DEFAULT_ROLE: {}", DEFAULT_ROLE);
 
         return new AuthUserInfo(user.getId(), DEFAULT_ROLE, user.getNickName());
     }

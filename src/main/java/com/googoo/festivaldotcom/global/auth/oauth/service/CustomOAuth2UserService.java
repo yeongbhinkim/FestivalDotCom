@@ -32,8 +32,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		// OAuth2User 객체와 공급자 이름을 통해 사용자 정보를 추출
 		OAuthUserInfo oauthUserInfo = extractUserInfoFromOAuth2User(oauth2User, providerName);
 
+		log.info("oauthUserInfo = {}", oauthUserInfo);
+
 		// 추출된 사용자 정보를 바탕으로 사용자를 등록하거나 가져옴
 		AuthUserInfo user = userService.getOauthId(oauthUserInfo);
+
+		log.info("user = {}", user);
 
 		// CustomOAuth2User 객체를 생성해 반환. 이 객체는 OAuth2User 인터페이스를 구현하며,
 		// 인증된 사용자의 정보와 권한 등을 포함

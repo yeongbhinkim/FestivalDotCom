@@ -124,4 +124,12 @@ public class TokenService { // TODO: authService와 TokenService로 분리하는
             throw new NotFoundCookieException();
         }
     }
+
+    public String extractTokenFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
 }

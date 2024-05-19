@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
+//@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class AppConfig {
 
     @Bean

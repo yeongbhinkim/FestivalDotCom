@@ -34,8 +34,11 @@ public class LoginController {
      */
     @Trace
     @RequestMapping("/")
-    public String home(HttpServletRequest request) {
+    public String home(HttpServletRequest request
+    ,@AuthenticationPrincipal JwtAuthentication user
+    ) {
         log.info("home = {}", "home()호출됨");
+        log.info("user = {}", user);
 
         String view = DetermineUtil.determineView(request, "login/beforeLogin", "login/afterLogin");
         return view;
