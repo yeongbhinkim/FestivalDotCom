@@ -1,10 +1,7 @@
 package com.googoo.festivaldotcom;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import io.sentry.Sentry;
 import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -31,7 +28,6 @@ public class FestivalDotComApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(FestivalDotComApplication.class, args);
-
     }
 
     @PostConstruct

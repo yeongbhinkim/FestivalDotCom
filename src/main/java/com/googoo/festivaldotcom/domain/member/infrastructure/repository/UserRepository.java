@@ -18,5 +18,7 @@ public interface UserRepository {
 
     int deleteUser(@Param("userId") Long userId);
 
+    String getOauthId(@Param("userId") Long userId);
+
 	boolean selectNickName(@Param("nickName") String nickName);
 }

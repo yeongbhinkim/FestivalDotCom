@@ -24,7 +24,7 @@ spring:
 
   # 애플리케이션 이름 설정
   application:
-    name: festivaldotcom # 애플리케이션의 이름을 'mat'으로 설정합니다.
+    name: FestivalDotCom # 애플리케이션의 이름을 'FestivalDotCom'으로 설정합니다.
 
   # 활성 프로파일 설정
   profiles:
@@ -80,6 +80,7 @@ management:
 # sentry 설정
 sentry:
   dsn: ${SENTRY_DSN}
+  authToken: ${SENTRY_AUTH_TOKEN}
   traces-sample-rate: 1.0 # 트레이스 샘플링 비율, 1.0은 100%의 요청을 추적한다는 의미
 
 
@@ -99,3 +100,4 @@ chatgpt:
 attach:
   root_dir: ${PROFILE_IMG_URL_PATH}
   handler: ${PROFILE_IMG_URL_PATH_HANDLER}
+

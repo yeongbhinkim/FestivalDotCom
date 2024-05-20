@@ -3,7 +3,7 @@ spring:
 #  datasource:
   datasource:
     driver-class-name: com.p6spy.engine.spy.P6SpyDriver
-    url: jdbc:p6spy:mysql://localhost:3306/mat?useSSL=false&serverTimezone=UTC
+    url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   # 커넥션 풀 설정

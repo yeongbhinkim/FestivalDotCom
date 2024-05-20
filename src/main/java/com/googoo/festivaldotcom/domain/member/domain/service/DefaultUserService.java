@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,11 +51,9 @@ public class DefaultUserService implements UserService {
     /* [회원 인증 정보 조회 및 저장] 등록된 유저 정보 찾아서 제공하고 없으면 등록합니다. */
     @Override
     @Transactional
-//    @Cacheable(value = "User", key = "#oauthUserInfo.oauthId")
+    @Cacheable(value = "User", key = "#oauthUserInfo.oauthId")
     public AuthUserInfo getOauthId(OAuthUserInfo oauthUserInfo) {
         Optional<User> optionalUser = userRepository.selectOauthId(oauthUserInfo.provider(), oauthUserInfo.oauthId());
-
-        log.info(" getOauthId user = {}", optionalUser);
 
         User user = optionalUser.orElseGet(() -> {
             // 새로운 User 객체를 생성하고 데이터베이스에 저장
@@ -75,6 +74,11 @@ public class DefaultUserService implements UserService {
         return userRepository.selectId(userId)
                 .map(userMapper::toSingleUserResponse)
                 .orElseThrow(() -> new UserNotFoundException(userId));
+    }
+
+    @Override
+    public String getOauthId(Long userId) {
+        return userRepository.getOauthId(userId);
     }
 
     /* [회원 프로필 수정] UpdateUserRequest DTO를 사용해서 사용자의 프로필(닉네임, 프로필 이미지, 자기소개)를 한번에 수정합니다. */
@@ -130,35 +134,16 @@ public class DefaultUserService implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
-
-//	@Override
-//	@Transactional
-//	@CachePut(value = "User", key = "#userId")
-//	public UserProfileResponse updateUser(UpdateUserRequest updateUserRequest, Long userId) {
-//		 userRepository.updateUser(updateUserRequest.nickName(), updateUserRequest.profileImgUrl(), updateUserRequest.introduction(), userId);
-////		 log.info("Updated user profile: {}", updateUserRequest);
-////		 userRepository.updateUser(updateUserRequest, userId);
-//
-//		return userRepository.selectId(userId)
-//				.map(user -> userMapper.toSingleUserResponse(user))  // User를 UserProfileResponse로 변환
-//				.orElseThrow(() -> new UserNotFoundException(userId));
-//	}
-
-//	@Override
-//	@Transactional
-//	@CachePut(value = "User", key = "#userId")
-//	public UserProfileResponse updateUser(UpdateUserRequest updateUserRequest, Long userId) {
-//		return userRepository.selectId(userId)
-//			.map(user -> user.changeProfile(updateUserRequest))
-//			.map(userMapper::toSingleUserResponse)
-//			.orElseThrow(() -> new UserNotFoundException(userId));
-//	}
-
     /* [회원 탈퇴] 계정을 삭제합니다. soft delete가 적용됩니다.*/
     @Override
     @Transactional
-    @CacheEvict(value = "User", key = "#userId")
-    public void removeUser(HttpServletRequest request, HttpServletResponse response, Long userId, String refreshToken) {
+//    @CacheEvict(value = "User", key = "#userId")
+//    public void removeUser(HttpServletRequest request, HttpServletResponse response, Long userId, String refreshToken) {
+    @Caching(evict = {
+            @CacheEvict(value = "User", key = "#userId"),
+            @CacheEvict(value = "User", key = "#oauthId")
+    })
+    public void removeUser(HttpServletRequest request, HttpServletResponse response, Long userId, String oauthId, String refreshToken) {
 
         userRepository.selectId(userId)
                 .ifPresentOrElse(user -> {

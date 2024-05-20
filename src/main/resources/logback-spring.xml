@@ -11,7 +11,7 @@
               value="%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-5level [%logger{0}:%line] : %msg%n"/>
 
     <!-- 로그 파일 저장 위치 설정 -->
-    <property name="LOGS" value="./logs"/>
+<!--    <property name="LOGS" value="./logs"/>-->
 
     <!-- 로컬 환경 설정 -->
     <springProfile name="local">

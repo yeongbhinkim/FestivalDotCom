@@ -226,8 +226,6 @@
                     <debugSentryCli>true</debugSentryCli>
                     <org>home-o0e</org>
                     <project>sentry</project>
-                    <!--  <url>http://localhost:8000/</url> 이 필요하면 주석 해제하고 사용  -->
-                    <authToken>AUTHTOKEN</authToken>
                 </configuration>
                 <executions>
                     <execution>
