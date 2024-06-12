@@ -1,6 +1,6 @@
 package com.googoo.festivaldotcom.global.auth.oauth.service;
 
-import com.googoo.festivaldotcom.domain.member.domain.service.UserService;
+import com.googoo.festivaldotcom.function.member.domain.service.UserService;
 import com.googoo.festivaldotcom.global.auth.oauth.dto.AuthUserInfo;
 import com.googoo.festivaldotcom.global.auth.oauth.dto.CustomOAuth2User;
 import com.googoo.festivaldotcom.global.auth.oauth.dto.OAuthUserInfo;

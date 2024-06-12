@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 public class LoggingAspect {
 
-	@Pointcut("execution(* com.googoo.festivaldotcom.domain..*(..))")
+	@Pointcut("execution(* com.googoo.festivaldotcom.function..*(..))")
 	public void methodInDomain() {
 	}
 
