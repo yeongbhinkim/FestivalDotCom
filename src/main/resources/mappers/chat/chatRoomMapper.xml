@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.googoo.festivaldotcom.function.chat.infrastructure.mapper.ChatRoomMapper">
+    <insert id="insertRoom" useGeneratedKeys="true" keyProperty="roomId">
+        INSERT INTO rooms (festival_id, room_name, created_at, deleted)
+        VALUES (#{festivalId}, #{roomName}, CURRENT_TIMESTAMP, 0)
+    </insert>
+
+    <insert id="insertRoomMember">
+        INSERT INTO room_members (room_id, id, created_at, deleted)
+        VALUES (#{roomId}, #{userId}, CURRENT_TIMESTAMP, 0)
+    </insert>
+</mapper>
