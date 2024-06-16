@@ -9,12 +9,19 @@ import com.googoo.festivaldotcom.function.member.infrastructure.mapper.UserMappe
 import com.googoo.festivaldotcom.function.member.infrastructure.repository.UserRepository;
 import com.googoo.festivaldotcom.global.auth.oauth.dto.AuthUserInfo;
 import com.googoo.festivaldotcom.global.auth.oauth.dto.OAuthUserInfo;
+import com.googoo.festivaldotcom.global.auth.oauth.service.OAuthService;
+import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.auth.token.service.TokenService;
+import com.googoo.festivaldotcom.global.utils.CookieUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +46,7 @@ public class DefaultUserService implements UserService {
     private final UserRepository userRepository;
     private final TokenService tokenService;
 
+
     /* [회원 인증 정보 조회 및 저장] 등록된 유저 정보 찾아서 제공하고 없으면 등록합니다. */
     @Override
     @Transactional
@@ -53,12 +61,6 @@ public class DefaultUserService implements UserService {
             return userRepository.selectOauthId(oauthUserInfo.provider(), oauthUserInfo.oauthId())
                     .orElseThrow(() -> new IllegalStateException("User could not be created"));
         });
-
-//		if(optionalUser.isPresent()) {
-//			// 기존 사용자 정보를 갱신
-//			userRepository.updateUser(user);
-//		}
-
         log.info("Mapped User: {}", user);
         log.info("DEFAULT_ROLE: {}", DEFAULT_ROLE);
 
@@ -156,19 +158,22 @@ public class DefaultUserService implements UserService {
     @Override
     @Transactional
     @CacheEvict(value = "User", key = "#userId")
-    public void removeUser(Long userId, String refreshToken) {
+    public void removeUser(HttpServletRequest request, HttpServletResponse response, Long userId, String refreshToken) {
 
         userRepository.selectId(userId)
                 .ifPresentOrElse(user -> {
-                    user.deleteInfo();
                     tokenService.deleteRefreshToken(refreshToken);
+                    userRepository.deleteUser(userId);
+                    // 쿠키 제거 메서드 호출
+                    CookieUtil.clearCookie(response, "accessToken");
+                    CookieUtil.clearCookie(response, "refreshToken");
+                    CookieUtil.clearCookie(response, "JSESSIONID");
+
                 }, () -> {
                     throw new UserNotFoundException(userId);
                 });
-
-        //탈퇴 로직 추가
-        userRepository.deleteUser(userId);
     }
+
 
     /**
      * 닉네임 중복체크

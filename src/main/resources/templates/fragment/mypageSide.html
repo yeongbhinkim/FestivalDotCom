@@ -41,10 +41,10 @@
             <a href="javascript:void(0)" class="my-history">회원정보</a>
             <ul>
               <li>
-                <a href="" th:href="@{/members/{MemberEmail}/memberModify(MemberEmail=${s_email})}">- 회원 정보 수정</a>
+                <a href="" th:href="@{/api/v1/user/myPage}">- 회원 정보 수정</a>
               </li>
               <li>
-                <a href="" th:href="@{/members/{email}/memberDel(email=${s_email})}">- 회원 탈퇴</a>
+                <a href="" th:href="@{/api/v1/user/myPageRemove}">- 회원 탈퇴</a>
               </li>
             </ul>
           </li>
