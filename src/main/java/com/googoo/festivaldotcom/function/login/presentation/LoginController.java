@@ -1,5 +1,8 @@
 package com.googoo.festivaldotcom.function.login.presentation;
 
+import com.googoo.festivaldotcom.function.member.domain.model.User;
+import com.googoo.festivaldotcom.function.member.infrastructure.repository.UserRepository;
+import com.googoo.festivaldotcom.global.auth.oauth.service.OAuthService;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.log.annotation.Trace;
 import com.googoo.festivaldotcom.global.utils.DetermineUtil;
