@@ -20,6 +20,14 @@
           AND deleted = 0
     </select>
 
+    <!-- 사용자 ID로 사용자 oauth_id 조회 -->
+    <select id="getOauthId" resultType="String">
+        SELECT oauth_id
+        FROM users
+        WHERE id = #{userId}
+          AND deleted = 0
+    </select>
+
     <!-- 새 사용자 저장 -->
     <insert id="insertUser" parameterType="com.googoo.festivaldotcom.function.member.domain.model.User">
         INSERT INTO users (

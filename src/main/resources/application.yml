@@ -100,3 +100,4 @@ chatgpt:
 attach:
   root_dir: ${PROFILE_IMG_URL_PATH}
   handler: ${PROFILE_IMG_URL_PATH_HANDLER}
+

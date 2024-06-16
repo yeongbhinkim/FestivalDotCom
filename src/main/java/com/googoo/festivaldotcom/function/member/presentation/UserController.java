@@ -144,9 +144,14 @@ public class UserController {
             model.addAttribute("outForm", outForm);
             return "memberJoin/memberDelpage";  // 다시 탈퇴 페이지로 이동
         }
+        //조회해서 준다
+        String oauthId = userService.getOauthId(user.id());
 
         // JwtAuthentication 객체를 통해 현재 인증된 사용자의 ID와, 쿠키에서 가져온 refreshToken을 사용하여 사용자를 삭제합니다.
-        userService.removeUser(request, response, user.id(), refreshToken);
+        userService.removeUser(request, response, user.id(),oauthId, refreshToken);
+
+        // JwtAuthentication 객체를 통해 현재 인증된 사용자의 ID와, 쿠키에서 가져온 refreshToken을 사용하여 사용자를 삭제합니다.
+//        userService.removeUser(request, response, user.id(), refreshToken);
 
         // SecurityContext 초기화
         SecurityContextHolder.clearContext();
