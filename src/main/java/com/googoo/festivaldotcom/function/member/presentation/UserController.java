@@ -1,10 +1,10 @@
-package com.googoo.festivaldotcom.domain.member.presentation;
+package com.googoo.festivaldotcom.function.member.presentation;
 
-import com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest;
-import com.googoo.festivaldotcom.domain.member.application.dto.response.UserProfileResponse;
-import com.googoo.festivaldotcom.domain.member.domain.model.OutForm;
-import com.googoo.festivaldotcom.domain.member.domain.model.User;
-import com.googoo.festivaldotcom.domain.member.domain.service.UserService;
+import com.googoo.festivaldotcom.function.member.application.dto.request.UpdateUserRequest;
+import com.googoo.festivaldotcom.function.member.application.dto.response.UserProfileResponse;
+import com.googoo.festivaldotcom.function.member.domain.model.OutForm;
+import com.googoo.festivaldotcom.function.member.domain.model.User;
+import com.googoo.festivaldotcom.function.member.domain.service.UserService;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.auth.token.service.JwtTokenProvider;
 import com.googoo.festivaldotcom.global.auth.token.service.TokenService;
