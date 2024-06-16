@@ -3,6 +3,7 @@ package com.googoo.festivaldotcom.function.member.presentation;
 import com.googoo.festivaldotcom.function.member.application.dto.request.UpdateUserRequest;
 import com.googoo.festivaldotcom.function.member.application.dto.response.UserProfileResponse;
 import com.googoo.festivaldotcom.function.member.domain.service.UserService;
+import com.googoo.festivaldotcom.function.member.domain.model.OutForm;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.log.annotation.Trace;
 import com.googoo.festivaldotcom.global.utils.DetermineUtil;
