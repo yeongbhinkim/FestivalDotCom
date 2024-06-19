@@ -92,10 +92,6 @@ mybatis:
     map-underscore-to-camel-case: true # 데이터베이스의 언더스코어 네이밍을 자바의 카멜케이스 네이밍으로 매핑합니다.
 
 
-# chatGPT API 연동
-chatgpt:
-  api-key: ${CHATGPT_API_KEY}
-
 # 프로필 사진 첨부파일
 attach:
   root_dir: ${PROFILE_IMG_URL_PATH}
