@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.googoo.festivaldotcom.domain.festival.infrastructure.repository.FestivalRepository">
+
+    <!-- festival 등록 -->
+    <insert id="insertFestival" parameterType="com.googoo.festivaldotcom.domain.festival.domain.model.Festival">
+        INSERT INTO festival (festival_id, festival_name, location, start_at, end_at, festival_content, main_corp, open_corp, support_corp, tel_number, website, related_info, road_address, lot_address, latitude, longitude, update_at, provider_code, provider_name, festival_img_url)
+        VALUES (#{festivalId}, #{festivalName}, #{location}, #{startAt}, #{endAt}, #{festivalContent}, #{mainCorp}, #{openCorp}, #{supportCorp}, #{telNumber}, #{website}, #{relatedInfo}, #{roadAddress}, #{lotAddress}, #{latitude}, #{longitude}, #{updateAt}, #{providerCode}, #{providerName}, #{festivalImgUrl})
+    </insert>
+
+</mapper>
