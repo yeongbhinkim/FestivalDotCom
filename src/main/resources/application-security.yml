@@ -1,7 +1,7 @@
 # JWT 설정
 jwt:
   issuer: "matDdonsan"  # JWT 발행자 이름
-  secret-key: ${JWT_SECRET-KEY}
+  secret-key: ${JWT_SECRET_KEY}
   expiry-seconds:
     access-token: 1800  # 액세스 토큰의 만료 시간 (초 단위)
     refresh-token: 36000 # 리프레시 토큰의 만료 시간 (초 단위), 설정을 생략할 경우 36000이 기본값으로 사용됨 604800
