@@ -2,6 +2,10 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 .app-header {
@@ -25,8 +29,9 @@ body {
 
 footer {
     background-color: #ffffff;
-    padding: 10px 0;
+    padding: 15px 0; /* 여유 공간을 위해 패딩을 증가 */
     border-top: 1px solid #ddd;
+    position: relative;
 }
 
 nav ul {
@@ -35,12 +40,20 @@ nav ul {
     margin: 0;
     display: flex;
     justify-content: space-around;
+    border-top: 1px solid #ddd; /* 구분선을 추가 */
 }
 
 nav li {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
+    border-left: 1px solid #ddd; /* 아이콘 사이에 구분선 추가 */
+    flex: 1; /* 아이콘 간 간격을 균일하게 만듦 */
+}
+
+nav li:first-child {
+    border-left: none; /* 첫 번째 아이콘의 좌측 구분선 제거 */
 }
 
 nav li i {
@@ -51,7 +64,7 @@ nav li i {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 120px); /* 헤더와 푸터 높이 제외 */
+    height: 100%;
 }
 
 .phone-screen {
@@ -64,6 +77,7 @@ nav li i {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    margin: auto;
 }
 
 .chat-header {
@@ -78,6 +92,7 @@ nav li i {
 .chat-body {
     overflow-y: auto;
     flex: 1;
+    border-bottom: 1px solid #ddd;
 }
 
 .chat-item {
@@ -85,6 +100,10 @@ nav li i {
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ddd;
+}
+
+.chat-item:last-child {
+    border-bottom: none; /* 마지막 항목의 하단 테두리 제거 */
 }
 
 .chat-icon {

@@ -8,9 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-<header class="app-header">
-    <div class="header-title">페이지 설명</div>
-    <div class="header-settings"><i class="fas fa-cog"></i></div>
-</header>
+<div th:fragment="header">
+    <div class="app-header">
+        <div class="header-title">페이지 설명</div>
+        <div class="header-settings">
+            <i class="fas fa-cog settings-icon"></i> <!-- 톱니바퀴 아이콘 -->
+        </div>
+    </div>
+</div>
 </body>
 </html>

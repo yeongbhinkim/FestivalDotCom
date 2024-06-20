@@ -65,6 +65,10 @@ spring:
       pool:
         size: 2 # 스프링 스케줄러가 사용할 스레드 풀의 크기를 2로 설정합니다.
 
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html #thymeleaf 설정
+
 # front server
 #front:
 #  server: "http://localhost:3000"

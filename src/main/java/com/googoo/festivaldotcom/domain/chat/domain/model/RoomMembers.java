@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Builder
@@ -12,7 +12,7 @@ public class RoomMembers {
 
     private Long roomId;
     private Long id;
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
     @Setter
     private boolean deleted;
 }

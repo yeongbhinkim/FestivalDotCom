@@ -9,14 +9,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-<div th:replace="fragment/header :: header"></div>
-
 <div class="container">
     <div class="phone-screen">
-        <div th:include="chat :: chat"></div>
+        <header th:replace="~{fragment/header :: header}"></header>
+
+        <div class="chat-body" th:insert="~{chat/chat :: chat}"></div>
+
+        <footer th:replace="~{fragment/footer :: footer}"></footer>
     </div>
 </div>
-
-<div th:replace="fragment/footer :: footer"></div>
 </body>
 </html>
