@@ -96,6 +96,9 @@ mybatis:
 attach:
   root_dir: ${PROFILE_IMG_URL_PATH}
   handler: ${PROFILE_IMG_URL_PATH_HANDLER}
+  img_dir: ${FESTIVAL_IMG_PATH}
 
 secretKey:
   festival: ${FESTIVAL_SECRET_KEY}
+
+
