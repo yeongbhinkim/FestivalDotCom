@@ -1,6 +1,6 @@
 # JWT 설정
 jwt:
-  issuer: "matDdonsan"  # JWT 발행자 이름
+  issuer: "FestivalDotCom"  # JWT 발행자 이름
   secret-key: ${JWT_SECRET_KEY}
   expiry-seconds:
     access-token: 1800  # 액세스 토큰의 만료 시간 (초 단위)

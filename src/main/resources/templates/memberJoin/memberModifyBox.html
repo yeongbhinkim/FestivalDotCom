@@ -1,51 +1,29 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원 수정</title>
-    <style>
-        p.errmsg {
-            display: none;
-            margin: 0;
-            font-weight: bold;
-            color: red;
-        }
-        p.errmsg.visible {
-            display: block;
-        }
-    </style>
-</head>
-<body>
 <main th:fragment="memberModifyBox">
+    <link rel="stylesheet" href="" th:href="@{/css/member/memberModify.css}">
     <div class="main-sub">
-        <div class="main-nav-title">
-            <span>회원 정보 수정</span>
-        </div>
-
         <form action="/api/v1/user/modify" id="modifyForm" method="post" th:object="${modifyForm}"
               enctype="multipart/form-data">
             <div class="container">
                 <div class="container-body">
-<!--                    &lt;!&ndash; 전체적인 폼 오류 메시지 &ndash;&gt;-->
-<!--                    <div th:if="${#fields.hasErrors()}">-->
-<!--                        <p th:each="err : ${#fields.errors('*')}" th:text="${err}" class="errmsg visible">오류 메시지</p>-->
-<!--                    </div>-->
                     <div class="inputInfo">
                         <div class="member_profileImgUrl">
                             <div style="position: relative; display: block; text-align: center;">
-                                <input type="file" id="file" name="file" accept="image/*" onchange="showImage(this)" style="display: none;">
+                                <input type="file" id="file" name="file" accept="image/*" onchange="showImage(this)"
+                                       style="display: none;">
                                 <img id="profileImgUrl"
                                      th:src="*{profileImgUrl}"
                                      alt="Selected Image"
                                      style="max-width: 300px; max-height: 300px; display: block; margin: auto; object-fit: contain;">
 
-                                <button type="button" onclick="deleteImage();" style="position: absolute; top: 0; right: 0; padding: 5px;">X</button>
+                                <button type="button" onclick="deleteImage();"
+                                        style="position: absolute; top: 0; right: 0; padding: 5px;">X
+                                </button>
                                 <button type="button" onclick="document.getElementById('file').click();"
-                                        style="display: block; margin: 10px auto 0;">사진 수정</button>
+                                        style="display: block; margin: 10px auto 0;">사진 수정
+                                </button>
                             </div>
-                            <input type="hidden" id="hiddenProfileImgUrl" name="profileImgUrl" th:value="*{profileImgUrl}"/>
+                            <input type="hidden" id="hiddenProfileImgUrl" name="profileImgUrl"
+                                   th:value="*{profileImgUrl}"/>
                         </div>
 
                         <div class="member_nickname">
@@ -53,7 +31,8 @@
                                 <label for="nickName">사용자명:</label>
                                 <input type="text" name="nickName" id="nickName" th:field="*{nickName}"
                                        placeholder="이름을 입력해주세요."/>
-                                <p th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}" class="errmsg visible"></p>
+                                <p th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"
+                                   class="errmsg visible"></p>
                             </li>
                         </div>
 
@@ -70,39 +49,28 @@
                                 <label for="introduction">자기소개:</label>
                                 <input type="text" name="introduction" id="introduction" th:field="*{introduction}"
                                        placeholder="자기소개를 작성해주세요."/>
-                                <p th:if="${#fields.hasErrors('introduction')}" th:errors="*{introduction}" class="errmsg visible"></p>
+                                <p th:if="${#fields.hasErrors('introduction')}" th:errors="*{introduction}"
+                                   class="errmsg visible"></p>
                             </li>
                         </div>
                     </div>
 
                     <div class="Btn">
+                        <a th:href="@{/api/v1/user/myPageRemove}">탈퇴</a>
                         <button type="button" id="modifyBtn">수정</button>
                     </div>
+
+                    <div class="Btn">
+                        <a href="#" id="logoutButton" role="button">로그아웃</a>
+                    </div>
+
                 </div>
             </div>
         </form>
     </div>
 
-    <script>
-        function showImage(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    document.getElementById('profileImgUrl').src = e.target.result;
-                    document.getElementById('profileImgUrl').style.display = 'block';
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
+    <script defer src="" th:src="@{/js/logout.js}"></script>
+    <script defer src="" th:src="@{/js/member/profileEditForm.js}"></script>
 
-        function deleteImage() {
-            document.getElementById('profileImgUrl').src = '/img/default.png'; // 기본 이미지로 변경
-        }
-
-        document.getElementById('modifyBtn').addEventListener('click', function() {
-            document.getElementById('modifyForm').submit();
-        });
-    </script>
 </main>
-</body>
-</html>
+

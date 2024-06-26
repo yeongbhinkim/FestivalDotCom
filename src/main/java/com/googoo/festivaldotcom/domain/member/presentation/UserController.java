@@ -3,14 +3,12 @@ package com.googoo.festivaldotcom.domain.member.presentation;
 import com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest;
 import com.googoo.festivaldotcom.domain.member.application.dto.response.UserProfileResponse;
 import com.googoo.festivaldotcom.domain.member.domain.model.OutForm;
-import com.googoo.festivaldotcom.domain.member.domain.model.User;
 import com.googoo.festivaldotcom.domain.member.domain.service.UserService;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.auth.token.service.JwtTokenProvider;
 import com.googoo.festivaldotcom.global.auth.token.service.TokenService;
 import com.googoo.festivaldotcom.global.log.annotation.Trace;
 import com.googoo.festivaldotcom.global.utils.DetermineUtil;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -89,7 +87,7 @@ public class UserController {
             // 검증 오류가 있으면 폼을 다시 보여줌
             model.addAttribute("modifyForm", modifyForm);
             model.addAttribute("org.springframework.validation.BindingResult.modifyForm", bindingResult);
-            return "memberJoin/memberModifypage";
+            return "memberModifyPage";
         }
 
         // 검증 로직 추가 (예: 닉네임 중복 체크)
@@ -97,7 +95,7 @@ public class UserController {
             bindingResult.rejectValue("nickName", "duplicate", "이미 사용 중인 닉네임입니다.");
             model.addAttribute("modifyForm", modifyForm);
             model.addAttribute("org.springframework.validation.BindingResult.modifyForm", bindingResult);
-            return "memberJoin/memberModifypage";
+            return "memberModifyPage";
         }
 
         userService.setUser(modifyForm, user.id());
@@ -120,7 +118,7 @@ public class UserController {
         //탈퇴 동의 페이지로 이동
         model.addAttribute("outForm", outForm);
 
-        String view = DetermineUtil.determineView(request, "login/beforeLogin", "memberJoin/memberDelpage");
+        String view = DetermineUtil.determineView(request, "login/loginPage", "memberJoin/memberDelpage");
         return view;
     }
 
@@ -136,14 +134,14 @@ public class UserController {
         // 검증 결과 처리
         if (bindingResult.hasErrors()) {
             model.addAttribute("outForm", outForm);
-            return "memberJoin/memberDelpage";  // 다시 탈퇴 페이지로 이동
+            return "memberDelPage";  // 다시 탈퇴 페이지로 이동
         }
 
         // 체크박스가 체크되지 않았으면 에러 메시지 처리
         if (!outForm.isAgree()) {
             bindingResult.rejectValue("agree", "error.outForm", "탈퇴 안내 사항에 동의해야 합니다.");
             model.addAttribute("outForm", outForm);
-            return "memberJoin/memberDelpage";  // 다시 탈퇴 페이지로 이동
+            return "memberDelPage";  // 다시 탈퇴 페이지로 이동
         }
         //조회해서 준다
         String oauthId = userService.getOauthId(user.id());
@@ -166,7 +164,7 @@ public class UserController {
             jwtTokenProvider.invalidateToken(token);
         }
 
-        return "login/beforeLogin";
+        return "login/loginPage";
     }
 
 }

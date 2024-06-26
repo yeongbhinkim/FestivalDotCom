@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -19,4 +20,16 @@ public class ValidateUtil {
 			throw new IllegalArgumentException(message);
 		}
 	}
+
+	private static final Pattern EMAIL_PATTERN = Pattern.compile(
+			"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z]{2,6}$",
+			Pattern.CASE_INSENSITIVE
+	);
+
+	public static void checkEmail(String email, String errorMessage) {
+		if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
+			throw new IllegalArgumentException(errorMessage);
+		}
+	}
+
 }

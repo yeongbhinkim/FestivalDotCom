@@ -1,8 +1,8 @@
 package com.googoo.festivaldotcom.global.auth.token.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googoo.festivaldotcom.global.base.dto.ErrorResponse;
 import com.googoo.festivaldotcom.global.base.exception.ErrorCode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -60,5 +60,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                 .write(objectMapper.writeValueAsString(
                         ErrorResponse.of(ErrorCode.HANDLE_ACCESS_DENIED))
                 );
+
+        response.sendRedirect("/oauthlogin");
     }
 }

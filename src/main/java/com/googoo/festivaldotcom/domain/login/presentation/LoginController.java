@@ -5,7 +5,6 @@ import com.googoo.festivaldotcom.domain.member.infrastructure.repository.UserRep
 import com.googoo.festivaldotcom.global.auth.oauth.service.OAuthService;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.log.annotation.Trace;
-import com.googoo.festivaldotcom.global.utils.DetermineUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Optional;
 
@@ -37,11 +35,9 @@ public class LoginController {
     public String home(HttpServletRequest request
     ,@AuthenticationPrincipal JwtAuthentication user
     ) {
-        log.info("home = {}", "home()호출됨");
-        log.info("user = {}", user);
 
-        String view = DetermineUtil.determineView(request, "login/beforeLogin", "login/afterLogin");
-        return view;
+//        String view = DetermineUtil.determineView(request, "login/beforeLogin", "login/afterLogin");
+        return "login/loginPage";
     }
 
     /**
@@ -52,7 +48,8 @@ public class LoginController {
     @RequestMapping("/oauthlogin")
     public String login() {
         log.info("oauthlogin = {}", "oauthlogin()호출됨");
-        return "/login/loginForm";
+
+        return "login/loginPage";
     }
 
     /**

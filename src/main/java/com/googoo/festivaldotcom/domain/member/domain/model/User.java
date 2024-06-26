@@ -2,8 +2,10 @@ package com.googoo.festivaldotcom.domain.member.domain.model;
 
 
 import com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest;
+import com.googoo.festivaldotcom.domain.member.application.dto.response.ChatPermission;
 import com.googoo.festivaldotcom.global.base.domain.BaseEntity;
 import com.googoo.festivaldotcom.global.utils.ValidateUtil;
+import com.nimbusds.openid.connect.sdk.claims.Gender;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +38,9 @@ public class User extends BaseEntity {
 	private BigDecimal mannerScore;
 	private Integer festivalCount;
 	private boolean enabled;
+	private ChatPermission chatPermission; // 사용자 권한
+	private Gender gender; // 성별
+	private String companyEmail; // 회사 이메일 검증
 
 	@Builder
 	protected User(String nickName, String profileImgUrl, String provider, String oauthId) {
@@ -46,6 +51,9 @@ public class User extends BaseEntity {
 		this.introduction = DEFAULT_INTRODUCE;
 		this.mannerScore = new BigDecimal("36.5");
 		this.festivalCount = ZERO;
+		this.chatPermission = chatPermission != null ? chatPermission : ChatPermission.GUEST; // 기본값 설정
+		this.gender = gender;
+		this.companyEmail = companyEmail;
 	}
 
 	private String validateNickName(String nickName) {
@@ -66,23 +74,31 @@ public class User extends BaseEntity {
 		return introduction;
 	}
 
+	private String validateCompanyEmail(String companyEmail) {
+		ValidateUtil.checkEmail(companyEmail, "유효하지 않은 이메일 형식입니다.");
+		return companyEmail;
+	}
+
 	public User changeProfile(UpdateUserRequest updateUserRequest) {
 		this.nickName = validateNickName(updateUserRequest.nickName());
 		this.profileImgUrl = validateProfileImgUrl(updateUserRequest.profileImgUrl());
 		this.introduction = validateIntroduction(updateUserRequest.introduction());
+		if (updateUserRequest.companyEmail() != null) {
+			this.companyEmail = validateCompanyEmail(updateUserRequest.companyEmail());
+		}
 		return this;
 	}
 
-	public User deleteInfo() {
-		this.nickName = "탈퇴한 유저";
-		this.profileImgUrl = "None";
-		this.introduction = "탈퇴한 유저입니다.";
-		this.provider = "NONE";
-		this.oauthId = "NONE : " + (this.id * RANDOM.nextInt(1000));
-		this.mannerScore = new BigDecimal("36.5");
-		this.festivalCount = ZERO;
-		return this;
-	}
+//	public User deleteInfo() {
+//		this.nickName = "탈퇴한 유저";
+//		this.profileImgUrl = "None";
+//		this.introduction = "탈퇴한 유저입니다.";
+//		this.provider = "NONE";
+//		this.oauthId = "NONE : " + (this.id * RANDOM.nextInt(1000));
+//		this.mannerScore = new BigDecimal("36.5");
+//		this.festivalCount = ZERO;
+//		return this;
+//	}
 
 	public boolean isSameUser(Long userId) {
 		return Objects.equals(this.id, userId);

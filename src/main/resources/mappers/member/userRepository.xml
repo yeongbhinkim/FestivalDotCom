@@ -46,7 +46,10 @@
         UPDATE users
         SET nick_name = #{nickName},
             profile_img_url = #{profileImgUrl},
-            introduction = #{introduction}
+            introduction = #{introduction},
+            gender = #{gender},
+            companyEmail = #{companyEmail}
+
         WHERE id = #{id}
           AND deleted = 0
     </update>
@@ -58,10 +61,13 @@
         WHERE id = #{userId}
     </update>
 
+    <!--  사용자 중복체크  -->
     <select id="selectNickName" resultType="boolean">
         SELECT COUNT(*) > 0
         FROM users
         WHERE nick_name = #{nickName}
     </select>
+
+
 
 </mapper>

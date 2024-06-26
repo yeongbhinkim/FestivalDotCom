@@ -1,70 +1,39 @@
 <!DOCTYPE html>
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
-      th:fragment="memberModify(title,styles,scripts,style,script,upm,header,nav,main,footer)"
-      th:with="s_id=${session?.loginMemberShip?.memberId},
-               s_email=${session?.loginMemberShip?.memberEmail},
-               s_name=${session?.loginMemberShip?.memberName}">
+      th:fragment="memberModify(title,styles,scripts,style,script,header,main,footer)">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title th:replace=${title}>회원 수정</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:fragment=${title}>회원 수정</title>
 
-  <!--common style-->
-  <link rel="stylesheet" href="" th:href="@{/css/common.css}">
-  <link rel="stylesheet" href="" th:href="@{/css/page/my-page.css}">
-  <link rel="stylesheet" href="" th:href="@{/css/parts/my-page-upper.css}">
-  <link rel="stylesheet" href="" th:href="@{/css/member/memberModify.css}">
-
-  <script defer type="module" src="" th:src="@{/js/logout.js}"></script>
-  <!--common script-->
-<!--  <script defer src="xxx.js"></script>-->
-
-
-  <!-- fontawesome -->
-  <!--  <script src="https://kit.fontawesome.com/023d8f21ed.js" crossorigin="anonymous"></script>-->
-
-  <!-- Per-page placeholder for additional link -->
-  <th:block th:replace="${styles}"></th:block>
-  <th:block th:replace="${style}"></th:block>
+    <!-- 공통 스타일을 불러오기 위한 링크 -->
+    <link rel="stylesheet" href="" th:href="@{/css/common.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 </head>
 <body>
-<th:block th:text="${aaa}"></th:block>
 <div class="global-wrap">
-
-  <div class="upm">
-    <div class="inner upm-inner" th:replace="${upm}">
-      upm
+    <div class="hdr">
+        <div class="inner hdr-inner" th:insert="${header}">
+            header
+        </div>
     </div>
-  </div>
 
-  <!--  <div class="hdr" th:if="${!#strings.isEmpty(header)}">-->
-  <div class="hdr">
-    <div class="inner hdr-inner" th:insert="${header}">
-      header
+    <div class="main">
+        <div class="inner main-inner" th:insert="${main}">
+            main
+        </div>
     </div>
-  </div>
 
-  <div class="gnb">
-    <div class="inner gnb-inner" th:insert="${nav}">
-      nav
+    <div class="foot">
+        <div class="inner foot-inner" th:insert="${footer}">
+            foot
+        </div>
     </div>
-  </div>
-
-  <div class="main">
-    <div class="inner main-inner" th:insert="${main}">
-      main
-    </div>
-  </div>
-
-  <div class="foot">
-    <div class="inner foot-inner" th:insert="${footer}">
-      foot
-    </div>
-  </div>
 </div>
+
 <th:block th:replace="${script}"></th:block>
 </body>
 </html>

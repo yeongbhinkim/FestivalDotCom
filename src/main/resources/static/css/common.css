@@ -1,28 +1,135 @@
 @charset "utf-8";
 
-.globalError, .fieldError{
-    color:red;
+.globalError, .fieldError {
+    color: red;
     font-size: 0.8em;
     font-weight: bold;
 }
 
-.globalError{
+.globalError {
 
 }
-input.fieldError{
-    color:inherit;
+
+input.fieldError {
+    color: inherit;
     font-weight: normal;
     border: 1px solid red;
 }
 
 .fieldSuccess {
-    color:green;
+    color: green;
     font-size: 0.8em;
     font-weight: bold;
 }
 
 input.fieldSuccess {
-    color:inherit;
+    color: inherit;
     font-weight: normal;
     border: 1px solid green;
+}
+
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.header-title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.header-settings {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+.global-wrap {
+    height: 100%;
+    width: 100%;
+}
+
+.hdr {
+    height: 10%;
+    width: 100%;
+}
+
+.inner.hdr-inner {
+    height: 100%;
+}
+
+header {
+    height: 100%;
+}
+
+.app-header {
+    height: 70%;
+}
+
+
+.main {
+    height: 77%;
+    width: 100%;
+}
+
+.inner.main-inner {
+    height: 100%;
+}
+
+.main-sub {
+    width: 100%;
+}
+
+
+.foot {
+    height: 13%;
+    width: 100%;
+}
+
+footer {
+    background-color: #ffffff;
+    padding: 15px 0; /* 여유 공간을 위해 패딩을 증가 */
+    border-top: 1px solid #ddd;
+    position: relative;
+}
+
+footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid #ddd; /* 구분선을 추가 */
+}
+
+footer li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-left: 1px solid #ddd; /* 아이콘 사이에 구분선 추가 */
+    flex: 1; /* 아이콘 간 간격을 균일하게 만듦 */
+}
+
+footer li:first-child {
+    border-left: none; /* 첫 번째 아이콘의 좌측 구분선 제거 */
+}
+
+footer li i {
+    font-size: 24px;
 }

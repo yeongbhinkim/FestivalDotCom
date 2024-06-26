@@ -106,3 +106,9 @@ secretKey:
   festival: ${FESTIVAL_SECRET_KEY}
 
 
+url:
+  stable_diffusion: ${STABLE_DIFFUSION_URL}
+
+
+
+

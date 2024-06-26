@@ -1,281 +1,134 @@
 @charset "utf-8";
-@import url('reset.css');
-@import url(https://fonts.googleapis.com/earlyaccess/jejugothic.css);
 
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
+
+main .member_email {
+    display: inline-flex;
 }
 
-/* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
+main .member_tel {
+    display: inline-flex;
 }
 
-body {
-  line-height: 1;
+main .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
-ol,
-ul {
-  list-style: none;
+main .container-body {
+    text-align: center;
 }
 
-blockquote,
-q {
-  quotes: none;
+main .inputInfo {
+    width: 100%;
 }
 
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-  content: '';
-  content: none;
-}
-
-a {
-  text-decoration: none;
-  color: #000000;
-}
-
-html,
-body {
-  width: 100%;
-  height: 100%;
-}
-
-body {
-  background-repeat: no-repeat;
-  width: 100%;
-  font-family: 'Jeju Gothic', sans-serif;
-  font-size: 16px;
-}
-
-input:focus {
-  outline: 0;
-}
-
-.member_email {
-  display: inline-flex;
-}
-
-.member_tel {
-  display: inline-flex;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-.container-body {
-  text-align: center;
-}
-
-.inputInfo {
-  width: 100%;
-}
-
-.inputInfo li {
-  width: 100%;
+main .inputInfo li {
+    width: 100%;
 }
 
 main {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
-form {
-  position: relative;
-  top: 135px;
-  left: 235px;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  padding: 10px;
-  box-shadow: 0 15px 10px -7px #eee;
-  width: 700px;
+main form {
+    /*position: relative;*/
+    top: 135px;
+    left: 235px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    padding: 10px;
+    box-shadow: 0 15px 10px -7px #eee;
+    /*width: 700px;*/
 }
 
-li {
-  list-style: none;
+main li {
+    list-style: none;
 }
 
-input {
-  padding: 10px 30px;
-  width: 250px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  margin: 20px 20px 0;
-  letter-spacing: 1 px;
-  font-size: 16px;
+main input {
+    padding: 10px 15px;
+    /*width: 250px;*/
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin: 20px 10px 0;
+    letter-spacing: 1px;
+    font-size: 16px;
 }
 
-button {
-  background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  /*width: 125px;*/
-  font-family: 'Jeju Gothic', sans-serif;
-  cursor: pointer;
-  padding: 10px 30px;
-  border: 1px solid transparent;
-  border-radius: 20px;
-  font-size: 16px;
+main .Btn button, .Btn a {
+    background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    font-family: 'Jeju Gothic', sans-serif;
+    cursor: pointer;
+    padding: 10px 30px;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    font-size: 16px;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 15px;
 }
 
-.form-wrap > li:last-child > a {
-  font-size: 13px;
-  color: #aaa;
-  padding: 0 13px;
-  border-right: 1px solid #aaaaaa;
+main button {
+    background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    font-family: 'Jeju Gothic', sans-serif;
+    cursor: pointer;
+    padding: 10px 30px;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    font-size: 16px;
+    color: black;
+    font-weight: bold;
 }
 
-.form-wrap > li:last-child > a:last-child {
-  border: none;
+
+main .Btn {
+    display: flex;
+    justify-content: center;
+    margin: 40px;
 }
 
-input.fieldError {
-  border: 1px solid red;
+
+main .member_gender label {
+    width: 25%;
 }
 
-.globalError,
-p.fieldError {
-  color: red;
-  font-size: 0.8em;
-  font-weight: bold;
+main .member_gender li {
+    display: flex;
+    padding: 10px 30px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin: 20px 20px 0;
+    letter-spacing: 1px;
+    font-size: 16px;
 }
 
-.Btn {
-  display: flex;
-  justify-content: center;
-  margin: 40px;
+main #memberGender1,
+main #memberGender2 {
+    margin: 0;
+    width: 25%;
 }
 
-#modifyBtn {
-  margin: 0 15px;
-}
 
-.member_gender label {
-  width: 25%;
-}
-
-.member_gender li {
-  display: flex;
-  padding: 10px 30px;
-  width: 250px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  margin: 20px 20px 0;
-  letter-spacing: 1 px;
-  font-size: 16px;
-}
-
-#memberGender1,
-#memberGender2 {
-  margin: 0;
-  width: 25%;
+p.errmsg.visible {
+    font-weight: bold;
+    color: red;
+    margin: 5px;
 }

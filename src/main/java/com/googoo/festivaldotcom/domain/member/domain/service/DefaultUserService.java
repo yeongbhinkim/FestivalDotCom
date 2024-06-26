@@ -9,11 +9,8 @@ import com.googoo.festivaldotcom.domain.member.infrastructure.mapper.UserMapper;
 import com.googoo.festivaldotcom.domain.member.infrastructure.repository.UserRepository;
 import com.googoo.festivaldotcom.global.auth.oauth.dto.AuthUserInfo;
 import com.googoo.festivaldotcom.global.auth.oauth.dto.OAuthUserInfo;
-import com.googoo.festivaldotcom.global.auth.oauth.service.OAuthService;
-import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.auth.token.service.TokenService;
 import com.googoo.festivaldotcom.global.utils.CookieUtil;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +19,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -113,7 +109,9 @@ public class DefaultUserService implements UserService {
                     fileUrl,
                     updateUserRequest.introduction(),
                     null,
-                    updateUserRequest.mannerScore()
+                    updateUserRequest.mannerScore(),
+                    updateUserRequest.gender(),
+                    updateUserRequest.companyEmail()
             );
         } else {
 			// 파일이 없거나 비어있는 경우 기본 이미지 경로를 설정
@@ -123,7 +121,9 @@ public class DefaultUserService implements UserService {
 					defaultImgUrl,
 					updateUserRequest.introduction(),
 					null,
-                    updateUserRequest.mannerScore()
+                    updateUserRequest.mannerScore(),
+                    updateUserRequest.gender(),
+                    updateUserRequest.companyEmail()
 			);
         }
 

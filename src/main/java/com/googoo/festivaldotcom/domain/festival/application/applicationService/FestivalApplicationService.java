@@ -5,93 +5,222 @@ import com.googoo.festivaldotcom.domain.festival.application.dto.response.GetFes
 import com.googoo.festivaldotcom.domain.festival.domain.model.Festival;
 import com.googoo.festivaldotcom.domain.festival.domain.service.FestivalService;
 import com.googoo.festivaldotcom.global.utils.DateTimeUtil;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
+// 로깅을 위한 어노테이션
+@Slf4j
+// 스프링 서비스로 등록
 @Service
-@RequiredArgsConstructor
 public class FestivalApplicationService {
 
-    // application.properties 또는 application.yml 파일에서 설정된 IMG_DIR 값을 주입받습니다.
+    // application.properties에서 설정된 이미지 저장 경로를 자동으로 주입받음
     @Value("${attach.img_dir}")
     private String IMG_DIR;
 
-    // FestivalService를 주입받습니다.
+    @Value("${url.stable_diffusion}")
+    private String STABLE_DIFFUSION_URL;
+
+    // 축제 관련 비즈니스 로직을 처리하는 서비스를 의존성 주입 받음
     private final FestivalService festivalService;
 
-    public List<Festival> getFestival(GetFestival getFestival){
+    // WebClient 인스턴스
+    private final WebClient webClient;
 
+    // 생성자에서 WebClient를 초기화합니다.
+    public FestivalApplicationService(FestivalService festivalService, WebClient.Builder webClientBuilder) {
+        this.festivalService = festivalService;
+        this.webClient = webClientBuilder.baseUrl(STABLE_DIFFUSION_URL).build();
+    }
+
+    /**
+     * 사용자로부터 입력받은 DTO를 기반으로 축제 정보를 조회하는 메서드
+     * @param getFestival
+     * @return
+     */
+    public List<Festival> getFestival(GetFestival getFestival) {
         return festivalService.getFestival(getFestival);
     }
 
     /**
-     * JSON 문자열을 파싱하여 FestivalApi 객체로 변환하고, 이를 서비스에 전달합니다.
-     *
-     * @param jsonString 파싱할 JSON 문자열
+     * 주어진 JSON 문자열에서 축제 정보를 파싱하고 처리하는 메서드
+     * @param jsonString
+     * @return
      */
-    public void parseAndPrintJson(String jsonString) {
-        // JSON 문자열을 JSONObject로 변환합니다.
-        JSONObject jsonObject = new JSONObject(jsonString);
-        // response 객체를 가져옵니다.
-        JSONObject response = jsonObject.getJSONObject("response");
-        // body 객체를 가져옵니다.
-        JSONObject body = response.getJSONObject("body");
-        // items 배열을 가져옵니다.
-        JSONArray items = body.getJSONArray("items");
+    public Mono<Void> parseAndProcessJson(String jsonString) {
+        try {
+            // JSON 문자열을 JSON 객체로 변환
+            JSONObject jsonObject = new JSONObject(jsonString);
+            JSONObject response = jsonObject.getJSONObject("response");
+            JSONObject header = response.getJSONObject("header");
 
-        // 각 item 객체를 파싱합니다.
-        for (int i = 0; i < items.length(); i++) {
-            JSONObject item = items.getJSONObject(i);
+            // resultCode를 확인하여 데이터가 없는 경우를 체크
+            String resultCode = header.getString("resultCode");
+            if ("03".equals(resultCode)) {
+                // 데이터가 없는 경우 처리 로직
+                System.out.println("No data available from the API.");
+                return Mono.empty();
+            }
 
-            // 축제 이미지 URL을 가져와서 이미지 경로를 생성합니다.
-            // 현재 시간 가져오기
-            LocalDateTime now = LocalDateTime.now();
-            // 폴더용 날짜 포맷 (년월일)
-            String formattedDate = DateTimeUtil.formatDateForFolder(now);
-            // 파일명용 시간 포맷 (년월일시분초)
-            String formattedDateTime = DateTimeUtil.formatDateTimeForFileName(now);
-            // 최종 이미지 경로 생성
-            // 예시 /festivalImg/20240620/20240620123045.jpg
-            String imagePath = String.format("%s/%s/%s.jpg", IMG_DIR, formattedDate, formattedDateTime);
+            // body가 있는지 확인
+            if (!response.has("body")) {
+                throw new JSONException("JSONObject[\"body\"] not found.");
+            }
 
+            JSONObject body = response.getJSONObject("body");
 
+            // items 배열이 있는지 확인
+            if (!body.has("items")) {
+                throw new JSONException("JSONArray[\"items\"] not found.");
+            }
 
+            JSONArray items = body.getJSONArray("items");
 
+            // items 배열 내 각 객체를 순회하며 처리
+//            return Flux.range(0, items.length())
+//                    .flatMap(i -> processItem(items.getJSONObject(i)))
+//                    .then(); // 모든 항목 처리가 완료되면 종료
 
-            // FestivalApi 객체를 빌더 패턴을 사용하여 생성합니다.
-            FestivalApi festivalApi = FestivalApi.builder()
-                    .fstvlNm(item.optString("fstvlNm", null)) // 축제 이름
-                    .opar(item.optString("opar", null)) // 운영자
-                    .fstvlStartDate(DateTimeUtil.convertToDate(item.optString("fstvlStartDate", null))) // 축제 시작일
-                    .fstvlEndDate(DateTimeUtil.convertToDate(item.optString("fstvlEndDate", null))) // 축제 종료일
-                    .fstvlCo(item.optString("fstvlCo", null)) // 축제 내용
-                    .mnnstNm(item.optString("mnnstNm", null)) // 주관기관명
-                    .auspcInsttNm(item.optString("auspcInsttNm", null)) // 후원기관명
-                    .suprtInsttNm(item.optString("suprtInsttNm", null)) // 지원기관명
-                    .phoneNumber(item.optString("phoneNumber", null)) // 전화번호
-                    .homepageUrl(item.optString("homepageUrl", null)) // 홈페이지 URL
-                    .relateInfo(item.optString("relateInfo", null)) // 관련 정보
-                    .rdnmadr(item.optString("rdnmadr", null)) // 도로명 주소
-                    .lnmadr(item.optString("lnmadr", null)) // 지번 주소
-                    .latitude(item.optString("latitude").isEmpty() ? null : new BigDecimal(item.optString("latitude", "0"))) // 위도
-                    .longitude(item.optString("longitude").isEmpty() ? null : new BigDecimal(item.optString("longitude", "0"))) // 경도
-                    .referenceDate(DateTimeUtil.convertToDate(item.optString("referenceDate", null))) // 참조 날짜
-                    .instt_code(item.optString("instt_code", null)) // 기관 코드
-                    .instt_nm(item.optString("instt_nm", null)) // 기관 이름
-                    .festivalImgUrl(imagePath) // 축제 이미지 경로
-                    .build();
+            // 순차적으로 항목 처리
+            return Flux.range(0, items.length())
+                    .concatMap(i -> processItem(items.getJSONObject(i)))
+                    .then();
 
-            // FestivalService에 FestivalApi 객체를 전달합니다.
-            festivalService.setFestival(festivalApi);
+        } catch (JSONException e) {
+            // JSON 처리 중 예외 발생 시 로깅 및 Mono 에러 반환
+            System.err.println("JSON processing error: " + e.getMessage());
+            return Mono.error(e);
         }
     }
 
+    /**
+     * JSON 객체를 개별적으로 처리하는 메서드
+     * @param item
+     * @return
+     */
+    private Mono<Void> processItem(JSONObject item) {
+        // 현재 시간 가져오기
+        LocalDateTime now = LocalDateTime.now();
+        // 폴더와 파일 이름에 사용할 날짜 형식으로 변환
+        String formattedDate = DateTimeUtil.formatDateForFolder(now);
+        String formattedDateTime = DateTimeUtil.formatDateTimeForFileName(now);
+        // 이미지 저장 경로 생성
+        String imagePath = String.format("%s/%s/%s.png", IMG_DIR, formattedDate, formattedDateTime);
+        // JSON 객체에서 필요한 정보 추출
+        String fstvlNm = item.optString("fstvlNm");
+        String fstvlCo = item.optString("fstvlCo");
+        String fstvlStartDate = item.optString("fstvlStartDate", "0000-00-00");
 
+        // 외부 API 호출 및 데이터 저장
+        return executePythonApi(formattedDate, formattedDateTime, imagePath, fstvlNm, fstvlCo, fstvlStartDate)
+                .flatMap(responseData -> saveFestival(item, imagePath))
+                .onErrorResume(e -> {
+                    // 오류 발생 시 로그를 남기고 빈 결과 반환
+                    log.error("Error processing festival item: {}", e.getMessage());
+                    return Mono.empty();
+                });
+    }
+
+    /**
+     * 페스티벌 정보를 저장하는 메서드
+     * @param item
+     * @param imagePath
+     * @return
+     */
+    private Mono<Void> saveFestival(JSONObject item, String imagePath) {
+        return Mono.defer(() -> {
+            // FestivalApi 객체 생성
+            FestivalApi festivalApi = buildFestivalApi(item, imagePath);
+            return Mono.fromRunnable(() -> {
+                // 서비스에 페스티벌 정보 저장 요청
+                festivalService.setFestival(festivalApi);
+                log.info("Festival saved: {}", festivalApi.getFstvlNm());
+            }).subscribeOn(Schedulers.boundedElastic());
+        }).then();
+    }
+
+    /**
+     * FestivalApi 객체를 생성하는 메서드
+     * @param item
+     * @param imagePath
+     * @return
+     */
+    private FestivalApi buildFestivalApi(JSONObject item, String imagePath) {
+        return FestivalApi.builder()
+                .festivalImgUrl(imagePath)
+                .fstvlNm(item.optString("fstvlNm"))
+                .opar(item.optString("opar"))
+                .fstvlStartDate(DateTimeUtil.convertToDate(item.optString("fstvlStartDate", "0000-00-00")))
+                .fstvlEndDate(DateTimeUtil.convertToDate(item.optString("fstvlEndDate", "0000-00-00")))
+                .fstvlCo(item.optString("fstvlCo"))
+                .mnnstNm(item.optString("mnnstNm"))
+                .auspcInsttNm(item.optString("auspcInsttNm"))
+                .suprtInsttNm(item.optString("suprtInsttNm"))
+                .phoneNumber(item.optString("phoneNumber"))
+                .homepageUrl(item.optString("homepageUrl"))
+                .relateInfo(item.optString("relateInfo"))
+                .rdnmadr(item.optString("rdnmadr"))
+                .lnmadr(item.optString("lnmadr"))
+                .latitude(parseDecimal(item.optString("latitude")))
+                .longitude(parseDecimal(item.optString("longitude")))
+                .referenceDate(DateTimeUtil.convertToDate(item.optString("referenceDate", "0000-00-00")))
+                .instt_code(item.optString("instt_code"))
+                .instt_nm(item.optString("instt_nm"))
+                .build();
+    }
+
+    /**
+     * 문자열을 BigDecimal로 변환하는 메서드
+     * @param value
+     * @return
+     */
+    private BigDecimal parseDecimal(String value) {
+        return Optional.ofNullable(value)
+                .filter(v -> !v.isEmpty())
+                .map(BigDecimal::new)
+                .orElse(null);
+    }
+
+    /**
+     * 외부 Python API를 호출하는 메서드
+     * @param formattedDate
+     * @param formattedDateTime
+     * @param imagePath
+     * @param fstvlNm
+     * @param fstvlCo
+     * @param fstvlStartDate
+     * @return
+     */
+    public Mono<JSONObject> executePythonApi(String formattedDate, String formattedDateTime, String imagePath, String fstvlNm, String fstvlCo, String fstvlStartDate) {
+        return webClient.post()
+                .uri(STABLE_DIFFUSION_URL) // API 엔드포인트 설정
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new JSONObject()
+                        .put("formattedDate", formattedDate)
+                        .put("formattedDateTime", formattedDateTime)
+                        .put("imagePath", imagePath)
+                        .put("festivalName", fstvlNm)
+                        .put("festivalContent", fstvlCo)
+                        .put("fstvlStartDate", fstvlStartDate)
+                        .toString())
+                .retrieve()
+                .bodyToMono(String.class) // 응답을 문자열로 받기
+                .map(JSONObject::new) // 문자열을 JSON 객체로 변환
+                .doOnError(e -> log.error("Error calling Python API: {}", e.getMessage())) // 오류 로그 기록
+                .onErrorResume(e -> Mono.empty()); // 오류 발생 시 빈 결과 반환
+    }
 }

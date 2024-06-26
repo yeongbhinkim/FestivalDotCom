@@ -26,5 +26,4 @@ public class FestivalRepository implements FestivalService {
         return festivalMapper.selectFestival(getFestival);
     }
 
-
 }

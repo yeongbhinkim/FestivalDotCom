@@ -49,6 +49,7 @@
     <!--  축제 조회  -->
     <select id="selectFestival" parameterType="com.googoo.festivaldotcom.domain.festival.domain.model.Festival">
         SELECT
+            festival_id,
             festival_name,
             location,
             start_at,
@@ -67,11 +68,14 @@
             update_at,
             provider_code,
             provider_name,
-            festival_img_url
+            festival_img_url,
+            canceled
         FROM festival
         WHERE festival_name LIKE CONCAT('%', #{festivalName}, '%')
         AND end_at > CURDATE()
         ORDER BY start_at
     </select>
+
+
 
 </mapper>

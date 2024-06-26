@@ -9,6 +9,7 @@ import java.sql.Date;
 @Getter // Lombok 라이브러리를 사용하여 getter을 자동으로 생성
 @Builder // Lombok 라이브러리를 사용하여 Builder 패턴을 자동으로 생성
 public class Festival {
+    private long  festivalId ; // 축제 ID
     private String festivalName; // 축제명
     private String location; // 운영자
     private Date startAt; // 축제 시작 날짜
@@ -28,4 +29,5 @@ public class Festival {
     private String providerCode; // 제공 기관 코드
     private String providerName; // 제공 기관명
     private String festivalImgUrl; // 축제 이미지 URL
+    private String canceled; // 취소여부
 }
