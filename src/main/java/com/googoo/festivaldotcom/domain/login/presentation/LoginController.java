@@ -1,19 +1,24 @@
 package com.googoo.festivaldotcom.domain.login.presentation;
 
+import com.googoo.festivaldotcom.domain.festival.application.applicationService.FestivalApplicationService;
+import com.googoo.festivaldotcom.domain.festival.application.dto.response.GetFestival;
+import com.googoo.festivaldotcom.domain.festival.domain.model.Festival;
 import com.googoo.festivaldotcom.domain.member.domain.model.User;
 import com.googoo.festivaldotcom.domain.member.infrastructure.repository.UserRepository;
 import com.googoo.festivaldotcom.global.auth.oauth.service.OAuthService;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.log.annotation.Trace;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -23,25 +28,37 @@ public class LoginController {
 
     private final OAuthService oAuthService;
     private final UserRepository userRepository;
+    // FestivalApplicationService를 주입받음
+    private final FestivalApplicationService festivalApplicationService;
 
 
     /**
-     *  홈 화면
-     * @param request
+     * 홈 화면
+     *
      * @return
      */
     @Trace
     @RequestMapping("/")
-    public String home(HttpServletRequest request
-    ,@AuthenticationPrincipal JwtAuthentication user
-    ) {
+    public String home(
+            @ModelAttribute GetFestival getFestival,
+            Model model
+            ) {
 
-//        String view = DetermineUtil.determineView(request, "login/beforeLogin", "login/afterLogin");
-        return "login/loginPage";
+        log.info("Receiving request to get festivals: {}", getFestival);
+
+        List<Festival> festivals = festivalApplicationService.getFestival(getFestival);
+
+        log.info("Retrieved {} festivals", festivals.size());
+
+        model.addAttribute("festivals", festivals);
+        model.addAttribute("getFestival", getFestival);
+
+        return "festival/festivalPage";
     }
 
     /**
      * 로그인 화면
+     *
      * @return
      */
     @Trace
@@ -54,6 +71,7 @@ public class LoginController {
 
     /**
      * 로그아웃 화면
+     *
      * @return
      */
     @Trace
@@ -68,7 +86,7 @@ public class LoginController {
         String Provider = userData.get().getProvider();
 
         // OAuth 로그아웃 URL 가져오기
-        String logoutUrl =oAuthService.revokeToken(Provider, user.accessToken());
+        String logoutUrl = oAuthService.revokeToken(Provider, user.accessToken());
 
         return ResponseEntity.ok(logoutUrl);
     }

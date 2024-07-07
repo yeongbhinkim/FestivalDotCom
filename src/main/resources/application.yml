@@ -44,7 +44,7 @@ spring:
     resources:
       add-mappings: true
       static-locations:
-        - file:///C:/profileImgUrl/
+        - file:///D:/test/test
         - classpath:/static/
 
   # MessageSource 설정

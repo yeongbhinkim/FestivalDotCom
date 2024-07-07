@@ -4,6 +4,7 @@ import com.googoo.festivaldotcom.domain.festival.application.dto.response.Festiv
 import com.googoo.festivaldotcom.domain.festival.application.dto.response.GetFestival;
 import com.googoo.festivaldotcom.domain.festival.domain.model.Festival;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -13,5 +14,7 @@ public interface FestivalMapper {
     void insertFestival(FestivalApi festivalApi);
 
     List<Festival> selectFestival(GetFestival getFestival);
+
+    Festival selectFestivalDetail(@Param("festivalId") Long festivalId);
 
 }

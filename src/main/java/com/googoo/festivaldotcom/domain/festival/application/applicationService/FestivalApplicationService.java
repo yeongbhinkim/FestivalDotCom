@@ -57,6 +57,15 @@ public class FestivalApplicationService {
     }
 
     /**
+     * 축제 상세 조회
+     * @param festivalId
+     * @return
+     */
+    public Festival getFestivalDetail(Long festivalId) {
+        return festivalService.getFestivalDetail(festivalId);
+    }
+
+    /**
      * 주어진 JSON 문자열에서 축제 정보를 파싱하고 처리하는 메서드
      * @param jsonString
      * @return

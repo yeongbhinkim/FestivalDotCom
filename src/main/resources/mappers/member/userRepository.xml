@@ -48,8 +48,8 @@
             profile_img_url = #{profileImgUrl},
             introduction = #{introduction},
             gender = #{gender},
-            companyEmail = #{companyEmail}
-
+            company_email = #{companyEmail},
+            company_email_at = now()
         WHERE id = #{id}
           AND deleted = 0
     </update>

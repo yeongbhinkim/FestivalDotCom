@@ -8,13 +8,11 @@ import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.auth.token.service.JwtTokenProvider;
 import com.googoo.festivaldotcom.global.auth.token.service.TokenService;
 import com.googoo.festivaldotcom.global.log.annotation.Trace;
-import com.googoo.festivaldotcom.global.utils.DetermineUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -41,12 +39,6 @@ public class UserController {
     private final TokenService tokenService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Value("${attach.root_dir}")
-    private String ROOT_DIR;
-
-    @Value("${attach.handler}")
-    private String HANDLER;
-
     /**
      * 회원 수정 화면
      *
@@ -64,8 +56,9 @@ public class UserController {
 
         model.addAttribute("modifyForm", modifyForm);
 
-        String view = DetermineUtil.determineView(request, "login/beforeLogin", "memberJoin/memberModifypage");
-        return view;
+//        String view = DetermineUtil.determineView(request, "login/beforeLogin", "memberJoin/memberModifypage");
+//        return view;
+        return "memberJoin/memberModifypage";
     }
 
     /**
@@ -87,7 +80,7 @@ public class UserController {
             // 검증 오류가 있으면 폼을 다시 보여줌
             model.addAttribute("modifyForm", modifyForm);
             model.addAttribute("org.springframework.validation.BindingResult.modifyForm", bindingResult);
-            return "memberModifyPage";
+            return "memberJoin/memberModifyPage";
         }
 
         // 검증 로직 추가 (예: 닉네임 중복 체크)
@@ -95,7 +88,7 @@ public class UserController {
             bindingResult.rejectValue("nickName", "duplicate", "이미 사용 중인 닉네임입니다.");
             model.addAttribute("modifyForm", modifyForm);
             model.addAttribute("org.springframework.validation.BindingResult.modifyForm", bindingResult);
-            return "memberModifyPage";
+            return "memberJoin/memberModifyPage";
         }
 
         userService.setUser(modifyForm, user.id());
@@ -118,8 +111,9 @@ public class UserController {
         //탈퇴 동의 페이지로 이동
         model.addAttribute("outForm", outForm);
 
-        String view = DetermineUtil.determineView(request, "login/loginPage", "memberJoin/memberDelpage");
-        return view;
+//        String view = DetermineUtil.determineView(request, "login/loginPage", "memberJoin/memberDelpage");
+//        return view;
+        return "memberJoin/memberDelpage";
     }
 
     @Trace

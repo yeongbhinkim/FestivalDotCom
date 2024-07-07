@@ -3,9 +3,9 @@ package com.googoo.festivaldotcom.domain.member.domain.model;
 
 import com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest;
 import com.googoo.festivaldotcom.domain.member.application.dto.response.ChatPermission;
+import com.googoo.festivaldotcom.domain.member.application.dto.response.Gender;
 import com.googoo.festivaldotcom.global.base.domain.BaseEntity;
 import com.googoo.festivaldotcom.global.utils.ValidateUtil;
-import com.nimbusds.openid.connect.sdk.claims.Gender;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,7 +52,6 @@ public class User extends BaseEntity {
 		this.mannerScore = new BigDecimal("36.5");
 		this.festivalCount = ZERO;
 		this.chatPermission = chatPermission != null ? chatPermission : ChatPermission.GUEST; // 기본값 설정
-		this.gender = gender;
 		this.companyEmail = companyEmail;
 	}
 

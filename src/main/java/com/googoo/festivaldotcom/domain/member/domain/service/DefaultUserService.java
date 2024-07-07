@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -43,6 +44,11 @@ public class DefaultUserService implements UserService {
     private final UserRepository userRepository;
     private final TokenService tokenService;
 
+    @Value("${attach.root_dir}")
+    private String ROOT_DIR;
+
+    @Value("${attach.handler}")
+    private String HANDLER;
 
     /* [회원 인증 정보 조회 및 저장] 등록된 유저 정보 찾아서 제공하고 없으면 등록합니다. */
     @Override
@@ -86,7 +92,7 @@ public class DefaultUserService implements UserService {
 
         MultipartFile file = updateUserRequest.file();
         if (file != null && !file.isEmpty()) {
-            String uploadDir = "C:/profileImgUrl/" + userId;
+            String uploadDir = ROOT_DIR + userId;
             Path uploadPath = Paths.get(uploadDir);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
@@ -103,7 +109,7 @@ public class DefaultUserService implements UserService {
             File dest = new File(filePath);
             file.transferTo(dest);
 
-            String fileUrl = "/profileImgUrl/" + userId + "/" + fileName;
+            String fileUrl = HANDLER + userId + "/" + fileName;
             updateUserRequest = new UpdateUserRequest(
                     updateUserRequest.nickName(),
                     fileUrl,
@@ -127,7 +133,7 @@ public class DefaultUserService implements UserService {
 			);
         }
 
-        userRepository.updateUser(updateUserRequest.nickName(), updateUserRequest.profileImgUrl(), updateUserRequest.introduction(), userId);
+        userRepository.updateUser(updateUserRequest.nickName(), updateUserRequest.profileImgUrl(), updateUserRequest.introduction(), updateUserRequest.gender(), updateUserRequest.companyEmail(), userId);
 
         return userRepository.selectId(userId)
                 .map(user -> userMapper.toSingleUserResponse(user))

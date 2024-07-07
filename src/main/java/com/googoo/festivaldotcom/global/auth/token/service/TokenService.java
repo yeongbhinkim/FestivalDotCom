@@ -1,9 +1,6 @@
 package com.googoo.festivaldotcom.global.auth.token.service;
 
-import com.googoo.festivaldotcom.domain.member.domain.model.User;
-import com.googoo.festivaldotcom.domain.member.infrastructure.repository.UserRepository;
 import com.googoo.festivaldotcom.global.auth.oauth.dto.AuthUserInfo;
-import com.googoo.festivaldotcom.global.auth.oauth.service.OAuthService;
 import com.googoo.festivaldotcom.global.auth.token.dto.Tokens;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthenticationToken;
@@ -13,24 +10,17 @@ import com.googoo.festivaldotcom.global.auth.token.model.RefreshToken;
 import com.googoo.festivaldotcom.global.auth.token.repository.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -68,9 +58,9 @@ public class TokenService { // TODO: authService와 TokenService로 분리하는
 
     @Transactional // 액세스 토큰 재발급을 위한 리프레시 토큰 검증
     public String getAccessTokensByRefreshToken(@NotBlank String refreshToken) {
-
         checkRefreshToken(refreshToken); // 리프레시 토큰 유효성 검증
 
+        System.out.println("refreshToken = " + refreshToken);
         return refreshTokenRepository.findById(refreshToken)
                 .map(token -> createAccessToken(token.getUserId(), token.getRole())) // 유효한 경우 새 액세스 토큰 생성
                 .orElseThrow(RefreshTokenNotFoundException::new); // 리프레시 토큰이 없는 경우 예외 발생
