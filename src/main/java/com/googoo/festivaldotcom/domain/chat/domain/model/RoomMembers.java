@@ -10,9 +10,9 @@ import java.time.LocalDate;
 @Builder
 public class RoomMembers {
 
-    private Long roomId;
-    private Long id;
-    private LocalDate createdAt;
+    private final Long roomId;
+    private final Long id;
+    private final LocalDate createdAt;
     @Setter
     private boolean deleted;
 }
