@@ -16,4 +16,9 @@ public class ChatMessage {
     private final Long senderId;
     private final String content;
     private final Date timestamp;
+    private final MessageType type;
+
+    public enum MessageType {
+        SENT, RECEIVED
+    }
 }
