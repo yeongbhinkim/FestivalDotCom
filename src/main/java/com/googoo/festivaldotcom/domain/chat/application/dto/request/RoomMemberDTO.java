@@ -11,8 +11,6 @@ import java.util.List;
 public class RoomMemberDTO {
 
     private final Long roomId;
-    private final Long userId;
-    @Setter
-    private List<Long> userIds;
+    private final List<Long> userIds;
 
 }

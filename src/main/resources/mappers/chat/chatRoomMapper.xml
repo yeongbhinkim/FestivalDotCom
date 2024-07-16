@@ -11,11 +11,14 @@
 
     <insert id="insertRoomMember">
         INSERT INTO room_members (room_id, id, created_at, deleted)
-        VALUES (#{roomId}, #{userId}, CURRENT_TIMESTAMP, 0)
+        VALUES 
+            <foreach collection="userIds" item="userId" separator=",">
+            (#{roomId}, #{userId}, CURRENT_TIMESTAMP, 0)
+            </foreach>
     </insert>
     
     <insert id="insertRegistration" useGeneratedKeys="true" keyProperty="registrationId">
-        INSERT INTO registration (registration_id, fetival_id, id, created_at)
-        VALUES (#{registrationId},#{fetivalId},#{id},CURRENT_TIMESTAMP)
+        INSERT INTO registration (fetival_id, id, created_at)
+        VALUES (#{fetivalId},#{id},CURRENT_TIMESTAMP)
     </insert>
 </mapper>

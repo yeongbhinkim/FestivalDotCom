@@ -21,7 +21,7 @@ public class RoomMemberService {
     private final ChatUserMapper chatUserMapper;
     private final ChatRoomMapper chatRoomMapper;
 
-    public List<RoomMemberDTO> getChatUserRoom(RoomMemberDTO roomMemberDTO, Festival festival) {
+    public List<RoomMemberDTO> getChatUserRoom(Festival festival) {
 
         List<User> males = chatUserMapper.selectUserGender(festival.getFestivalId(), "male");
         List<User> females = chatUserMapper.selectUserGender(festival.getFestivalId(), "female");
@@ -46,15 +46,14 @@ public class RoomMemberService {
                     .roomName(festival.getFestivalName())
                     .build();
 
-            int roomId = chatRoomMapper.insertRoom(rooms);
+            long roomId = chatRoomMapper.insertRoom(rooms);
+
+            RoomMemberDTO roomMemberDTO = RoomMemberDTO.builder()
+                    .roomId(roomId)
+                    .userIds(selectedUserIds).build();
 
 
-
-//            chatRoom.setFestivalId(festivalId);
-//            chatRoom.setUserIds(selectedUserIds);
-//
-//            chatRoomMapper.createChatRoom(chatRoom);
-//            createdRooms.add(chatRoom);
+            chatRoomMapper.insertRoomMember(roomMemberDTO);
         }
 
 //        // 남은 사용자들에 대한 처리
