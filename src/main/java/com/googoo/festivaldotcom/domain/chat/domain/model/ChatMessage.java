@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 @Getter
-@Builder(access = lombok.AccessLevel.PUBLIC)
+@Builder
 @Document(collection = "chat_messages")
 public class ChatMessage {
 

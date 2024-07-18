@@ -5,9 +5,8 @@ import lombok.Getter;
 
 
 @Getter
-@Builder(access = lombok.AccessLevel.PUBLIC)
+@Builder
 public class RegisDTO {
-    private final Long registration_id;
     private final Long festival_id;
     private final Long id; //userId
 }

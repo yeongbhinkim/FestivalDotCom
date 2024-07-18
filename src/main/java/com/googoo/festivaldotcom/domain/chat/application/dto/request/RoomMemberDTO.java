@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Getter
-@Builder(access = lombok.AccessLevel.PUBLIC)
+@Builder
 public class RoomMemberDTO {
 
     private final Long roomId;

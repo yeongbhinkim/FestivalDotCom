@@ -19,6 +19,6 @@
     
     <insert id="insertRegistration" useGeneratedKeys="true" keyProperty="registrationId">
         INSERT INTO registration (fetival_id, id, created_at)
-        VALUES (#{fetivalId},#{id},CURRENT_TIMESTAMP)
+        VALUES (#{fetivalId}, #{id}, CURRENT_TIMESTAMP)
     </insert>
 </mapper>

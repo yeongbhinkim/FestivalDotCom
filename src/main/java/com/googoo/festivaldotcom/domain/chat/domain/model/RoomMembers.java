@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Getter
-@Builder(access = lombok.AccessLevel.PUBLIC)
+@Builder
 public class RoomMembers {
 
     private final Long roomId;
