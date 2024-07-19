@@ -10,8 +10,8 @@ import org.apache.ibatis.annotations.Param;
 public interface ChatRoomMapper {
 
     long insertRoom(Rooms room);
-    void insertRoomMember(RoomMemberDTO roomMemberDTO);
-    void insertRegistration(RegisDTO regisDTO);
+    long insertRoomMember(RoomMemberDTO roomMemberDTO);
+    long insertRegistration(RegisDTO regisDTO);
 
 
 }
