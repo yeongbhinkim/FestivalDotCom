@@ -3,6 +3,7 @@ package com.googoo.festivaldotcom.domain.chat.presentation;
 
 import com.googoo.festivaldotcom.domain.chat.application.dto.request.RegisDTO;
 import com.googoo.festivaldotcom.domain.chat.domain.service.FestivalRegisService;
+import com.googoo.festivaldotcom.global.auth.token.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,9 +22,10 @@ public class ChatRegisController {
 
 
     private final FestivalRegisService festivalRegisService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/insert")
-    public ResponseEntity<String> regisInsertController (@RequestBody RegisDTO regisDTO){
+    public ResponseEntity<String> setRegis(@RequestBody RegisDTO regisDTO){
         try {
             festivalRegisService.festivalRegisInsert(regisDTO);
             return new ResponseEntity<>("신청이 성공적으로 완료되었습니다.", HttpStatus.OK);

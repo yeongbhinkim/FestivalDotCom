@@ -7,6 +7,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -77,6 +79,23 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException e) {
             throw new InvalidTokenException(); // 토큰이 유효하지 않은 경우 예외 발생
         }
+    }
+
+
+    public String extractTokenFromRequestCookie(HttpServletRequest request){
+
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("accessToken".equals(cookie.getName()) || "refreshToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
+        // 쿠키가 null이거나 조건을 만족하지 않으면 null 반환
+        return null;
     }
 
     private Set<String> blacklistedTokens = new HashSet<>();
