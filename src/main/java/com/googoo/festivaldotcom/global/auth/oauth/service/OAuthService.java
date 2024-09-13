@@ -2,13 +2,7 @@ package com.googoo.festivaldotcom.global.auth.oauth.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -47,6 +41,7 @@ public class OAuthService {
     public String revokeKakaoToken(String accessToken) {
         String apiURL = "https://kauth.kakao.com/oauth/logout";
         String logoutRedirectUri = "http://localhost:8080/oauthlogin";
+//        String logoutRedirectUri = "http://220.118.225.167:2221/oauthlogin";
 
         // URL에 필요한 파라미터 추가
         String logoutUrl = String.format("%s?client_id=%s&logout_redirect_uri=%s", apiURL, kakaoClientId, logoutRedirectUri);

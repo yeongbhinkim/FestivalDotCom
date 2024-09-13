@@ -6,6 +6,10 @@ server:
     include-exception: false # 예외의 전체 스택 추적은 로그에 포함되지 않습니다.
     include-message: never # 예외 메시지는 로그에 포함되지 않습니다.
     include-stacktrace: never # 예외 스택 트레이스는 로그에 포함되지 않습니다.
+  tomcat:
+    threads:
+      max: 200  # tomcat_threads_config_max_threads에 해당
+      min-spare: 10
 
 # profiles 설정
 spring:
@@ -80,6 +84,10 @@ management:
     web:
       exposure:
         include: '*'  # 모든 Actuator 엔드포인트를 외부에 노출합니다.
+  endpoint:
+    prometheus:
+      enabled: true
+
 
 # sentry 설정
 sentry:
@@ -108,6 +116,7 @@ secretKey:
 
 url:
   stable_diffusion: ${STABLE_DIFFUSION_URL}
+
 
 
 

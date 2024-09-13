@@ -23,7 +23,7 @@ public class HttpCookieOAuthAuthorizationRequestRepository implements Authorizat
 
     public static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request"; // OAuth2 인증 요청을 저장하는 쿠키의 이름
     public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri"; // 리다이렉트 URI를 저장하는 쿠키의 이름
-    private static final int COOKIE_EXPIRE_SECONDS = 180; // 쿠키의 유효기간(초)
+    private static final int COOKIE_EXPIRE_SECONDS = 1800; // 쿠키의 유효기간(초)
 
     /**
      * 요청에서 OAuth2 인증 요청을 로드합니다.
@@ -79,14 +79,30 @@ public class HttpCookieOAuthAuthorizationRequestRepository implements Authorizat
         // 쿠키에서 OAuth2 인증 요청을 가져옴
         OAuth2AuthorizationRequest authRequest = this.loadAuthorizationRequest(request);
 
-        // 인증 요청이 null이 아닌 경우 쿠키를 삭제함
+        // 인증 요청이 존재할 경우 쿠키를 삭제함
         if (authRequest != null) {
             CookieUtil.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+            CookieUtil.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME); // 리다이렉트 URI 쿠키 삭제
+            log.debug("Authorization request and redirect URI cookies deleted.");
+        } else {
+            log.error("Authorization request not found in cookie.");
+
+            try {
+                // 응답이 커밋되었는지 확인한 후 리다이렉트 처리
+                if (!response.isCommitted()) {
+                    response.sendRedirect("http://localhost:8080/oauthlogin");
+                } else {
+                    log.warn("Response has already been committed, cannot redirect.");
+                }
+            } catch (Exception e) {
+                log.error("Error redirecting to /oauthlogin: {}", e.getMessage());
+            }
         }
 
         // 인증 요청을 반환함
         return authRequest;
     }
+
 
     /**
      * OAuth2 인증 요청 및 리다이렉트 URI 쿠키를 제거합니다.

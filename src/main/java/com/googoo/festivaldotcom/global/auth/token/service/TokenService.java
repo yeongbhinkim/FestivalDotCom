@@ -53,6 +53,9 @@ public class TokenService { // TODO: authService와 TokenService로 분리하는
     @Transactional // 쓰기 트랜잭션을 위해 메소드 수준에서 설정 변경
     public String createRefreshToken(Long userId, String userRole) { // 리프레시 토큰 생성
         RefreshToken refreshToken = new RefreshToken(UUID.randomUUID().toString(), userId, userRole, getRefreshTokenExpirySeconds());
+
+//        System.out.println("createRefreshToken = " + refreshToken);
+
         return refreshTokenRepository.save(refreshToken).getRefreshToken();
     }
 
@@ -60,7 +63,7 @@ public class TokenService { // TODO: authService와 TokenService로 분리하는
     public String getAccessTokensByRefreshToken(@NotBlank String refreshToken) {
         checkRefreshToken(refreshToken); // 리프레시 토큰 유효성 검증
 
-        System.out.println("refreshToken = " + refreshToken);
+//        System.out.println("refreshToken = " + refreshToken);
         return refreshTokenRepository.findById(refreshToken)
                 .map(token -> createAccessToken(token.getUserId(), token.getRole())) // 유효한 경우 새 액세스 토큰 생성
                 .orElseThrow(RefreshTokenNotFoundException::new); // 리프레시 토큰이 없는 경우 예외 발생
@@ -70,6 +73,9 @@ public class TokenService { // TODO: authService와 TokenService로 분리하는
     public void deleteRefreshToken(String refreshToken) {
 
         checkRefreshToken(refreshToken); // 유효성 검증
+
+//        System.out.println("deleteRefreshToken = " + refreshToken);
+
         refreshTokenRepository.findById(refreshToken)
                 .ifPresent(refreshTokenRepository::delete); // 리프레시 토큰이 존재하는 경우 삭제
     }

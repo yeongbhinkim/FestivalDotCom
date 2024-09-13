@@ -81,7 +81,7 @@ public class FestivalApplicationService {
             String resultCode = header.getString("resultCode");
             if ("03".equals(resultCode)) {
                 // 데이터가 없는 경우 처리 로직
-                System.out.println("No data available from the API.");
+//                System.out.println("No data available from the API.");
                 return Mono.empty();
             }
 
@@ -111,7 +111,7 @@ public class FestivalApplicationService {
 
         } catch (JSONException e) {
             // JSON 처리 중 예외 발생 시 로깅 및 Mono 에러 반환
-            System.err.println("JSON processing error: " + e.getMessage());
+//            System.err.println("JSON processing error: " + e.getMessage());
             return Mono.error(e);
         }
     }
