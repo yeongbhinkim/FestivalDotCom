@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.googoo.festivaldotcom.domain.member.infrastructure.repository.VerificationTokenMapper">
+
+    <!-- 토큰 저장 -->
+    <insert id="insertVerificationToken">
+        INSERT INTO verification_token (email, token, created_at)
+        VALUES (#{email}, #{token}, NOW())
+    </insert>
+
+    <!-- 토큰으로 이메일 찾기 -->
+    <select id="findByToken" resultType="com.googoo.festivaldotcom.domain.member.domain.model.VerificationToken">
+        SELECT id, email, token, created_at
+        FROM verification_token
+        WHERE token = #{token}
+    </select>
+
+    <!-- 이메일로 토큰 삭제 -->
+    <delete id="deleteByEmail">
+        DELETE FROM verification_token WHERE email = #{email}
+    </delete>
+
+</mapper>

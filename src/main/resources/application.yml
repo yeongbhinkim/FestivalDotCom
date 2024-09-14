@@ -116,6 +116,7 @@ secretKey:
 
 url:
   stable_diffusion: ${STABLE_DIFFUSION_URL}
+  baseurl: ${BASEURL}
 
 springdoc:
   api-docs:
@@ -124,7 +125,17 @@ springdoc:
     url: /api-docs   # Swagger UI가 사용할 API 문서 경로를 /api-docs로 설정
     path: /api-docs/ui  # Swagger UI 경로를 /api-docs/ui로 설정
 
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: your-company-email@company.com
+    password: your-email-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 
 
