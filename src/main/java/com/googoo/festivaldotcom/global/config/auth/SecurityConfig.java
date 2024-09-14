@@ -43,9 +43,9 @@ public class SecurityConfig {
 						.requestMatchers("/img/**").permitAll()
 						.requestMatchers("/js/**").permitAll()
 						.requestMatchers("/css/**").permitAll()
+						.requestMatchers("/api-docs/**").permitAll()
 						.requestMatchers("/oauthlogin").permitAll()
 						.requestMatchers("/").permitAll()
-						.requestMatchers("/test0").permitAll()
 						.requestMatchers("/chat/**").permitAll()  //추후 삭제해야함 테스트용으로 넣어둠
 
 						.requestMatchers("/api/v1/festival/**").permitAll()

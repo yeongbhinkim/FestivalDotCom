@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="festival(title,styles,scripts,style,script,header,main,footer)">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:fragment=${title}>축제</title>
+
+  <!-- 공통 스타일을 불러오기 위한 링크 -->
+  <link rel="stylesheet" href="" th:href="@{/css/common.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+</head>
+<body>
+<div class="global-wrap">
+  <div class="hdr">
+    <div class="inner hdr-inner" th:insert="${header}">
+      header
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="inner main-inner" th:insert="${main}">
+      main
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="inner foot-inner" th:insert="${footer}">
+      foot
+    </div>
+  </div>
+</div>
+
+<th:block th:replace="${script}"></th:block>
+</body>
+</html>
