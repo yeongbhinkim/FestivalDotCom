@@ -1,6 +1,7 @@
 package com.googoo.festivaldotcom.domain.member.domain.service;
 
 import com.googoo.festivaldotcom.domain.member.infrastructure.repository.VerificationTokenMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,7 +15,9 @@ public class EmailVerificationService {
     @Value("${url.baseurl}")
     private String BASEURL;
 
+    @Autowired
     private JavaMailSender mailSender; // 이메일 전송을 담당하는 JavaMailSender 객체
+    @Autowired
     private VerificationTokenMapper tokenMapper; // MyBatis 매퍼로, 인증 토큰 관련 CRUD를 수행
 
     // 이메일 발송 메서드

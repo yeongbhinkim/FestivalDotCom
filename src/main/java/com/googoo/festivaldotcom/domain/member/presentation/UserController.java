@@ -6,6 +6,7 @@ import com.googoo.festivaldotcom.domain.member.application.dto.response.EmailVer
 import com.googoo.festivaldotcom.domain.member.application.dto.response.TokenVerificationResponse;
 import com.googoo.festivaldotcom.domain.member.application.dto.response.UserProfileResponse;
 import com.googoo.festivaldotcom.domain.member.domain.model.OutForm;
+import com.googoo.festivaldotcom.domain.member.domain.service.DomainValidationService;
 import com.googoo.festivaldotcom.domain.member.domain.service.EmailVerificationService;
 import com.googoo.festivaldotcom.domain.member.domain.service.UserService;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
@@ -21,6 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,6 +45,7 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final EmailVerificationService emailVerificationService;
+    private final DomainValidationService domainValidationService;
 
     @Operation(summary = "회원 수정 페이지", description = "사용자가 자신의 정보를 수정할 수 있는 페이지를 반환합니다.")
     @GetMapping("/myPage")
@@ -129,14 +132,37 @@ public class UserController {
     @Operation(summary = "이메일 인증 요청", description = "사용자의 이메일로 인증 링크를 전송합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이메일 인증 링크가 성공적으로 전송됨"),
-            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식")
+            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식 또는 도메인 유효하지 않음")
     })
     @PostMapping("/sendVerificationEmail")
     public ResponseEntity<EmailVerificationResponse> sendVerificationEmail(
-            @RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "인증 요청에 필요한 사용자 이메일") EmailVerificationRequest request) {
-        emailVerificationService.sendVerificationEmail(request.getEmail());
+            @Valid @RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "인증 요청에 필요한 사용자 이메일") EmailVerificationRequest request) {
+
+        // 이메일에서 도메인 부분 추출
+        String email = request.getEmail();
+        String domain = extractDomainFromEmail(email);
+
+        // 도메인 유효성 확인
+        if (!domainValidationService.isDomainValid(domain)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new EmailVerificationResponse(false, "유효하지 않은 도메인입니다."));
+        }
+
+        // 차단된 도메인인지 확인
+        if (domainValidationService.isBlockedDomain(domain)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new EmailVerificationResponse(false, "일반 메일 도메인은 사용할 수 없습니다."));
+        }
+
+        // 도메인이 유효하면 이메일 전송
+        emailVerificationService.sendVerificationEmail(email);
         return ResponseEntity.ok(new EmailVerificationResponse(true, "이메일 인증 링크가 전송되었습니다."));
     }
+
+    // 이메일에서 도메인 부분 추출
+    private String extractDomainFromEmail(String email) {
+        String[] parts = email.split("@");
+        return parts.length == 2 ? parts[1] : "";
+    }
+
 
     @Operation(summary = "이메일 인증 처리", description = "사용자가 이메일로 받은 토큰을 검증하여 인증을 처리합니다.")
     @ApiResponses(value = {
@@ -148,6 +174,8 @@ public class UserController {
         boolean isVerified = emailVerificationService.verifyEmailToken(token);
 
         if (isVerified) {
+            // 인증 업데이트 유저 테이블 수정 등급?
+
             return ResponseEntity.ok(new TokenVerificationResponse(true, "이메일 인증이 성공했습니다."));
         } else {
             return ResponseEntity.badRequest().body(new TokenVerificationResponse(false, "유효하지 않거나 만료된 토큰입니다."));

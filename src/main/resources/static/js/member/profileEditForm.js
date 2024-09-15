@@ -22,9 +22,16 @@ document.getElementById('modifyBtn').addEventListener('click', function () {
 function verifyEmail() {
   const emailInput = document.getElementById('companyEmail').value;
 
-  // 이메일 입력 확인
+// 이메일 입력 확인
   if (!emailInput) {
     document.getElementById('emailVerificationStatus').textContent = '이메일을 입력해주세요.';
+    return;
+  }
+
+// 이메일 형식 검증 (정규 표현식 사용)
+  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailPattern.test(emailInput)) {
+    document.getElementById('emailVerificationStatus').textContent = '유효한 이메일 형식이 아닙니다.';
     return;
   }
 
@@ -38,10 +45,11 @@ function verifyEmail() {
   })
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         if (data.success) {
           document.getElementById('emailVerificationStatus').textContent = '인증 이메일이 발송되었습니다.';
         } else {
-          document.getElementById('emailVerificationStatus').textContent = '이메일 인증에 실패했습니다.';
+          document.getElementById('emailVerificationStatus').textContent = data.message;
         }
       })
       .catch(error => {
