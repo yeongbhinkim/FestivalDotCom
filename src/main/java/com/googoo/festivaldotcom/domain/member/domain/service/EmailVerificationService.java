@@ -1,5 +1,7 @@
 package com.googoo.festivaldotcom.domain.member.domain.service;
 
+import com.googoo.festivaldotcom.domain.member.domain.model.VerificationToken;
+import com.googoo.festivaldotcom.domain.member.infrastructure.repository.UserRepository;
 import com.googoo.festivaldotcom.domain.member.infrastructure.repository.VerificationTokenMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,6 +9,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -19,9 +22,11 @@ public class EmailVerificationService {
     private JavaMailSender mailSender; // 이메일 전송을 담당하는 JavaMailSender 객체
     @Autowired
     private VerificationTokenMapper tokenMapper; // MyBatis 매퍼로, 인증 토큰 관련 CRUD를 수행
+    @Autowired
+    private UserRepository userRepository;
 
     // 이메일 발송 메서드
-    public void sendVerificationEmail(String recipientEmail) {
+    public void sendVerificationEmail(String recipientEmail, String userId ) {
         // 인증 토큰을 생성하는 메서드 호출
         String verificationToken = generateToken();
 
@@ -44,7 +49,7 @@ public class EmailVerificationService {
         mailSender.send(message);
 
         // 생성된 토큰과 이메일을 데이터베이스에 저장 (추후 검증을 위해 저장)
-        tokenMapper.insertVerificationToken(recipientEmail, verificationToken);
+        tokenMapper.insertVerificationToken(userId, verificationToken, recipientEmail);
     }
 
     // 인증 토큰 생성 메서드
@@ -53,10 +58,25 @@ public class EmailVerificationService {
         return UUID.randomUUID().toString();
     }
 
-    // 이메일 인증 처리
     public boolean verifyEmailToken(String token) {
-        // 데이터베이스에서 해당 토큰을 조회하고, 토큰이 존재하는지 확인
-        return tokenMapper.findByToken(token) != null;
+        // 토큰이 데이터베이스에 존재하는지 확인
+        VerificationToken tokenEntity = tokenMapper.findByToken(token);
+
+        if (tokenEntity == null) {
+            return false;  // 토큰이 없으면 유효하지 않음
+        }
+
+        // 토큰 만료 여부 확인 (5분 내에 유효해야 한다고 가정)
+        LocalDateTime tokenExpiryDate = tokenEntity.getCreatedAt().plusMinutes(5);
+        if (tokenExpiryDate.isBefore(LocalDateTime.now())) {
+            return false;  // 토큰이 만료된 경우
+        }
+
+        // 토큰이 유효하면 이메일 인증 처리 (예: 사용자 이메일 상태 업데이트)
+        userRepository.updateUserEmail(tokenEntity.getEmail(), Long.valueOf(tokenEntity.getUserId()));
+
+        return true;
     }
+
 
 }

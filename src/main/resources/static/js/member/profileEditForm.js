@@ -47,7 +47,7 @@ function verifyEmail() {
       .then(data => {
         console.log(data)
         if (data.success) {
-          document.getElementById('emailVerificationStatus').textContent = '인증 이메일이 발송되었습니다.';
+          document.getElementById('emailVerificationStatus').textContent = data.message;
         } else {
           document.getElementById('emailVerificationStatus').textContent = data.message;
         }

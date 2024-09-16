@@ -17,6 +17,8 @@ public interface UserRepository {
 
     int updateUser(@Param("nickName") String nickName, @Param("profileImgUrl") String profileImgUrl, @Param("introduction") String introduction, @Param("gender") Gender gender, @Param("companyEmail") String companyEmail, @Param("id") Long id);
 
+    int updateUserEmail(@Param("companyEmail") String companyEmail, @Param("id") Long id);
+
     int deleteUser(@Param("userId") Long userId);
 
     String getOauthId(@Param("userId") Long userId);

@@ -41,14 +41,26 @@
          )
     </insert>
 
-    <!--  사용자 수정  -->
+    <!--  사용자 수정
+     ,
+            company_email = #{companyEmail},
+            company_email_at = now()
+
+     -->
     <update id="updateUser" parameterType="com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest">
         UPDATE users
         SET nick_name = #{nickName},
             profile_img_url = #{profileImgUrl},
             introduction = #{introduction},
-            gender = #{gender},
-            company_email = #{companyEmail},
+            gender = #{gender}
+        WHERE id = #{id}
+          AND deleted = 0
+    </update>
+
+    <!--  사용자 이메일 수정  -->
+    <update id="updateUserEmail" parameterType="com.googoo.festivaldotcom.domain.member.application.dto.request.UpdateUserRequest">
+        UPDATE users
+        SET company_email = #{companyEmail},
             company_email_at = now()
         WHERE id = #{id}
           AND deleted = 0

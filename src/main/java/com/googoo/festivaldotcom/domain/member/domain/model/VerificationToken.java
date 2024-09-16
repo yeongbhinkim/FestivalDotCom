@@ -13,6 +13,9 @@ public class VerificationToken {
     @Schema(description = "고유한 토큰 ID", example = "1", required = true)
     private Long id;
 
+    @Schema(description = "사용자의 고유 ID", example = "1", required = true)
+    private String userId;
+
     @Schema(description = "사용자의 이메일 주소", example = "user@example.com", required = true)
     private String email;
 
@@ -22,7 +25,8 @@ public class VerificationToken {
     @Schema(description = "토큰이 생성된 시간", example = "2024-01-01T12:00:00", required = true)
     private LocalDateTime createdAt;
 
-    public VerificationToken(String email, String token) {
+    public VerificationToken(String email, String token, String userId) {
+        this.userId = userId;
         this.email = email;
         this.token = token;
         this.createdAt = LocalDateTime.now();

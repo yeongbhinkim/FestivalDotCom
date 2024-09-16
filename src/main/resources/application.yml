@@ -139,7 +139,7 @@ springdoc:
 
 blocked:
   domains:
-    - gmail.com
+#    - gmail.com
     - naver.com
     - daum.net
     - yahoo.com

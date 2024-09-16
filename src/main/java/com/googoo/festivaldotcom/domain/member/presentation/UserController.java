@@ -136,7 +136,8 @@ public class UserController {
     })
     @PostMapping("/sendVerificationEmail")
     public ResponseEntity<EmailVerificationResponse> sendVerificationEmail(
-            @Valid @RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "인증 요청에 필요한 사용자 이메일") EmailVerificationRequest request) {
+            @Valid @RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "인증 요청에 필요한 사용자 이메일") EmailVerificationRequest request,
+            @Parameter(description = "인증된 사용자 정보") @AuthenticationPrincipal JwtAuthentication user) {
 
         // 이메일에서 도메인 부분 추출
         String email = request.getEmail();
@@ -153,7 +154,7 @@ public class UserController {
         }
 
         // 도메인이 유효하면 이메일 전송
-        emailVerificationService.sendVerificationEmail(email);
+        emailVerificationService.sendVerificationEmail(email, user.id().toString());
         return ResponseEntity.ok(new EmailVerificationResponse(true, "이메일 인증 링크가 전송되었습니다."));
     }
 
@@ -174,8 +175,6 @@ public class UserController {
         boolean isVerified = emailVerificationService.verifyEmailToken(token);
 
         if (isVerified) {
-            // 인증 업데이트 유저 테이블 수정 등급?
-
             return ResponseEntity.ok(new TokenVerificationResponse(true, "이메일 인증이 성공했습니다."));
         } else {
             return ResponseEntity.badRequest().body(new TokenVerificationResponse(false, "유효하지 않거나 만료된 토큰입니다."));
