@@ -54,7 +54,7 @@ public class UserController {
                          Model model) {
         UserProfileResponse modifyForm = userService.getUser(user.id());
         model.addAttribute("modifyForm", modifyForm);
-        return "memberJoin/memberModifypage";
+        return "memberJoin/memberModifyPage";
     }
 
     @Operation(summary = "회원 정보 수정", description = "사용자가 자신의 정보를 수정합니다.")

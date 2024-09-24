@@ -32,4 +32,9 @@ public class FestivalRepository implements FestivalService {
         return festivalMapper.selectFestivalDetail(festivalId);
     }
 
+    @Override
+    public String getFestivalUpdateAt() {
+        return festivalMapper.selectFestivalUpdateAt();
+    }
+
 }

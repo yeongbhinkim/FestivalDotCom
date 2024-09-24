@@ -17,4 +17,6 @@ public interface FestivalMapper {
 
     Festival selectFestivalDetail(@Param("festivalId") Long festivalId);
 
+    String selectFestivalUpdateAt();
+
 }

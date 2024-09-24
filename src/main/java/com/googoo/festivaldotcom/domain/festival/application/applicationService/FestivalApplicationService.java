@@ -232,4 +232,9 @@ public class FestivalApplicationService {
                 .doOnError(e -> log.error("Error calling Python API: {}", e.getMessage())) // 오류 로그 기록
                 .onErrorResume(e -> Mono.empty()); // 오류 발생 시 빈 결과 반환
     }
+
+    public String getFestivalUpdateAt() {
+        return festivalService.getFestivalUpdateAt();
+    }
+
 }

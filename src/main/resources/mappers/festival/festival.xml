@@ -108,5 +108,10 @@
         WHERE festival_id = #{festivalId}
     </select>
 
+    <!-- 축제 최신 등록 날짜 조회 -->
+    <select id="selectFestivalUpdateAt" resultType="string">
+        SELECT update_at FROM festival ORDER BY update_at DESC LIMIT 1
+    </select>
+
 
 </mapper>

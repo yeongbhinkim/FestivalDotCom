@@ -21,4 +21,7 @@ public interface FestivalService {
 
     /* 축제 상세 조회 */
     Festival getFestivalDetail(@Param("festivalId") Long festivalId);
+
+    /* 축제 최신 등록 날짜 조회 */
+    String getFestivalUpdateAt();
 }

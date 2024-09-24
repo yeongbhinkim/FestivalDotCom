@@ -24,12 +24,14 @@ public class SchedulerConfig {
      * 스케줄러 메서드. 매일 새벽 1시에 실행됩니다.
      */
 //    @Scheduled(cron = "0 0 1 * * ?") // cron 표현식을 사용하여 매일 새벽 1시에 작업을 실행하도록 설정
-    @Scheduled(cron = "0 22 15 * * *")
+    @Scheduled(cron = "0 31 21 * * *")
     public void fetchAndSaveFestivalData() {
         log.info("Fetching festival data from API...");
         try {
+            String referenceDate = festivalApplicationService.getFestivalUpdateAt();
+
             // API에서 데이터를 가져옴
-            String data = apiExplorer.getDataFromApi();
+            String data = apiExplorer.getDataFromApi(referenceDate);
             log.info("Fetched data from API.");
 
             // 가져온 데이터를 파싱하고 저장하는 메서드를 호출

@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 
 @Slf4j // 로깅을 위한 Lombok 어노테이션
 @Service // 이 클래스가 서비스 레이어의 빈(Bean)임을 나타냅니다.
@@ -19,22 +18,23 @@ public class ApiExplorer {
     private String FESTIVAL_SECRET_KEY; // application.properties에서 'secretKey.festival' 값을 주입받습니다.
 
     // API로부터 데이터를 가져오는 메서드입니다.
-    public String getDataFromApi() throws IOException, URISyntaxException {
+    public String getDataFromApi(String referenceDate) throws IOException, URISyntaxException {
         StringBuilder urlBuilder = new StringBuilder("http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api"); // 기본 URL 설정
 
         // URL에 쿼리 파라미터를 추가합니다.
         urlBuilder.append("?").append(URLEncoder.encode("serviceKey", StandardCharsets.UTF_8)).append("=").append(FESTIVAL_SECRET_KEY); // 서비스 키 추가
         urlBuilder.append("&").append(URLEncoder.encode("pageNo", StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode("1", StandardCharsets.UTF_8)); // 페이지 번호 추가
-        urlBuilder.append("&").append(URLEncoder.encode("numOfRows", StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode("100", StandardCharsets.UTF_8)); // 한 페이지 결과 수 추가
+        urlBuilder.append("&").append(URLEncoder.encode("numOfRows", StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode("1000", StandardCharsets.UTF_8)); // 한 페이지 결과 수 추가
         urlBuilder.append("&").append(URLEncoder.encode("type", StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode("json", StandardCharsets.UTF_8)); // 응답 형식(JSON) 추가
 
         
         // 테스트 데이터는 하루에 1개씩하자 스케줄러 수정해서
         // 오늘 날짜를 'yyyy-MM-dd' 형식으로 포맷합니다.
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 //        String currentDate = sdf.format(new Date());
-        String currentDate = "2023-04-28";
-        urlBuilder.append("&").append(URLEncoder.encode("referenceDate", StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode(currentDate, StandardCharsets.UTF_8)); // 데이터 기준일자 추가
+        String currentDate = "2024-10-01";
+        urlBuilder.append("&").append(URLEncoder.encode("fstvlStartDate", StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode(currentDate, StandardCharsets.UTF_8)); // 데이터 기준일자 추가
+//        urlBuilder.append("&").append(URLEncoder.encode("referenceDate", StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode(referenceDate, StandardCharsets.UTF_8)); // 데이터 기준일자 추가
 
         URI uri = new URI(urlBuilder.toString());
         URL url = uri.toURL();
