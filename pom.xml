@@ -11,7 +11,7 @@
     <groupId>com.googoo</groupId>
     <artifactId>FestivalDotCom</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>FestivalDotCom</name>
     <description>FestivalDotCom</description>
     <properties>

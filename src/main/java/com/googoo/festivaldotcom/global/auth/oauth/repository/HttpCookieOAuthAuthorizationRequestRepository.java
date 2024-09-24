@@ -90,7 +90,8 @@ public class HttpCookieOAuthAuthorizationRequestRepository implements Authorizat
             try {
                 // 응답이 커밋되었는지 확인한 후 리다이렉트 처리
                 if (!response.isCommitted()) {
-                    response.sendRedirect("http://localhost:8080/oauthlogin");
+//                    response.sendRedirect("http://localhost:8080/oauthlogin");
+                    response.sendRedirect("https://festivaldotcom.shop/oauthlogin");
                 } else {
                     log.warn("Response has already been committed, cannot redirect.");
                 }

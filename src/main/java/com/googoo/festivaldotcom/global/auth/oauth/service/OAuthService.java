@@ -40,8 +40,8 @@ public class OAuthService {
 
     public String revokeKakaoToken(String accessToken) {
         String apiURL = "https://kauth.kakao.com/oauth/logout";
-        String logoutRedirectUri = "http://localhost:8080/oauthlogin";
-//        String logoutRedirectUri = "http://220.118.225.167:2221/oauthlogin";
+//        String logoutRedirectUri = "http://localhost:8080/oauthlogin";
+        String logoutRedirectUri = "https://festivaldotcom.shop/oauthlogin";
 
         // URL에 필요한 파라미터 추가
         String logoutUrl = String.format("%s?client_id=%s&logout_redirect_uri=%s", apiURL, kakaoClientId, logoutRedirectUri);

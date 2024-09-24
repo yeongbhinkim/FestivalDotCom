@@ -23,7 +23,8 @@
                 <li th:each="festival : ${festivals}">
                     <div class="image-container">
                         <a th:href="@{/api/v1/festival/detail/{festivalId}(festivalId=${festival.festivalId})}">
-                            <img th:src="${festival.festivalImgUrl}" alt="Festival Image">
+<!--                            <img th:src="${festival.festivalImgUrl}" alt="Festival Image">-->
+                            <img th:src="@{${festival.festivalImgUrl}}" alt="Festival Image">
                         </a>
                         <div class="image-content">
                             <a th:href="@{/api/v1/festival/detail/{festivalId}(festivalId=${festival.festivalId})}">
