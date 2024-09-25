@@ -1,10 +1,8 @@
 # 베이스 이미지를 지정합니다. 여기서는 Eclipse Temurin 21 버전을 사용하여 Java 런타임 환경을 제공합니다.
 FROM eclipse-temurin:21
 
-# Sentry Auth Token 및 프로젝트 정보를 빌드 시에 전달받을 수 있게 ARG로 설정합니다.
+# Sentry Auth Token을 빌드 시에 전달받을 수 있게 ARG로 설정합니다.
 ARG SENTRY_AUTH_TOKEN
-ARG SENTRY_ORG=festivalDotCom
-ARG SENTRY_PROJECT=festivalDotCom
 
 # 필요한 패키지들을 업데이트하고 sentry-cli를 설치합니다.
 RUN apt-get update && apt-get install -y curl unzip \
@@ -16,8 +14,8 @@ COPY .env /app/.env
 # .env 파일을 읽고 올바른 형식의 변수만 환경 변수로 설정합니다.
 RUN grep -v '^#' /app/.env | grep -v '^$' | grep -E '^[a-zA-Z_][a-zA-Z0-9_]*=' | while read -r line; do export "$line"; done
 
-# Sentry CLI를 사용하여 소스 번들을 업로드하는 명령어. ARG로 받은 SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT 사용
-RUN sentry-cli --auth-token "$SENTRY_AUTH_TOKEN" --org "$SENTRY_ORG" --project "$SENTRY_PROJECT" sourcemaps upload /app/target/sourcemaps
+# Sentry CLI를 사용하여 소스 번들을 업로드하는 명령어. ARG로 받은 SENTRY_AUTH_TOKEN 사용
+RUN sentry-cli --auth-token "$SENTRY_AUTH_TOKEN" sourcemaps upload /app/target/sourcemaps
 
 # 빌드 중 사용할 JAR 파일의 경로를 ARG로 지정합니다. 기본값은 build/libs/FestivalDotCom-1.0.2.jar입니다.
 ARG JAR_FILE=build/libs/FestivalDotCom-1.0.2.jar
