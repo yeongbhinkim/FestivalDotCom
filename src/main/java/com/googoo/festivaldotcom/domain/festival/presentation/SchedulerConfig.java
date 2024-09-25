@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -24,7 +23,7 @@ public class SchedulerConfig {
      * 스케줄러 메서드. 매일 새벽 1시에 실행됩니다.
      */
 //    @Scheduled(cron = "0 0 1 * * ?") // cron 표현식을 사용하여 매일 새벽 1시에 작업을 실행하도록 설정
-    @Scheduled(cron = "0 31 21 * * *")
+//    @Scheduled(cron = "0 31 21 * * *")
     public void fetchAndSaveFestivalData() {
         log.info("Fetching festival data from API...");
         try {
