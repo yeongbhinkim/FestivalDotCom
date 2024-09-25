@@ -3,6 +3,8 @@ FROM eclipse-temurin:21
 
 # Sentry Auth Token 및 프로젝트 정보를 빌드 시에 전달받을 수 있게 ARG로 설정합니다.
 ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG=festivalDotCom_docker
+ARG SENTRY_PROJECT=festivalDotCom_docker
 
 # 필요한 패키지들을 업데이트하고 sentry-cli를 설치합니다.
 RUN apt-get update && apt-get install -y curl unzip \
@@ -15,7 +17,7 @@ COPY .env /app/.env
 RUN grep -v '^#' /app/.env | grep -v '^$' | grep -E '^[a-zA-Z_][a-zA-Z0-9_]*=' | while read -r line; do export "$line"; done
 
 # Sentry CLI를 사용하여 소스 번들을 업로드하는 명령어.
-RUN sentry-cli --auth-token "$SENTRY_AUTH_TOKEN" sourcemaps upload /app/target/sourcemaps
+RUN sentry-cli --auth-token "$SENTRY_AUTH_TOKEN" sourcemaps upload /app/target/sourcemaps --org "$SENTRY_ORG" --project "$SENTRY_PROJECT"
 
 # 빌드 중 사용할 JAR 파일의 경로를 ARG로 지정합니다. 기본값은 build/libs/FestivalDotCom-1.0.2.jar입니다.
 ARG JAR_FILE=build/libs/FestivalDotCom-1.0.2.jar
