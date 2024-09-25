@@ -1,6 +1,12 @@
 # 베이스 이미지를 지정합니다. 여기서는 Eclipse Temurin 21 버전을 사용하여 Java 런타임 환경을 제공합니다.
 FROM eclipse-temurin:21
 
+# .env 파일을 컨테이너로 복사합니다.
+COPY .env /app/.env
+
+# .env 파일을 읽고 환경 변수로 설정합니다.
+RUN export $(grep -v '^#' /app/.env | xargs)
+
 # 빌드 중 사용할 JAR 파일의 경로를 ARG로 지정합니다. 기본값은 build/libs/FestivalDotCom-1.0.2.jar입니다.
 ARG JAR_FILE=build/libs/FestivalDotCom-1.0.2.jar
 
@@ -41,9 +47,6 @@ WORKDIR /app
 
 # 호스트 머신의 모든 파일을 컨테이너의 /app 디렉토리로 복사합니다. 이 작업은 애플리케이션 소스를 컨테이너에 포함시키기 위해 필요합니다.
 COPY . /app
-
-# .env 파일을 컨테이너로 복사
-COPY .env /app/.env
 
 # Maven을 사용하여 애플리케이션을 빌드합니다.
 RUN mvn clean package
