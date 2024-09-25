@@ -5,6 +5,7 @@ FROM eclipse-temurin:21
 ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_ORG=home-o0e
 ARG SENTRY_PROJECT=sentry
+ARG REDIS_PORT
 
 # 필요한 패키지들을 업데이트하고 sentry-cli를 설치합니다.
 RUN apt-get update && apt-get install -y curl unzip \
