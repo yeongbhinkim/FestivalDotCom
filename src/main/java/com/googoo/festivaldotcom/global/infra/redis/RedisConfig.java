@@ -25,12 +25,12 @@ public class RedisConfig {
 	private String redisHost;
 
 	@Value("${spring.config.redis.port}")  // application.properties에서 Redis 포트를 주입
-	private int redisPort;
+	private String redisPort;
 
 	@Bean  // 스프링 빈으로 등록
 	public RedisConnectionFactory redisConnectionFactory() {
 		// Lettuce를 사용한 RedisConnection 생성
-		return new LettuceConnectionFactory(redisHost, redisPort);
+		return new LettuceConnectionFactory(redisHost, Integer.parseInt(redisPort));
 	}
 
 	@Bean  // 스프링 빈으로 등록
