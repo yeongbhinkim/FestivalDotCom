@@ -40,7 +40,7 @@ RUN apt-get update && apt-get install -y maven
 WORKDIR /app
 
 # 호스트 머신의 모든 파일을 컨테이너의 /app 디렉토리로 복사합니다. 이 작업은 애플리케이션 소스를 컨테이너에 포함시키기 위해 필요합니다.
-COPY .env /app/.env
+COPY . /app
 
 # Maven을 사용하여 애플리케이션을 빌드합니다.
 RUN mvn clean package
