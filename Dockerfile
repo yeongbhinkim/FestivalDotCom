@@ -4,8 +4,8 @@ FROM eclipse-temurin:21
 # .env 파일을 컨테이너로 복사합니다.
 COPY .env /app/.env
 
-# .env 파일을 읽고 환경 변수로 설정합니다..
-RUN set -o allexport && . /app/.env && set +o allexport
+# .env 파일을 읽고 환경 변수로 설정
+RUN grep -v '^#' /app/.env | grep -v '^$' | while read -r line; do export "$line"; done
 
 # Sentry CLI를 사용하여 소스 번들을 업로드하는 명령어
 RUN sentry-cli --auth-token $SENTRY_AUTH_TOKEN upload-sourcemaps /app/target/sourcemaps
