@@ -4,7 +4,7 @@ FROM eclipse-temurin:21
 # .env 파일을 컨테이너로 복사합니다.
 COPY .env /app/.env
 
-# .env 파일을 읽고 환경 변수로 설정합니다.
+# .env 파일을 읽고 환경 변수로 설정합니다..
 RUN export $(grep -v '^#' /app/.env | xargs)
 
 # 빌드 중 사용할 JAR 파일의 경로를 ARG로 지정합니다. 기본값은 build/libs/FestivalDotCom-1.0.2.jar입니다.
