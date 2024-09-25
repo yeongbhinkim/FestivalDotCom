@@ -33,24 +33,24 @@ ENV DB_URL=${DB_URL} \
     MAIL_USERNAME=${MAIL_USERNAME} \
     MAIL_PASSWORD=${MAIL_PASSWORD}
 
+# Maven을 설치
+RUN apt-get update && apt-get install -y maven
+
 # 컨테이너 내에서 작업할 디렉토리를 /app으로 설정합니다. 이후의 작업들은 이 디렉토리에서 수행됩니다.
 WORKDIR /app
 
 # 호스트 머신의 모든 파일을 컨테이너의 /app 디렉토리로 복사합니다. 이 작업은 애플리케이션 소스를 컨테이너에 포함시키기 위해 필요합니다.
 COPY . /app
 
-# Maven Wrapper에 실행 권한을 부여합니다. 이 명령을 통해 Maven 빌드 도구가 실행될 수 있습니다.
-RUN chmod +x ./mvnw
-
-# Maven Wrapper를 사용해 애플리케이션을 빌드합니다. 'mvnw clean package' 명령어는 빌드 후 JAR 파일을 생성합니다.
-RUN ./mvnw clean package
+# Maven을 사용하여 애플리케이션을 빌드합니다.
+RUN mvn clean package
 
 # 컨테이너에서 8080 포트를 개방합니다. 이 포트는 애플리케이션이 HTTP 요청을 받을 포트입니다.
 EXPOSE 8080
 
 # 컨테이너가 시작될 때 실행될 명령어를 지정합니다. 생성된 JAR 파일을 실행하여 애플리케이션을 시작합니다.
-CMD ["java", "-jar", "target/your-application.jar"]
+CMD ["java", "-jar", "${JAR_FILE}"]
 
 # 운영 환경 또는 개발 환경에 맞게 프로파일을 설정할 수 있는 ENTRYPOINT입니다.
 # ACTIVE_PROFILE 환경 변수에 따라 Spring Boot 프로파일을 활성화하여 실행할 수 있습니다.
-# ENTRYPOINT ["java", "-Dspring.profiles.active=${ACTIVE_PROFILE}", "-jar", "/app.jar"]
+# ENTRYPOINT ["java", "-Dspring.profiles.active=${ACTIVE_PROFILE}", "-jar", "${JAR_FILE}"]
