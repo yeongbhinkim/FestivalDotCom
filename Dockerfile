@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y curl unzip \
 COPY .env /app/.env
 
 # .env 파일을 읽고 올바른 형식의 변수만 환경 변수로 설정합니다.
-RUN grep -v '^#' /app/.env | grep -v '^$' | grep -E '^[a-zA-Z_][a-zA-Z0-9_]*=' | while read -r line; do export "$line"; done
+RUN export $(grep -v '^#' /app/.env | xargs)
 
 # Sentry CLI를 사용하여 소스 번들을 업로드하는 명령어.
 RUN sentry-cli --auth-token "$SENTRY_AUTH_TOKEN" sourcemaps upload /app/target/sourcemaps --org "$SENTRY_ORG" --project "$SENTRY_PROJECT"
