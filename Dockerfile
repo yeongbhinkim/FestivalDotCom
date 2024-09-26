@@ -11,7 +11,7 @@ ARG DB_URL
 ARG DB_USERNAME
 ARG DB_PASSWORD
 
-# 필요한 패키지들을 업데이트하고 sentry-cli를 설치합니다.
+# 필요한 패키지들을 업데이트하고 sentry-cli를 설치합니다..
 RUN apt-get update && apt-get install -y curl unzip \
     && curl -sL https://sentry.io/get-cli/ | bash
 
