@@ -8,7 +8,6 @@ set -o pipefail  # 파이프라인 에러 감지
 # .env 파일 로드
 ENV_FILE="/home/dotcom/java/.env"
 if [ -f "$ENV_FILE" ]; then
-    # 주석과 빈 라인을 무시하고, 유효한 KEY=VALUE 형식만 로드
     set -a
     source "$ENV_FILE"
     set +a
@@ -24,6 +23,7 @@ BLUE_IP="172.31.0.10"  # 블루 서비스 IP
 GREEN_IP="172.31.0.11"  # 그린 서비스 IP
 NGINX_CONTAINER="nginx"  # Docker Compose에서 정의한 NGINX 컨테이너 이름
 LOG_FILE="/home/dotcom/deploy.log"  # 사용자 홈 디렉토리 내 로그 파일 경로
+DOCKER_IMAGE="abc282v/festivaldotcom"  # Docker 이미지 경로 (예: Docker Hub 또는 개인 레지스트리)
 
 # 로그 함수
 log() {
@@ -32,14 +32,12 @@ log() {
 
 # 충돌하는 컨테이너 제거 함수
 remove_conflicting_containers() {
-    local containers=("blue" "green")  # 제거할 컨테이너 이름 목록
+    local containers=("blue" "green")
 
     for container in "${containers[@]}"; do
         if docker ps -a --format '{{.Names}}' | grep -w "$container" > /dev/null; then
             log "충돌하는 컨테이너 발견: $container"
-            log "컨테이너 중지 중: $container"
             docker stop "$container" || log "컨테이너 중지 실패: $container"
-            log "컨테이너 제거 중: $container"
             docker rm "$container" || log "컨테이너 제거 실패: $container"
         else
             log "충돌하는 컨테이너 없음: $container"
@@ -54,24 +52,20 @@ update_nginx_upstream() {
 
     log "NGINX 업스트림 가중치 업데이트: 블루=${blue_weight}, 그린=${green_weight}"
 
-    # NGINX 설정 백업
     sudo cp "$NGINX_CONF" "${NGINX_CONF}.bak"
 
-    # 블루 서비스 가중치 수정
     if [ "$blue_weight" -eq 0 ]; then
         sudo sed -i "s/server ${BLUE_IP}:8080 .*/server ${BLUE_IP}:8080 down;/" "$NGINX_CONF"
     else
         sudo sed -i "s/server ${BLUE_IP}:8080 .*/server ${BLUE_IP}:8080 weight=${blue_weight};/" "$NGINX_CONF"
     fi
 
-    # 그린 서비스 가중치 수정
     if [ "$green_weight" -eq 0 ]; then
         sudo sed -i "s/server ${GREEN_IP}:8080 .*/server ${GREEN_IP}:8080 down;/" "$NGINX_CONF"
     else
         sudo sed -i "s/server ${GREEN_IP}:8080 .*/server ${GREEN_IP}:8080 weight=${green_weight};/" "$NGINX_CONF"
     fi
 
-    # NGINX 설정 테스트
     if ! sudo nginx -t -c "$NGINX_CONF"; then
         log "NGINX 설정 테스트 실패. 롤백을 수행합니다."
         sudo cp "${NGINX_CONF}.bak" "$NGINX_CONF"
@@ -79,7 +73,6 @@ update_nginx_upstream() {
         exit 1
     fi
 
-    # NGINX 재로드 (Docker 컨테이너 내부에서 실행)
     reload_nginx
     log "NGINX 재로드 완료."
 }
@@ -106,14 +99,14 @@ deploy_service() {
 
     log "서비스 배포 시작: $service"
 
-    # 도커 이미지 풀
-    if ! docker-compose -f "$DOCKER_COMPOSE_PATH" pull "$service"; then
-        log "도커 이미지 풀 실패: $service"
+    # Docker 이미지를 풀 (latest 태그 사용)
+    if ! docker pull "${DOCKER_IMAGE}:latest"; then
+        log "도커 이미지 풀 실패: ${DOCKER_IMAGE}:latest"
         exit 1
     fi
 
-    # 도커 컨테이너 업
-    if ! docker-compose -f "$DOCKER_COMPOSE_PATH" up -d "$service"; then
+    # 도커 컨테이너 업 (latest 태그 사용)
+    if ! docker-compose -f "$DOCKER_COMPOSE_PATH" up -d --force-recreate "$service"; then
         log "도커 컨테이너 업 실패: $service"
         exit 1
     fi
