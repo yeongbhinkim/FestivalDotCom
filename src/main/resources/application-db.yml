@@ -12,7 +12,9 @@ spring:
     maximum-pool-size: 20
     pool-name: MYSQL_DB
   config:
-    import: optional:file:.env[.properties]
+#    import: optional:file:.env[.properties]
+    import: optional:file:.env[.yml]
+#    import: "optional:classpath:.env"
 
 
   # JPA 설정
