@@ -22,7 +22,7 @@ COPY .env /app/.env
 RUN set -a && . /app/.env && set +a
 
 # Sentry CLI를 사용하여 소스 번들을 업로드하는 명령어.
-RUN sentry-cli --auth-token "$SENTRY_AUTH_TOKEN" sourcemaps upload /app/target/sourcemaps --org "$SENTRY_ORG" --project "$SENTRY_PROJECT"
+RUN sentry-cli --auth-token "\"$SENTRY_AUTH_TOKEN\"" sourcemaps upload /app/target/sourcemaps --org "$SENTRY_ORG" --project "$SENTRY_PROJECT"
 
 # 빌드 중 사용할 JAR 파일의 경로를 ARG로 지정합니다. 기본값은 build/libs/FestivalDotCom-1.0.2.jar입니다.
 ARG JAR_FILE=build/libs/FestivalDotCom-1.0.2.jar
