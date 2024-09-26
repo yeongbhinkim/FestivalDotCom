@@ -18,7 +18,8 @@ spring:
   #   virtual:
   #     enabled: true
   config:
-    import: optional:file:.env[.properties]
+#    import: optional:file:.env[.properties]
+    import: optional:file:.env[.yml]
 
 
   # Spring MVC 경로 매칭 전략 설정

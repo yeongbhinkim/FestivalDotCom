@@ -9,7 +9,8 @@ jwt:
 # OAuth 2.0 설정
 spring:
   config:
-    import: optional:file:.env[.properties]
+#    import: optional:file:.env[.properties]
+    import: optional:file:.env[.yml]
 
   security:
     oauth2:
