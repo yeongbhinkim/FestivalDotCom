@@ -32,7 +32,7 @@ RUN set -a && . /app/.env && set +a
 RUN sentry-cli --auth-token "$SENTRY_AUTH_TOKEN" sourcemaps upload /app/target/sourcemaps --org "$SENTRY_ORG" --project "$SENTRY_PROJECT"
 
 # 빌드 중 사용할 JAR 파일의 경로를 ARG로 지정합니다. 기본값은 build/libs/FestivalDotCom-0.0.1-SNAPSHOT.jar입니다.
-ARG JAR_FILE=/home/dotcom/java/FestivalDotCom-0.0.1-SNAPSHOT.jar
+#ARG JAR_FILE=/home/dotcom/java/FestivalDotCom-0.0.1-SNAPSHOT.jar
 
 # 여러 환경 변수를 설정합니다. 이 변수들은 애플리케이션이 실행되는 동안 사용됩니다.
 ENV DB_URL=$DB_URL \
@@ -80,7 +80,8 @@ RUN mvn clean package
 EXPOSE 8080
 
 # 컨테이너가 시작될 때 실행될 명령어를 지정합니다. 생성된 JAR 파일을 실행하여 애플리케이션을 시작합니다.
-CMD ["java", "-jar", "/home/dotcom/java/FestivalDotCom-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/FestivalDotCom-0.0.1-SNAPSHOT.jar"]
+#CMD ["java", "-jar", "/home/dotcom/java/FestivalDotCom-0.0.1-SNAPSHOT.jar"]
 
 # 운영 환경 또는 개발 환경에 맞게 프로파일을 설정할 수 있는 ENTRYPOINT입니다.
 # ACTIVE_PROFILE 환경 변수에 따라 Spring Boot 프로파일을 활성화하여 실행할 수 있습니다.
