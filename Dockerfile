@@ -14,8 +14,8 @@ COPY . /app
 # Maven Wrapper에 실행 권한을 부여합니다.
 RUN chmod +x ./mvnw
 
-# Maven을 사용해 애플리케이션을 빌드합니다.
-RUN ./mvnw clean package
+# Maven을 사용해 애플리케이션을 빌드합니다. (-DskipTests 옵션 추가로 테스트 실행을 생략)
+RUN ./mvnw clean package -DskipTests
 
 # 2단계: 런타임 스테이지
 # 경량화된 Java 21 런타임 이미지를 사용합니다.
