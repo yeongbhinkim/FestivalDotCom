@@ -16,5 +16,8 @@ RUN ./mvnw clean package -DskipTests
 # 2단계: 런타임 스테이지
 FROM eclipse-temurin:21-jre AS runtime
 
+# 빌드 스테이지에서 타겟 디렉토리에 빌드된 JAR 파일을 런타임 스테이지로 복사합니다.
+COPY --from=build /var/jenkins_home/workspace/festivalDotCom_docker/target/FestivalDotCom-0.0.1-SNAPSHOT.jar /app/FestivalDotCom.jar
+
 # 컨테이너 시작 시 실행할 명령을 지정합니다.
-ENTRYPOINT ["java", "-jar", "/var/jenkins_home/workspace/festivalDotCom_docker/target/FestivalDotCom-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/app/FestivalDotCom.jar"]
