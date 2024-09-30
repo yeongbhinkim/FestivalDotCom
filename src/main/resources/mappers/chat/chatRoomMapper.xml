@@ -21,4 +21,12 @@
         INSERT INTO registration (fetival_id, id, created_at)
         VALUES (#{fetivalId}, #{id}, CURRENT_TIMESTAMP)
     </insert>
+
+    <select id="findChatRoomsByUserId" resultType="ChatRoom">
+        SELECT * FROM chat_rooms WHERE user_id = #{userId}
+    </select>
+
+    <select id="findChatRoomById" resultType="ChatRoom">
+        SELECT * FROM chat_rooms WHERE room_id = #{roomId}
+    </select>
 </mapper>

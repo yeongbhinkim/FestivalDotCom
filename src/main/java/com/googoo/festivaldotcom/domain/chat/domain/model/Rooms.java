@@ -1,6 +1,5 @@
 package com.googoo.festivaldotcom.domain.chat.domain.model;
 
-import com.googoo.festivaldotcom.domain.festival.domain.model.Festival;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

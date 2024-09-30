@@ -11,6 +11,7 @@ import java.time.LocalDate;
 public class RoomMembers {
 
     private final Long roomId;
+    //유저id
     private final Long id;
     private final LocalDate createdAt;
     @Setter

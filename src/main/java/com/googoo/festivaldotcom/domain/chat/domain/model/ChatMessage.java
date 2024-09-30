@@ -11,11 +11,11 @@ import java.util.Date;
 @Document(collection = "chat_messages")
 public class ChatMessage {
 
-    private final String id;
-    private final String roomId;
+    private final Long id;
+    private final Long roomId;
     private final Long senderId;
     private final String content;
-    private final Date timestamp;
+    private final Date sentAt;
     private final MessageType type;
 
     public enum MessageType {

@@ -88,7 +88,7 @@ public class JwtTokenProvider {
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("accessToken".equals(cookie.getName()) || "refreshToken".equals(cookie.getName())) {
+                if ("accessToken".equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }

@@ -24,7 +24,6 @@ public class ChatRegisController {
 
 
     @PostMapping("/insert")
-    @ResponseBody
     public ResponseEntity<String> setRegis(@RequestBody RegisDTO regisDTO){
         try {
             festivalRegisService.festivalRegisInsert(regisDTO);
