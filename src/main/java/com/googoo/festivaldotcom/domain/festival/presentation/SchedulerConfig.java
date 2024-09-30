@@ -22,7 +22,7 @@ public class SchedulerConfig {
     /**
      * 스케줄러 메서드. 매일 새벽 1시에 실행됩니다.
      */
-    //모델 변경후 적용 예정
+    //모델 변경후 적용
 //    @Scheduled(cron = "0 0 1 * * ?") // cron 표현식을 사용하여 매일 새벽 1시에 작업을 실행하도록 설정
 //    @Scheduled(cron = "0 31 21 * * *")
     public void fetchAndSaveFestivalData() {
