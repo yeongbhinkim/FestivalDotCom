@@ -1,9 +1,6 @@
-// var stompClient = null;
-// var currentChatRoomId = '123'; // 실제 채팅방 ID로 변경 필요
-// var sessionId = 'user-id'; // 실제 사용자 ID로 교체 필요
+var stompClient = null;
 
 function connect() {
-    // WebSocket 연결 설정
     var socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
 
@@ -64,7 +61,6 @@ function showMessage(message) {
 }
 
 function loadChatHistory() {
-    // AJAX 요청을 사용하여 기존 채팅 기록을 서버에서 로드
     fetch('/chat/chatRooms/' + currentChatRoomId + '/messages')
         .then(response => response.json())
         .then(messages => {
@@ -74,7 +70,6 @@ function loadChatHistory() {
         });
 }
 
-// 페이지 로드 시 WebSocket 연결 시작
 window.onload = function() {
     connect();
 };

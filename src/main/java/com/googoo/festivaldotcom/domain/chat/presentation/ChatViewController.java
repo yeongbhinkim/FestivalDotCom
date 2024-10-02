@@ -1,6 +1,7 @@
 package com.googoo.festivaldotcom.domain.chat.presentation;
 
 import com.googoo.festivaldotcom.domain.chat.domain.model.ChatMessage;
+import com.googoo.festivaldotcom.domain.chat.domain.service.ChatRoomService;
 import com.googoo.festivaldotcom.domain.chat.domain.service.ChatService;
 import com.googoo.festivaldotcom.global.auth.token.service.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
@@ -25,6 +26,7 @@ public class ChatViewController {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final ChatService chatService;
+    private final ChatRoomService chatRoomService;
 
     private final SimpMessagingTemplate messagingTemplate;
     @GetMapping("/test")
@@ -43,7 +45,9 @@ public class ChatViewController {
                 .build();
 
         chatService.saveMessage(chatMessage);
+        chatRoomService.updateLastMessageTime(chatMessage.getRoomId());
         messagingTemplate.convertAndSend("/topic/" + chatMessage.getRoomId(), chatMessage);
+        messagingTemplate.convertAndSend("/topic/chatRooms", "updated");
     }
 
 
@@ -52,18 +56,17 @@ public class ChatViewController {
         return chatService.getMessagesByChatroomId(chatRoomId);
     }
 
-    @GetMapping("/chatRoom")
-    public String getChatRoom(HttpServletRequest request,ModelAndView modelAndView){
+    @GetMapping("/chatRoom/{chatRoomId}")
+    public String getChatRoom(HttpServletRequest request,ModelAndView modelAndView,@PathVariable Long chatRoomId){
 
         String userToken = jwtTokenProvider.extractTokenFromRequestCookie(request);
 
         Claims claims = jwtTokenProvider.getClaims(userToken);
 
         String userId = String.valueOf(claims.get("userId", Long.class));
-        String roomId = String.valueOf(claims.get("roomId", Long.class));
 
         modelAndView.addObject("sessionId", userId);
-        modelAndView.addObject("currentChatRoomId", roomId);
+        modelAndView.addObject("currentChatRoomId", chatRoomId);
 
         return "/chat/chatRoom";
     }

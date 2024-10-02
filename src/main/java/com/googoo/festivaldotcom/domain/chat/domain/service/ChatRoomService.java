@@ -11,5 +11,8 @@ public class ChatRoomService {
     private final ChatRoomMapper chatRoomMapper;
 
 
+    public void updateLastMessageTime(Long roomId) {
+        chatRoomMapper.updateLastMessageTime(roomId);
+    }
 
 }
