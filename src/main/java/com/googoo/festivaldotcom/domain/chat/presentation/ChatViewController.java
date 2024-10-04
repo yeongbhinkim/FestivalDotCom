@@ -34,6 +34,19 @@ public class ChatViewController {
         return "/chat/main";
     }
 
+    @GetMapping("/chatList")
+    public String chatList(HttpServletRequest request) {
+
+        String userToken = jwtTokenProvider.extractTokenFromRequestCookie(request);
+
+        Claims claims = jwtTokenProvider.getClaims(userToken);
+        String userId = String.valueOf(claims.get("userId", Long.class));
+
+
+
+        return "/chat/chatList";
+    }
+
 
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(ChatMessage message) {
