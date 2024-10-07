@@ -18,8 +18,9 @@
         <div class="chat-room-list">
             <ul id="chat-room-list">
                 <!-- Thymeleaf를 사용하여 서버에서 채팅방 목록 렌더링 -->
-                <li th:each="room : ${chatRooms}" class="chat-room-item">
-                    <span th:text="${room.roomName} + ' (ID: ' + ${room.roomId} + ')'"></span>
+                <li th:each="room, iterStat : ${roomList}" class="chat-room-item">
+                    <span th:text="${room.roomName}"></span>
+                    <span th:text="${messageList[iterStat.index]}"></span>
                     <button onclick="location.href='/chat/chatRoom/' + [[${room.roomId}]]">Join</button>
                 </li>
             </ul>

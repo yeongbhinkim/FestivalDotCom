@@ -17,5 +17,6 @@ public class Rooms {
     @Setter
     private boolean deleted;
 
+    private final LocalDate lastMessageAt;
 
 }

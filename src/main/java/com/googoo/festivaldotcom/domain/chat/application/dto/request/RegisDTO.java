@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class RegisDTO {
-    private final Long festival_id;
+    private final Long festivalId;
     private final Long id; //userId
 }

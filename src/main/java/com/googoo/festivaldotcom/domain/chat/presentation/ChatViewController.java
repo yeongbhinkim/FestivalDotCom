@@ -1,6 +1,8 @@
 package com.googoo.festivaldotcom.domain.chat.presentation;
 
+import com.googoo.festivaldotcom.domain.chat.application.projection.RoomLastMessageProjection;
 import com.googoo.festivaldotcom.domain.chat.domain.model.ChatMessage;
+import com.googoo.festivaldotcom.domain.chat.domain.model.Rooms;
 import com.googoo.festivaldotcom.domain.chat.domain.service.ChatRoomService;
 import com.googoo.festivaldotcom.domain.chat.domain.service.ChatService;
 import com.googoo.festivaldotcom.global.auth.token.service.JwtTokenProvider;
@@ -35,14 +37,18 @@ public class ChatViewController {
     }
 
     @GetMapping("/chatList")
-    public String chatList(HttpServletRequest request) {
+    public String chatList(HttpServletRequest request,ModelAndView modelAndView) {
 
         String userToken = jwtTokenProvider.extractTokenFromRequestCookie(request);
 
         Claims claims = jwtTokenProvider.getClaims(userToken);
         String userId = String.valueOf(claims.get("userId", Long.class));
 
+        List<RoomLastMessageProjection> lastMessage = chatService.getLastMessage(userId);
+        List<Rooms> roomsList = chatRoomService.selectChatRoomsByUserId(userId);
 
+        modelAndView.addObject("messageList", lastMessage);
+        modelAndView.addObject("roomList", roomsList);
 
         return "/chat/chatList";
     }
@@ -65,7 +71,7 @@ public class ChatViewController {
 
 
     @GetMapping("/chatRooms/{chatRoomId}/messages")
-    public List<ChatMessage> getAllMessages(@PathVariable Long chatRoomId) {
+    public List<ChatMessage> getAllMessages(@PathVariable String chatRoomId) {
         return chatService.getMessagesByChatroomId(chatRoomId);
     }
 

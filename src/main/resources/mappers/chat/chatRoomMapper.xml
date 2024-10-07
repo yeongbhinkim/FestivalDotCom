@@ -6,13 +6,17 @@
 <mapper namespace="com.googoo.festivaldotcom.domain.chat.infrastructure.mapper.ChatRoomMapper">
 
     <!--    select    -->
-    <select id="findChatRoomsByUserId" resultType="ChatRoom">
-        SELECT * FROM chat_rooms WHERE user_id = #{userId}
+    <select id="selectChatRoomsByUserId" resultType="Rooms">
+        SELECT * FROM rooms
+        JOIN room_members
+            ON rooms.room_id = room_members.room_id
+        WHERE room_members.id = #{userId}
+        ORDER BY rooms.last_message_at DESC
     </select>
 
-    <select id="findChatRoomById" resultType="ChatRoom">
+<!--    <select id="findChatRoomById" resultType="ChatRoom">
         SELECT * FROM chat_rooms WHERE room_id = #{roomId}
-    </select>
+    </select>-->
 
     <!--    insert    -->
     <insert id="insertRoom" useGeneratedKeys="true" keyProperty="roomId" parameterType="Rooms">
