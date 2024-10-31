@@ -71,8 +71,7 @@ public class DefaultUserService implements UserService {
 
     /* [회원 조회] 사용자 ID를 통해 등록된 유저 정보 찾아서 제공하고 없으면 예외가 발생합니다. */
     @Override
-//    @Cacheable(value = "User", key = "#userId")
-    @CacheEvict(value = "User", key = "#userId")
+    @Cacheable(value = "User", key = "#userId")
     public UserProfileResponse getUser(Long userId) {
         return userRepository.selectId(userId)
                 .map(userMapper::toSingleUserResponse)
