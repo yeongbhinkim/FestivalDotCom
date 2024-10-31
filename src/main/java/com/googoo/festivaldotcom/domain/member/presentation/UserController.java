@@ -87,7 +87,7 @@ public class UserController {
             }
 
         // 성공 메시지를 Flash Attribute로 설정
-        redirectAttributes.addFlashAttribute("successMessage", "사용자 정보가 성공적으로 수정되었습니다.");
+//        redirectAttributes.addFlashAttribute("successMessage", "사용자 정보가 성공적으로 수정되었습니다.");
 
         userService.setUser(modifyForm, user.id());
         return "redirect:/api/v1/user/myPage";
