@@ -1,10 +1,11 @@
 <main th:fragment="memberModifyBox">
     <script th:inline="javascript">
-        /*[[${successMessage}]]*/
-        const successMessage = /*[[${successMessage}]]*/ null;
-        if (successMessage && successMessage !== 'null') {
-            alert(successMessage);
-        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const successMessage = /*[[${successMessage != null ? "'" + successMessage + "'" : "null"}]]*/ null;
+            if (successMessage && successMessage !== 'null') {
+                alert(successMessage);
+            }
+        });
     </script>
 
 
