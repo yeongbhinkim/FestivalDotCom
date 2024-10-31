@@ -27,9 +27,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 
@@ -47,6 +49,7 @@ public class UserController {
     private final EmailVerificationService emailVerificationService;
     private final DomainValidationService domainValidationService;
 
+    @Transactional
     @Operation(summary = "회원 수정 페이지", description = "사용자가 자신의 정보를 수정할 수 있는 페이지를 반환합니다.")
     @GetMapping("/myPage")
     public String myPage(HttpServletRequest request,
@@ -66,18 +69,26 @@ public class UserController {
     public String modify(@Valid @ModelAttribute UpdateUserRequest modifyForm,
                          BindingResult bindingResult,
                          @Parameter(description = "인증된 사용자 정보") @AuthenticationPrincipal JwtAuthentication user,
-                         Model model) throws IOException {
+                         Model model,
+                         RedirectAttributes redirectAttributes) throws IOException {
         if (bindingResult.hasErrors()) {
             model.addAttribute("modifyForm", modifyForm);
             model.addAttribute("org.springframework.validation.BindingResult.modifyForm", bindingResult);
             return "memberJoin/memberModifyPage";
         }
-        if (userService.getNickName(modifyForm.nickName())) {
-            bindingResult.rejectValue("nickName", "duplicate", "이미 사용 중인 닉네임입니다.");
-            model.addAttribute("modifyForm", modifyForm);
-            model.addAttribute("org.springframework.validation.BindingResult.modifyForm", bindingResult);
-            return "memberJoin/memberModifyPage";
-        }
+
+        UserProfileResponse userForm = userService.getUser(user.id());
+
+            if (userService.getNickName(modifyForm.nickName()) && !userForm.nickName().equals(modifyForm.nickName())) {
+                bindingResult.rejectValue("nickName", "duplicate", "이미 사용 중인 닉네임입니다.");
+                model.addAttribute("modifyForm", modifyForm);
+                model.addAttribute("org.springframework.validation.BindingResult.modifyForm", bindingResult);
+                return "memberJoin/memberModifyPage";
+            }
+
+        // 성공 메시지를 Flash Attribute로 설정
+        redirectAttributes.addFlashAttribute("successMessage", "사용자 정보가 성공적으로 수정되었습니다.");
+
         userService.setUser(modifyForm, user.id());
         return "redirect:/api/v1/user/myPage";
     }

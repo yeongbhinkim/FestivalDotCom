@@ -1,4 +1,14 @@
 <main th:fragment="memberModifyBox">
+    <script defer>
+        window.onload = function () {
+            const successMessageElement = document.getElementById('flashMessage');
+            if (successMessageElement && successMessageElement.textContent.trim() !== '') {
+                alert(successMessageElement.textContent);
+            }
+        }
+    </script>
+
+
     <link rel="stylesheet" href="" th:href="@{/css/member/memberModify.css}">
     <div class="main-sub">
         <form action="/api/v1/user/modify" id="modifyForm" method="post" th:object="${modifyForm}"
@@ -74,6 +84,10 @@
                                 <p id="emailVerificationStatus"></p>
                             </li>
                         </div>
+                        <p th:if="${successMessage}" th:text="${successMessage}" id="flashMessage"
+                           style="display: none;"></p>
+
+
                     </div>
 
                     <div class="Btn">

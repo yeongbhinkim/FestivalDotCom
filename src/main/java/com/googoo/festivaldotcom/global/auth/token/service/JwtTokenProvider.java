@@ -58,7 +58,7 @@ public class JwtTokenProvider {
 
     // 토큰에서 클레임(사용자 정보 및 권한 등)을 추출
     public Claims getClaims(String token) {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
                 .build()
                 .parseClaimsJws(token)
@@ -68,7 +68,7 @@ public class JwtTokenProvider {
     // 토큰의 유효성을 검증하는 메서드
     public void validateToken(String token) {
         try {
-            Jwts.parser()
+            Jwts.parserBuilder()
                     .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
                     .build()
                     .parseClaimsJws(token);
