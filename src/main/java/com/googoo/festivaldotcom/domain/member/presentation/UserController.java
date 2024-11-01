@@ -77,12 +77,12 @@ public class UserController {
 
         UserProfileResponse userForm = userService.getUser(user.id());
 
-            if (userService.getNickName(modifyForm.nickName()) && !userForm.nickName().equals(modifyForm.nickName())) {
-                bindingResult.rejectValue("nickName", "duplicate", "이미 사용 중인 닉네임입니다.");
-                model.addAttribute("modifyForm", modifyForm);
-                model.addAttribute("org.springframework.validation.BindingResult.modifyForm", bindingResult);
-                return "memberJoin/memberModifyPage";
-            }
+        if (userService.getNickName(modifyForm.nickName()) && !userForm.nickName().equals(modifyForm.nickName())) {
+            bindingResult.rejectValue("nickName", "duplicate", "이미 사용 중인 닉네임입니다.");
+            model.addAttribute("modifyForm", modifyForm);
+            model.addAttribute("org.springframework.validation.BindingResult.modifyForm", bindingResult);
+            return "memberJoin/memberModifyPage";
+        }
 
         userService.setUser(modifyForm, user.id());
 
@@ -96,8 +96,7 @@ public class UserController {
 
     @Operation(summary = "회원 탈퇴 페이지", description = "회원 탈퇴를 위한 페이지로 이동합니다.")
     @GetMapping("/myPageRemove")
-    public String myPageRemove(HttpServletRequest request,
-                               OutForm outForm,
+    public String myPageRemove(OutForm outForm,
                                Model model) {
         model.addAttribute("outForm", outForm);
         return "memberJoin/memberDelpage";
