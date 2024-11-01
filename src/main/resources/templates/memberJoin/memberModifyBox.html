@@ -103,10 +103,13 @@
         </form>
     </div>
     <script th:inline="javascript">
-        /*[[${successMessage != null}]]*/ {
+        /*<![CDATA[*/
+        if ([[${successMessage != null}]] && [[${successMessage} != ''])) {
             alert(/*[[${successMessage}]]*/);
         }
+        /*]]>*/
     </script>
+
     <script defer src="" th:src="@{/js/logout.js}"></script>
     <script defer src="" th:src="@{/js/member/profileEditForm.js}"></script>
 </main>
