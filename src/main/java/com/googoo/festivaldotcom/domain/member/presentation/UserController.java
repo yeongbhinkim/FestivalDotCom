@@ -54,9 +54,16 @@ public class UserController {
     @GetMapping("/myPage")
     public String myPage(HttpServletRequest request,
                          @Parameter(description = "인증된 사용자 정보") @AuthenticationPrincipal JwtAuthentication user,
-                         Model model) {
+                         Model model,
+                         HttpServletResponse response) {
         UserProfileResponse modifyForm = userService.getUser(user.id());
         model.addAttribute("modifyForm", modifyForm);
+
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+
+
         return "memberJoin/memberModifyPage";
     }
 
