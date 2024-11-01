@@ -21,7 +21,10 @@ public class P6spyMessageFormatter implements MessageFormattingStrategy {
 
 		// SQL을 포맷하고 카테고리와 실행 시간을 포함한 메시지를 생성합니다.
 		sql = formatSql(category, sql);
-		return category + " | " + "OperationTime : " + elapsed + "ms" + sql;
+//		return category + " | " + "OperationTime : " + elapsed + "ms" + sql;
+
+		String methodName = getCallingMethodName(); // 호출된 메소드명을 가져옴
+		return category + " | " + "OperationTime : " + elapsed + "ms | Method: " + methodName + " | " + sql;
 	}
 
 	// SQL 쿼리를 특정 형식에 맞게 포맷합니다.
@@ -60,6 +63,16 @@ public class P6spyMessageFormatter implements MessageFormattingStrategy {
 						&& !string.startsWith("com.googoo.festivaldotcom.global.config.db.p6spy")
 						&& !string.startsWith("com.googoo.festivaldotcom.FestivalDotComApplication.main"))
 				.toArray(String[]::new);
+	}
+
+	// 호출된 메소드명을 반환하는 메소드입니다.
+	private String getCallingMethodName() {
+		return Arrays.stream(new Throwable().getStackTrace())
+				.filter(stackTraceElement -> stackTraceElement.getClassName().startsWith("com.googoo.festivaldotcom")
+						&& !stackTraceElement.getClassName().startsWith("com.googoo.festivaldotcom.global.config.db.p6spy"))
+				.findFirst()
+				.map(StackTraceElement::getMethodName)
+				.orElse("UnknownMethod");
 	}
 
 }
