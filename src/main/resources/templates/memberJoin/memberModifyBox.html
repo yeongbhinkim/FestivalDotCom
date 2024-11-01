@@ -84,10 +84,7 @@
                                 <p id="emailVerificationStatus"></p>
                             </li>
                         </div>
-                        <p th:if="${successMessage}" th:text="${successMessage}" id="flashMessage"
-                           style="display: none;"></p>
-
-
+                        <p th:if="${successMessage}" th:text="${successMessage}" id="flashMessage" style="display:none;"></p>
                     </div>
 
                     <div class="Btn">
@@ -102,13 +99,15 @@
             </div>
         </form>
     </div>
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        if ([[${successMessage != null}]] && [[${successMessage} != ''])) {
-            alert(/*[[${successMessage}]]*/);
-        }
-        /*]]>*/
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const messageElement = document.getElementById('flashMessage');
+            if (messageElement && messageElement.textContent.trim() !== '') {
+                alert(messageElement.textContent);
+            }
+        });
     </script>
+
 
     <script defer src="" th:src="@{/js/logout.js}"></script>
     <script defer src="" th:src="@{/js/member/profileEditForm.js}"></script>
