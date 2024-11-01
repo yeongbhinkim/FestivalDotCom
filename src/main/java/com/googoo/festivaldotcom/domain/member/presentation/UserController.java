@@ -52,17 +52,10 @@ public class UserController {
     @Transactional
     @Operation(summary = "회원 수정 페이지", description = "사용자가 자신의 정보를 수정할 수 있는 페이지를 반환합니다.")
     @GetMapping("/myPage")
-    public String myPage(HttpServletRequest request,
-                         @Parameter(description = "인증된 사용자 정보") @AuthenticationPrincipal JwtAuthentication user,
-                         Model model,
-                         HttpServletResponse response) {
+    public String myPage(@Parameter(description = "인증된 사용자 정보") @AuthenticationPrincipal JwtAuthentication user,
+                         Model model) {
         UserProfileResponse modifyForm = userService.getUser(user.id());
         model.addAttribute("modifyForm", modifyForm);
-
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
-
 
         return "memberJoin/memberModifyPage";
     }
