@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 
@@ -69,8 +68,7 @@ public class UserController {
     public String modify(@Valid @ModelAttribute UpdateUserRequest modifyForm,
                          BindingResult bindingResult,
                          @Parameter(description = "인증된 사용자 정보") @AuthenticationPrincipal JwtAuthentication user,
-                         Model model,
-                         RedirectAttributes redirectAttributes) throws IOException {
+                         Model model) throws IOException {
         if (bindingResult.hasErrors()) {
             model.addAttribute("modifyForm", modifyForm);
             model.addAttribute("org.springframework.validation.BindingResult.modifyForm", bindingResult);
@@ -86,11 +84,14 @@ public class UserController {
                 return "memberJoin/memberModifyPage";
             }
 
-        // 성공 메시지를 Flash Attribute로 설정
-//        redirectAttributes.addFlashAttribute("successMessage", "사용자 정보가 성공적으로 수정되었습니다.");
-
         userService.setUser(modifyForm, user.id());
-        return "redirect:/api/v1/user/myPage";
+
+        model.addAttribute("successMessage", "회원 정보가 성공적으로 수정되었습니다.");
+
+        UserProfileResponse getModifyForm = userService.getUser(user.id());
+        model.addAttribute("modifyForm", getModifyForm);
+
+        return "memberJoin/memberModifyPage";
     }
 
     @Operation(summary = "회원 탈퇴 페이지", description = "회원 탈퇴를 위한 페이지로 이동합니다.")
