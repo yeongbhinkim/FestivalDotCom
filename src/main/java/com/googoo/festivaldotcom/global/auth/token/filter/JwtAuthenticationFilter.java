@@ -92,7 +92,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             .parseClaimsJws(accessToken)
                             .getBody();
 
-                    log.info("Claims: {}", claims);
+//                    log.info("Claims: {}", claims);
 
                     // 유저 역할 추출
                     String userRole = claims.get("role", String.class);
@@ -125,8 +125,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     // 특정 경로("/tokens")에 대해서는 필터를 적용하지 않음
-//    @Override
-//    protected boolean shouldNotFilter(HttpServletRequest request) {
-//        return request.getRequestURI().endsWith("tokens");
-//    }
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return request.getRequestURI().endsWith("tokens");
+    }
 }

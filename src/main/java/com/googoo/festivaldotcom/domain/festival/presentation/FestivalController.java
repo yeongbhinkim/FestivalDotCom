@@ -38,16 +38,33 @@ public class FestivalController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @PostMapping(value = "/search")
+    @GetMapping(value = "/search")
     public String getFestival(
             @Parameter(description = "조회 조건을 담은 객체") @ModelAttribute GetFestival getFestival,
             Model model
     ) {
 
-        log.info("search = {}", "search()호출됨");
+        log.info("search = {}", "search() 호출됨");
+
         List<Festival> festivals = festivalApplicationService.getFestival(getFestival);
         model.addAttribute("festivals", festivals);
         return "festival/festivalPage";
+    }
+
+    @Operation(summary = "축제 목록 조회", description = "입력한 조건에 맞는 축제 정보를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 축제 목록을 반환함"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    @GetMapping(value = "/searchScroll", produces = "application/json")
+    @ResponseBody // JSON 형식으로 반환
+    public List<Festival> getFestivalSearchScroll(
+            @Parameter(description = "조회 조건을 담은 객체") @ModelAttribute GetFestival getFestival
+    ) {
+        log.info("searchScroll = {}", "searchScroll() 호출됨");
+
+        return festivalApplicationService.getFestival(getFestival);
     }
 
     /**

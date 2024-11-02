@@ -7,7 +7,6 @@ import com.googoo.festivaldotcom.domain.member.domain.model.User;
 import com.googoo.festivaldotcom.domain.member.infrastructure.repository.UserRepository;
 import com.googoo.festivaldotcom.global.auth.oauth.service.OAuthService;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
-import com.googoo.festivaldotcom.global.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +36,7 @@ public class LoginController {
      *
      * @return
      */
-    @Trace
+//    @Trace
     @RequestMapping("/")
     public String home(
             @ModelAttribute GetFestival getFestival,
@@ -61,7 +60,7 @@ public class LoginController {
      *
      * @return
      */
-    @Trace
+//    @Trace
     @RequestMapping("/oauthlogin")
     public String login() {
         log.info("oauthlogin = {}", "oauthlogin()호출됨");
@@ -74,7 +73,7 @@ public class LoginController {
      *
      * @return
      */
-    @Trace
+//    @Trace
     @GetMapping("/oauthlogOut")
     public ResponseEntity<String> logOut(
             @AuthenticationPrincipal JwtAuthentication user

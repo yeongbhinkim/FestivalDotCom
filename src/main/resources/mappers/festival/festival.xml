@@ -78,6 +78,7 @@
             AND festival_name LIKE CONCAT('%', #{festivalName}, '%')
         </if>
         ORDER BY start_at
+        LIMIT #{size} OFFSET #{offset}
     </select>
 
 

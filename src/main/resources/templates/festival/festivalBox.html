@@ -2,8 +2,8 @@
     <link rel="stylesheet" href="" th:href="@{/css/festival/festival.css}">
 
     <div class="festival">
-
-        <form id="frm" action="/api/v1/festival/search" method="post" th:object="${getFestival}">
+        <!-- 검색 폼 -->
+        <form id="frm" action="/api/v1/festival/search" method="get" th:object="${getFestival}">
             <div class="container">
                 <div class="festival_festivalName">
                     <li>
@@ -17,13 +17,12 @@
             </div>
         </form>
 
-        <div class="container-body">
-            <!-- 조회된 페스티벌 리스트를 표시 -->
+        <!-- 페스티벌 리스트 -->
+        <div class="container-body" id="festivalContainer">
             <ul>
                 <li th:each="festival : ${festivals}">
                     <div class="image-container">
                         <a th:href="@{/api/v1/festival/detail/{festivalId}(festivalId=${festival.festivalId})}">
-<!--                            <img th:src="${festival.festivalImgUrl}" alt="Festival Image">-->
                             <img th:src="@{${festival.festivalImgUrl}}" alt="Festival Image">
                         </a>
                         <div class="image-content">
@@ -37,5 +36,7 @@
         </div>
 
     </div>
+
+    <script defer src="" th:src="@{/js/festival/festival.js}"></script>
 
 </main>
