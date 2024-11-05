@@ -32,9 +32,10 @@ public class ApiExplorer {
         // 오늘 날짜를 'yyyy-MM-dd' 형식으로 포맷합니다.
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 //        String currentDate = sdf.format(new Date());
-        String currentDate = "2024-10-01";
-        urlBuilder.append("&").append(URLEncoder.encode("fstvlStartDate", StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode(currentDate, StandardCharsets.UTF_8)); // 데이터 기준일자 추가
-//        urlBuilder.append("&").append(URLEncoder.encode("referenceDate", StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode(referenceDate, StandardCharsets.UTF_8)); // 데이터 기준일자 추가
+//        String currentDate = "2024-11-06";
+//        urlBuilder.append("&").append(URLEncoder.encode("fstvlStartDate", StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode(currentDate, StandardCharsets.UTF_8)); // 데이터 기준일자 추가
+//        urlBuilder.append("&").append(URLEncoder.encode("fstvlStartDate", StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode(referenceDate, StandardCharsets.UTF_8)); // 데이터 기준일자 추가
+        urlBuilder.append("&").append(URLEncoder.encode("referenceDate", StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode(referenceDate, StandardCharsets.UTF_8)); // 데이터 기준일자 추가
 
         URI uri = new URI(urlBuilder.toString());
         URL url = uri.toURL();
