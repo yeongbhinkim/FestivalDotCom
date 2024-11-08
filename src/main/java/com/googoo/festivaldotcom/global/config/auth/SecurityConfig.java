@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -43,35 +45,40 @@ public class SecurityConfig {
 						.requestMatchers("/img/**").permitAll()
 						.requestMatchers("/js/**").permitAll()
 						.requestMatchers("/css/**").permitAll()
+						.requestMatchers("/api-docs/**").permitAll()
 						.requestMatchers("/oauthlogin").permitAll()
+						.requestMatchers("/profileImgUrl/**").permitAll()
 						.requestMatchers("/").permitAll()
-						.requestMatchers("/test0").permitAll()
+						.requestMatchers("/api/v1/user/verify").permitAll()
 						.requestMatchers("/chat/**").permitAll()  //추후 삭제해야함 테스트용으로 넣어둠
 						.requestMatchers("/api/v1/festival/**").permitAll()
+						.requestMatchers("/festivalImg/**").permitAll()
+
+						.requestMatchers("/actuator/prometheus").permitAll()
 						.anyRequest().authenticated()
 				)
 
 
 				// 기본 HTTP 인증을 비활성화합니다.
-				.httpBasic(httpBasic -> httpBasic.disable())
+				.httpBasic(AbstractHttpConfigurer::disable)
 
 				// 기억하기 기능을 비활성화합니다.
-				.rememberMe(rememberMe -> rememberMe.disable())
+				.rememberMe(AbstractHttpConfigurer::disable)
 
 				// CSRF 보호를 비활성화합니다.
-				.csrf(csrf -> csrf.disable())
+				.csrf(AbstractHttpConfigurer::disable)
 
 				// 로그아웃을 비활성화합니다.
-				.logout(logout -> logout.disable())
+				.logout(AbstractHttpConfigurer::disable)
 
 				// 요청 캐시를 비활성화합니다.
-				.requestCache(requestCache -> requestCache.disable())
+				.requestCache(RequestCacheConfigurer::disable)
 
 				// 폼 로그인을 비활성화합니다.
-				.formLogin(formLogin -> formLogin.disable())
+				.formLogin(AbstractHttpConfigurer::disable)
 
 				// 헤더 보안을 비활성화합니다.
-				.headers(headers -> headers.disable())
+				.headers(AbstractHttpConfigurer::disable)
 
 				// 세션 관리를 구성합니다.
 				.sessionManagement(sessionManagement ->
@@ -85,7 +92,7 @@ public class SecurityConfig {
 								.authorizationRequestRepository(httpCookieOAuthAuthorizationRequestRepository)
 						)
 						.redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig
-								.baseUri("/test")
+								.baseUri("/oauth2Login")
 						)
 						.successHandler(oauthAuthenticationSuccessHandler)
 						.failureHandler(oauthAuthenticationFailureHandler)

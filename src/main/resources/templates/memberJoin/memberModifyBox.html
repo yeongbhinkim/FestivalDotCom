@@ -1,4 +1,14 @@
 <main th:fragment="memberModifyBox">
+<!--    <script th:inline="javascript">-->
+<!--        document.addEventListener("DOMContentLoaded", function () {-->
+<!--            const successMessage = /*[[${successMessage != null ? "'" + successMessage + "'" : "null"}]]*/ null;-->
+<!--            if (successMessage && successMessage !== 'null') {-->
+<!--                alert(successMessage);-->
+<!--            }-->
+<!--        });-->
+<!--    </script>-->
+
+
     <link rel="stylesheet" href="" th:href="@{/css/member/memberModify.css}">
     <div class="main-sub">
         <form action="/api/v1/user/modify" id="modifyForm" method="post" th:object="${modifyForm}"
@@ -14,7 +24,6 @@
                                      th:src="*{profileImgUrl}"
                                      alt="Selected Image"
                                      style="max-width: 300px; max-height: 300px; display: block; margin: auto; object-fit: contain;">
-
                                 <button type="button" onclick="deleteImage();"
                                         style="position: absolute; top: 0; right: 0; padding: 5px;">X
                                 </button>
@@ -53,6 +62,29 @@
                                    class="errmsg visible"></p>
                             </li>
                         </div>
+
+                        <div class="member_gender">
+                            <li>
+                                <label>성별:</label>
+                                <label for="male">남자</label>
+                                <input type="radio" id="male" name="gender" value="MALE" th:field="*{gender}"/>
+                                <label for="female">여자</label>
+                                <input type="radio" id="female" name="gender" value="FEMALE" th:field="*{gender}"/>
+                                <label for="none">선택 안 함</label>
+                                <input type="radio" id="none" name="gender" value="NONE" th:field="*{gender}"/>
+                            </li>
+                        </div>
+
+                        <div class="member_email_verification">
+                            <li>
+                                <label for="companyEmail">회사 이메일:</label>
+                                <input type="text" name="companyEmail" id="companyEmail" th:field="*{companyEmail}"
+                                       placeholder="회사 이메일을 입력해주세요."/>
+                                <button type="button" onclick="verifyEmail();">이메일 인증</button>
+                                <p id="emailVerificationStatus"></p>
+                            </li>
+                        </div>
+                        <p th:if="${successMessage}" th:text="${successMessage}" id="flashMessage" style="display:none;"></p>
                     </div>
 
                     <div class="Btn">
@@ -63,14 +95,20 @@
                     <div class="Btn">
                         <a href="#" id="logoutButton" role="button">로그아웃</a>
                     </div>
-
                 </div>
             </div>
         </form>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const messageElement = document.getElementById('flashMessage');
+            if (messageElement && messageElement.textContent.trim() !== '') {
+                alert(messageElement.textContent);
+            }
+        });
+    </script>
+
 
     <script defer src="" th:src="@{/js/logout.js}"></script>
     <script defer src="" th:src="@{/js/member/profileEditForm.js}"></script>
-
 </main>
-

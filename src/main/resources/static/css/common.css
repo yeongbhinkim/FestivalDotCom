@@ -37,6 +37,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    overflow: hidden;
 }
 
 .app-header {
@@ -51,6 +52,16 @@ body {
 .header-title {
     font-size: 16px;
     font-weight: bold;
+}
+
+@media (max-width: 550px) {
+    .responsive-text {
+        font-size: 9px;
+    }
+}
+
+.responsive-text {
+    font-size: 16px;
 }
 
 .header-settings {
@@ -85,6 +96,8 @@ header {
 .main {
     height: 77%;
     width: 100%;
+    overflow-y: auto;
+    display: grid;
 }
 
 .inner.main-inner {

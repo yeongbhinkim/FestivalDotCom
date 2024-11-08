@@ -57,6 +57,15 @@ public class FestivalApplicationService {
     }
 
     /**
+     * 축제 상세 조회
+     * @param festivalId
+     * @return
+     */
+    public Festival getFestivalDetail(Long festivalId) {
+        return festivalService.getFestivalDetail(festivalId);
+    }
+
+    /**
      * 주어진 JSON 문자열에서 축제 정보를 파싱하고 처리하는 메서드
      * @param jsonString
      * @return
@@ -72,7 +81,7 @@ public class FestivalApplicationService {
             String resultCode = header.getString("resultCode");
             if ("03".equals(resultCode)) {
                 // 데이터가 없는 경우 처리 로직
-                System.out.println("No data available from the API.");
+//                System.out.println("No data available from the API.");
                 return Mono.empty();
             }
 
@@ -102,7 +111,7 @@ public class FestivalApplicationService {
 
         } catch (JSONException e) {
             // JSON 처리 중 예외 발생 시 로깅 및 Mono 에러 반환
-            System.err.println("JSON processing error: " + e.getMessage());
+//            System.err.println("JSON processing error: " + e.getMessage());
             return Mono.error(e);
         }
     }
@@ -223,4 +232,9 @@ public class FestivalApplicationService {
                 .doOnError(e -> log.error("Error calling Python API: {}", e.getMessage())) // 오류 로그 기록
                 .onErrorResume(e -> Mono.empty()); // 오류 발생 시 빈 결과 반환
     }
+
+    public String getFestivalUpdateAt() {
+        return festivalService.getFestivalUpdateAt();
+    }
+
 }

@@ -1,7 +1,5 @@
 package com.googoo.festivaldotcom.domain.member.application.dto.response;
 
-import com.nimbusds.openid.connect.sdk.claims.Gender;
-
 public record UserProfileResponse(
 	Long id,
 	String nickName,

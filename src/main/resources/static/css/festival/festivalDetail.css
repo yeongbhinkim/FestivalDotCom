@@ -1,0 +1,28 @@
+@charset "utf-8";
+
+
+.main {
+    display: flex;          /* Flexbox를 사용하여 자식 요소 배치 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center;     /* 수직 중앙 정렬 */
+}
+
+.main img {
+    max-width: 100%;         /* 이미지가 너무 커지지 않도록 제어 */
+    height: auto;
+}
+
+.main p,
+.main h2 {
+    text-align: center;      /* 텍스트 중앙 정렬 */
+}
+
+main .festival {
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    padding: 10px; /* 패딩 추가 */
+    box-shadow: 0 15px 10px -7px #eee;
+}

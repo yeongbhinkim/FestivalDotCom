@@ -1,0 +1,31 @@
+<main th:fragment="festivalDetailBox">
+<!--    <link rel="stylesheet" href="" th:href="@{/css/festival/festivalDetail.css}">-->
+
+    <div class="festival">
+
+        <div th:if="${festival != null}">
+            <h2 th:text="${festival.festivalName}">축제 이름</h2>
+            <img th:src="${festival.festivalImgUrl}" alt="Festival Image">
+            <p th:text="${festival.festivalContent}">축제 설명</p>
+            <p th:text="${festival.startAt}">시작 날짜</p>
+            <p th:text="${festival.endAt}">종료 날짜</p>
+            <p th:text="${festival.location}">장소</p>
+            <p th:text="${festival.telNumber}">전화번호</p>
+            <p th:text="${festival.website}">웹사이트</p>
+            <p th:text="${festival.relatedInfo}">관련 정보</p>
+            <p th:text="${festival.roadAddress}">도로명 주소</p>
+            <p th:text="${festival.lotAddress}">지번 주소</p>
+            <p th:text="${festival.longitude}">위도</p>
+            <p th:text="${festival.website}">경도</p>
+            <p th:text="${festival.updateAt}">데이터 기준 날짜</p>
+            <p th:text="${festival.providerName}">제공 기관명</p>
+<!--            <p th:text="${festival.canceled}">취소여부</p>-->
+
+        </div>
+        <div th:if="${festival == null}">
+            <p>축제 정보를 찾을 수 없습니다.</p>
+        </div>
+
+    </div>
+
+</main>

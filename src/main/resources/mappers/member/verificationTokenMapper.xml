@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.googoo.festivaldotcom.domain.member.infrastructure.repository.VerificationTokenMapper">
+
+    <!-- 토큰 저장 -->
+    <insert id="insertVerificationToken">
+        INSERT INTO verification_token (user_id, email, token, created_at)
+        VALUES (#{userId}, #{email}, #{token}, NOW())
+    </insert>
+
+    <!-- 토큰으로 이메일 찾기 -->
+    <select id="findByToken" resultType="com.googoo.festivaldotcom.domain.member.domain.model.VerificationToken">
+        SELECT id, user_id, email, token, created_at
+        FROM verification_token
+        WHERE token = #{token}
+    </select>
+
+    <!-- 이메일로 토큰 삭제 -->
+    <delete id="deleteByEmail">
+        DELETE FROM verification_token WHERE email = #{email}
+    </delete>
+
+    <!-- 특정 유저 ID의 6개월 이내 인증된 토큰이 있는지 확인 -->
+    <select id="isTokenValidForUser" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM verification_tokens
+        WHERE user_id = #{userId}
+          AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+    </select>
+
+</mapper>

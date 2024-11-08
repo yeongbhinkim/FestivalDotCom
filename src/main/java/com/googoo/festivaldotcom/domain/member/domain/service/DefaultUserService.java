@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -43,6 +44,11 @@ public class DefaultUserService implements UserService {
     private final UserRepository userRepository;
     private final TokenService tokenService;
 
+    @Value("${attach.root_dir}")
+    private String ROOT_DIR;
+
+    @Value("${attach.handler}")
+    private String HANDLER;
 
     /* [회원 인증 정보 조회 및 저장] 등록된 유저 정보 찾아서 제공하고 없으면 등록합니다. */
     @Override
@@ -81,58 +87,156 @@ public class DefaultUserService implements UserService {
 
     @Override
     @Transactional
-    @CachePut(value = "User", key = "#userId")
+    @Caching(put = {
+            @CachePut(value = "User", key = "#userId")
+    }, evict = {
+            @CacheEvict(value = "User", key = "#userId")
+    })
     public UserProfileResponse setUser(UpdateUserRequest updateUserRequest, Long userId) throws IOException {
 
         MultipartFile file = updateUserRequest.file();
-        if (file != null && !file.isEmpty()) {
-            String uploadDir = "C:/profileImgUrl/" + userId;
-            Path uploadPath = Paths.get(uploadDir);
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
+
+        synchronized (userId.toString().intern()) {
+            if (file != null && !file.isEmpty()) {
+                String uploadDir = ROOT_DIR + userId;
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                String originalFileName = file.getOriginalFilename();
+
+                // 파일 이름 및 확장자 검증 추가
+                if (originalFileName == null || !originalFileName.contains(".")) {
+                    throw new IllegalStateException("Invalid file name.");
+                }
+
+                String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".")).toLowerCase();
+                if (!fileExtension.matches("\\.(jpg|jpeg|png)")) {
+                    throw new IllegalStateException("Invalid file type. Only JPG, JPEG, and PNG files are allowed.");
+                }
+
+                String fileName = UUID.randomUUID().toString() + fileExtension;
+                String filePath = Paths.get(uploadDir, fileName).toString();
+                File dest = new File(filePath);
+
+                // 파일 덮어쓰기 방지
+                if (dest.exists()) {
+                    throw new IllegalStateException("File with the same name already exists.");
+                }
+
+                file.transferTo(dest);
+
+                // 파일 권한 설정 (읽기 전용, 실행 불가)
+                if (!dest.setReadable(true, false)) {
+                    throw new IOException("Failed to set file readable.");
+                }
+                if (!dest.setWritable(false, false)) {
+                    throw new IOException("Failed to set file writable.");
+                }
+                if (!dest.setExecutable(false, false)) {
+                    throw new IOException("Failed to set file non-executable.");
+                }
+
+
+                String fileUrl = HANDLER + userId + "/" + fileName;
+                updateUserRequest = new UpdateUserRequest(
+                        updateUserRequest.nickName(),
+                        fileUrl,
+                        updateUserRequest.introduction(),
+                        null,
+                        updateUserRequest.mannerScore(),
+                        updateUserRequest.gender(),
+                        updateUserRequest.companyEmail()
+                );
+            } else {
+
+                Optional<User> user1 = userRepository.selectId(userId);
+                User user = user1.orElseThrow(() -> new UserNotFoundException(userId));
+
+
+                // 파일이 없거나 비어있는 경우 기존 프로필 이미지 유지
+                updateUserRequest = new UpdateUserRequest(
+                        updateUserRequest.nickName(),
+                        user.getProfileImgUrl(),
+                        updateUserRequest.introduction(),
+                        null,
+                        updateUserRequest.mannerScore(),
+                        updateUserRequest.gender(),
+                        updateUserRequest.companyEmail()
+                );
             }
 
-            String originalFileName = file.getOriginalFilename();
-            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-            if (!fileExtension.matches("\\.(jpg|jpeg|png)")) {
-                throw new IllegalStateException("Invalid file type.");
-            }
-
-            String fileName = UUID.randomUUID().toString() + fileExtension;
-            String filePath = Paths.get(uploadDir, fileName).toString();
-            File dest = new File(filePath);
-            file.transferTo(dest);
-
-            String fileUrl = "/profileImgUrl/" + userId + "/" + fileName;
-            updateUserRequest = new UpdateUserRequest(
-                    updateUserRequest.nickName(),
-                    fileUrl,
-                    updateUserRequest.introduction(),
-                    null,
-                    updateUserRequest.mannerScore(),
-                    updateUserRequest.gender(),
-                    updateUserRequest.companyEmail()
-            );
-        } else {
-			// 파일이 없거나 비어있는 경우 기본 이미지 경로를 설정
-			String defaultImgUrl = "/img/default.png";
-			updateUserRequest = new UpdateUserRequest(
-					updateUserRequest.nickName(),
-					defaultImgUrl,
-					updateUserRequest.introduction(),
-					null,
-                    updateUserRequest.mannerScore(),
-                    updateUserRequest.gender(),
-                    updateUserRequest.companyEmail()
-			);
+            userRepository.updateUser(updateUserRequest.nickName(), updateUserRequest.profileImgUrl(), updateUserRequest.introduction(), updateUserRequest.gender(), updateUserRequest.companyEmail(), userId);
         }
-
-        userRepository.updateUser(updateUserRequest.nickName(), updateUserRequest.profileImgUrl(), updateUserRequest.introduction(), userId);
-
         return userRepository.selectId(userId)
-                .map(user -> userMapper.toSingleUserResponse(user))
+                .map(userMapper::toSingleUserResponse)
                 .orElseThrow(() -> new UserNotFoundException(userId));
     }
+
+//    @Override
+//    @Transactional
+//    @Caching(put = {
+//            @CachePut(value = "User", key = "#userId")
+//    }, evict = {
+//            @CacheEvict(value = "User", key = "#userId")
+//    })
+//    public UserProfileResponse setUser(UpdateUserRequest updateUserRequest, Long userId) throws IOException {
+//
+//        MultipartFile file = updateUserRequest.file();
+//
+//        synchronized (userId.toString().intern()) {
+//            if (file != null && !file.isEmpty()) {
+//                String uploadDir = ROOT_DIR + userId;
+//                Path uploadPath = Paths.get(uploadDir);
+//                if (!Files.exists(uploadPath)) {
+//                    Files.createDirectories(uploadPath);
+//                }
+//
+//                String originalFileName = file.getOriginalFilename();
+//                String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+//                if (!fileExtension.matches("\\.(jpg|jpeg|png)")) {
+//                    throw new IllegalStateException("Invalid file type.");
+//                }
+//
+//                String fileName = UUID.randomUUID().toString() + fileExtension;
+//                String filePath = Paths.get(uploadDir, fileName).toString();
+//                File dest = new File(filePath);
+//                file.transferTo(dest);
+//
+//                String fileUrl = HANDLER + userId + "/" + fileName;
+//                updateUserRequest = new UpdateUserRequest(
+//                        updateUserRequest.nickName(),
+//                        fileUrl,
+//                        updateUserRequest.introduction(),
+//                        null,
+//                        updateUserRequest.mannerScore(),
+//                        updateUserRequest.gender(),
+//                        updateUserRequest.companyEmail()
+//                );
+//            } else {
+//
+//                Optional<User> user1 = userRepository.selectId(userId);
+//
+//                // 파일이 없거나 비어있는 경우 기본 이미지 경로를 설정
+////			String defaultImgUrl = "/img/default.png";
+//                updateUserRequest = new UpdateUserRequest(
+//                        updateUserRequest.nickName(),
+//                        user1.get().getProfileImgUrl(),
+//                        updateUserRequest.introduction(),
+//                        null,
+//                        updateUserRequest.mannerScore(),
+//                        updateUserRequest.gender(),
+//                        updateUserRequest.companyEmail()
+//                );
+//            }
+//
+//            userRepository.updateUser(updateUserRequest.nickName(), updateUserRequest.profileImgUrl(), updateUserRequest.introduction(), updateUserRequest.gender(), updateUserRequest.companyEmail(), userId);
+//        }
+//        return userRepository.selectId(userId)
+//                .map(user -> userMapper.toSingleUserResponse(user))
+//                .orElseThrow(() -> new UserNotFoundException(userId));
+//    }
 
     /* [회원 탈퇴] 계정을 삭제합니다. soft delete가 적용됩니다.*/
     @Override
@@ -162,8 +266,7 @@ public class DefaultUserService implements UserService {
 
     /**
      * 닉네임 중복체크
-     * @param nickName
-     * @return
+     *
      */
     public boolean getNickName(String nickName) {
         return userRepository.selectNickName(nickName);
