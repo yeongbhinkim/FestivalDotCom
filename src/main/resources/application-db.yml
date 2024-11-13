@@ -2,7 +2,7 @@
 spring:
 #  datasource:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
@@ -42,6 +42,7 @@ spring:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
 
+  data:
   # MongoDB
     mongodb:
       host: ${MONGO_HOST}

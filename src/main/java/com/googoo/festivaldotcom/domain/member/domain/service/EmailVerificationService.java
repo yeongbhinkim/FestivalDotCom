@@ -40,7 +40,7 @@ public class EmailVerificationService {
         message.setTo(recipientEmail);
 
         // 이메일 제목 설정
-        message.setSubject("Email Verification");
+        message.setSubject("FestivalDotCom Email Verification");
 
         // 이메일 본문 설정: 인증 링크를 포함
         message.setText("Click the link to verify your email: " + verificationLink);
