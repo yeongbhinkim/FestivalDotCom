@@ -1,4 +1,4 @@
-package com.googoo.festivaldotcom.domain.festival.presentation;
+package com.googoo.festivaldotcom.domain.SchedulerConfig;
 
 import com.googoo.festivaldotcom.domain.festival.application.applicationService.ApiExplorer;
 import com.googoo.festivaldotcom.domain.festival.application.applicationService.FestivalApplicationService;
@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -17,6 +18,7 @@ import java.util.Date;
 @Configuration // 스프링의 설정 클래스를 나타내는 어노테이션
 @EnableScheduling // 스케줄링을 활성화하는 어노테이션
 @RequiredArgsConstructor // Lombok을 사용하여 final 필드에 대한 생성자를 자동으로 생성
+@Transactional
 public class SchedulerConfig {
 
     private final ApiExplorer apiExplorer; // API에서 데이터를 가져오는 역할
@@ -51,9 +53,6 @@ public class SchedulerConfig {
         }
     }
 
-
-//    test
-    //모델 변경후 적용
 //    @Scheduled(cron = "0 0 1 * * ?") // cron 표현식을 사용하여 매일 새벽 1시에 작업을 실행하도록 설정
 //    @Scheduled(cron = "0 29 15 * * *")
 //    public void fetchAndSaveFestivalData() {
@@ -91,7 +90,15 @@ public class SchedulerConfig {
 //            throw new RuntimeException(e);
 //        }
 //    }
+
+
+    /**
+     * 해당날짜 축제, 채팅방 생성 스케줄러
+     */
+//    @Scheduled(cron = "0 0 0 * * ?")  // 매일 자정에 실행
+//    public void scheduleChatRoomCreation() {
+//
+//    }
+
+
 }
-
-
-
