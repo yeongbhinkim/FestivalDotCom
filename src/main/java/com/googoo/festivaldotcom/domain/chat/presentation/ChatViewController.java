@@ -47,7 +47,7 @@ public class ChatViewController {
         if (chatRoomsByUserIdCount == 0) {
             model.addAttribute("messageList", "메시지가 없습니다.");
             model.addAttribute("roomList", Collections.emptyList());
-            return "/chat/chatListPage";
+            return "chat/chatListPage";
         }
 
         try {
@@ -62,7 +62,7 @@ public class ChatViewController {
             model.addAttribute("roomList", Collections.emptyList());
         }
 
-        return "/chat/chatListPage";
+        return "chat/chatListPage";
     }
 
 
@@ -100,7 +100,7 @@ public class ChatViewController {
         modelAndView.addObject("sessionId", userId);
         modelAndView.addObject("currentChatRoomId", chatRoomId);
 
-        return "/chat/chatRoomPage";
+        return "chat/chatRoomPage";
     }
 
 }
