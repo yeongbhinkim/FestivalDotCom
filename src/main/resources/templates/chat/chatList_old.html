@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Room List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/chat/chatListStyle.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.4.0/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <script src="/js/chatList.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="phone-screen">
+        <div class="app-header">
+            <span class="header-title">Chat Room List</span>
+        </div>
+        <div class="chat-room-list">
+            <ul id="chat-room-list">
+                <!-- Thymeleaf를 사용하여 서버에서 채팅방 목록 렌더링 -->
+                <li th:each="room, iterStat : ${roomList}" class="chat-room-item">
+                    <span th:text="${room.roomName}"></span>
+                    <span th:text="${messageList[iterStat.index]}"></span>
+                    <button onclick="location.href='/chat/view/chatRoom/' + [[${room.roomId}]]">Join</button>
+                </li>
+            </ul>
+        </div>
+        <footer>
+            <nav>
+                <ul>
+                    <li><i class="fas fa-comment"></i></li>
+                    <li><i class="fas fa-users"></i></li>
+                    <li><i class="fas fa-cog"></i></li>
+                </ul>
+            </nav>
+        </footer>
+    </div>
+</div>
+</body>
+</html>
