@@ -74,6 +74,7 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html #thymeleaf 설정
+    cache: false
 
   mail:
     host: smtp.gmail.com
