@@ -14,11 +14,15 @@ public class ChatRoomService {
     private final ChatRoomMapper chatRoomMapper;
 
 
-    public void updateLastMessageTime(Long roomId) {
+    public void modifyLastMessageTime(Long roomId) {
         chatRoomMapper.updateLastMessageTime(roomId);
     }
 
-    public List<Rooms> selectChatRoomsByUserId(String userId) {
+    public List<Rooms> getChatRoomsByUserId(Long userId) {
         return chatRoomMapper.selectChatRoomsByUserId(userId);
+    }
+
+    public long getChatRoomsByUserIdCount(Long userId) {
+        return chatRoomMapper.selectChatRoomsByUserIdCount(userId);
     }
 }

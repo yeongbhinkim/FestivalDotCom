@@ -84,7 +84,7 @@ public class UserController {
             return "memberJoin/memberModifyPage";
         }
 
-        userService.setUser(modifyForm, user.id());
+        userService.modifyUser(modifyForm, user.id());
 
         model.addAttribute("successMessage", "회원 정보가 성공적으로 수정되었습니다.");
 

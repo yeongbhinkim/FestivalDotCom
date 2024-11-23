@@ -4,6 +4,8 @@
     <div class="festival">
 
         <div th:if="${festival != null}">
+            <input type="hidden" th:value="${festival.festivalId}" name="festivalId">
+
             <h2 th:text="${festival.festivalName}">축제 이름</h2>
             <img th:src="${festival.festivalImgUrl}" alt="Festival Image">
             <p th:text="${festival.festivalContent}">축제 설명</p>
@@ -26,6 +28,12 @@
             <p>축제 정보를 찾을 수 없습니다.</p>
         </div>
 
+        <div class="button-container">
+            <button class="regis-button styled-button">신청하기</button>
+        </div>
+
     </div>
+
+    <script defer src="" th:src="@{/js/festival/festivalDetail.js}"></script>
 
 </main>

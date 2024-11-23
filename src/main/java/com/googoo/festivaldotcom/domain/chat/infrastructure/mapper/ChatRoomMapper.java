@@ -11,9 +11,11 @@ import java.util.List;
 public interface ChatRoomMapper {
 
 
-    List<Rooms> selectChatRoomsByUserId(String userId);
+    List<Rooms> selectChatRoomsByUserId(Long userId);
+    long selectChatRoomsByUserIdCount(Long userId);
     long insertRoom(Rooms room);
     long insertRoomMember(RoomMemberDTO roomMemberDTO);
     long insertRegistration(RegisDTO regisDTO);
+    long selectRegistrationCount(RegisDTO regisDTO);
     void updateLastMessageTime(Long roomId);
 }

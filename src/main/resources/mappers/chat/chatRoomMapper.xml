@@ -7,11 +7,19 @@
 
     <!--    select    -->
     <select id="selectChatRoomsByUserId" resultType="Rooms">
-        SELECT * FROM rooms
+        SELECT *
+        FROM rooms
         JOIN room_members
             ON rooms.room_id = room_members.room_id
         WHERE room_members.id = #{userId}
         ORDER BY rooms.last_message_at DESC
+    </select>
+
+    <!--  채팅 목록 유무 체크  -->
+    <select id="selectChatRoomsByUserIdCount" resultType="long">
+        SELECT count(id)
+        FROM room_members
+        WHERE room_members.id = #{userId}
     </select>
 
 <!--    <select id="findChatRoomById" resultType="ChatRoom">
@@ -32,9 +40,17 @@
             </foreach>
     </insert>
 
-    <insert id="insertRegistration" useGeneratedKeys="true" keyProperty="registrationId">
-        INSERT INTO registration (fetival_id, id, created_at)
-        VALUES (#{fetivalId}, #{id}, CURRENT_TIMESTAMP)
+    <!-- 축제 신청 중복 체크  -->
+    <select id="selectRegistrationCount" resultType="long">
+        SELECT count(registration_id)
+        FROM registration
+        WHERE festival_id = #{festivalId}
+        AND id = #{id}
+    </select>
+
+    <insert id="insertRegistration">
+        INSERT INTO registration (festival_id, id, created_at)
+        VALUES (#{festivalId}, #{id}, CURRENT_TIMESTAMP)
     </insert>
 
     <!--    update    -->

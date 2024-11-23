@@ -1,0 +1,33 @@
+<main th:fragment="chatRoomBox">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/chat/chatRoomStyle.css}">
+
+    <div class="chat-room-container">
+        <div class="chat-header">
+            <h2>Chat Room: <span th:text="${roomName}"></span></h2>
+        </div>
+        <div class="chat-body">
+            <ul id="chat-items">
+                <!-- 타임리프를 사용하여 서버에서 전달된 기존 메시지를 렌더링 -->
+                <li th:each="message : ${messages}" class="chat-item"
+                    th:classappend="${message.senderId == sessionId} ? 'my-message' : 'other-message'">
+                    <i class="fas fa-user-circle chat-icon"></i>
+                    <div class="chat-info">
+                        <div class="chat-name" th:text="${message.sender}">User</div>
+                        <div class="chat-message" th:text="${message.content}">Message</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="message-input">
+            <input type="text" id="message" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script defer src="" th:src="@{/js/chat/chatRoom.js}"></script>
+    <script defer th:inline="javascript">
+        var sessionId = [[${userId}]] || 'default-session-id';
+        var currentChatRoomId = [[${roomId}]] || 'default-room-id';
+    </script>
+
+</main>

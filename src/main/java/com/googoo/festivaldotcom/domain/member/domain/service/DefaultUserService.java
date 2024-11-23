@@ -92,7 +92,7 @@ public class DefaultUserService implements UserService {
     }, evict = {
             @CacheEvict(value = "User", key = "#userId")
     })
-    public UserProfileResponse setUser(UpdateUserRequest updateUserRequest, Long userId) throws IOException {
+    public UserProfileResponse modifyUser(UpdateUserRequest updateUserRequest, Long userId) throws IOException {
 
         MultipartFile file = updateUserRequest.file();
 

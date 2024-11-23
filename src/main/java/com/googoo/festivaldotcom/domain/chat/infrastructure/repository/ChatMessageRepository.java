@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface ChatMessageRepository extends MongoRepository<ChatMessage, String> {
 
-    List<ChatMessage> findByRoomIdOrderBySentAtAsc(String roomId);
+    List<ChatMessage> findByRoomIdOrderBySentAtAsc(Long roomId);
 
 
     @Aggregation(pipeline = {
@@ -20,5 +20,5 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
             "{ '$group': { '_id': '$roomId', 'lastMessage': { '$first': '$$ROOT' } } }",  // 각 방별로 가장 최근 메시지를 그룹화
             "{ '$project': { 'roomId': '$_id', 'lastMessage': '$lastMessage.content' } }"  // 필요한 필드만 반환
     })
-    List<RoomLastMessageProjection> findLastMessagesByUserId(String userId);
+    List<RoomLastMessageProjection> findLastMessagesByUserId(Long userId);
 }

@@ -1,0 +1,22 @@
+<main th:fragment="chatListBox">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/chat/chatListStyle.css}">
+
+    <div class="chat-room-list">
+        <ul id="chat-room-list">
+            <!-- roomList가 없거나 비어 있을 때 "메시지가 없습니다." 메시지를 출력 -->
+            <li th:if="${#lists.isEmpty(roomList)}" class="chat-room-item">
+                <span th:text="${messageList}">메시지가 없습니다.</span>
+            </li>
+
+            <!-- roomList가 있을 때 각 방 정보를 출력 -->
+            <li th:each="room, iterStat : ${roomList}" class="chat-room-item">
+                <span th:text="${room.roomName}">Room Name Placeholder</span>
+                <span th:text="${messageList[iterStat.index]}">Message Placeholder</span>
+                <a th:href="@{/chat/view/chatRoom/{roomId}(roomId=${room.roomId})}" class="join-button">Join</a>
+            </li>
+        </ul>
+    </div>
+
+    <script defer src="" th:src="@{/js/chat/chatList.js}"></script>
+
+</main>

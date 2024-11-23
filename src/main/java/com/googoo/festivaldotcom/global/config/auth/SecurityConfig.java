@@ -50,7 +50,7 @@ public class SecurityConfig {
 						.requestMatchers("/profileImgUrl/**").permitAll()
 						.requestMatchers("/").permitAll()
 						.requestMatchers("/api/v1/user/verify").permitAll()
-						.requestMatchers("/chat/**").permitAll()  //추후 삭제해야함 테스트용으로 넣어둠
+//						.requestMatchers("/chat/**").permitAll()  //추후 삭제해야함 테스트용으로 넣어둠
 						.requestMatchers("/api/v1/festival/**").permitAll()
 						.requestMatchers("/festivalImg/**").permitAll()
 

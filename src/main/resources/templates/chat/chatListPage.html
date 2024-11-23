@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{chat/chatList::chatList(
+        ~{::title},       <!--/* title */-->
+        ~{},              <!--/* styles */-->
+        ~{::scripts},     <!--/* scripts */-->
+        ~{},              <!--/* style */-->
+        ~{},              <!--/* script */-->
+        ~{::header},      <!--/* header */-->
+        ~{::main},        <!--/* main */-->
+        ~{::footer}       <!--/* footer default*/-->
+        )}">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${pageTitle}">Chat Room List</title>
+</head>
+<body>
+<div class="global-wrap">
+  <div class="hdr">
+    <div class="inner hdr-inner">
+      <header th:replace="~{fragment/header::header(pageTitle='채팅 목록')}"></header>
+    </div>
+  </div>
+  <div class="main">
+    <div class="inner main-inner">
+      <main th:replace="~{chat/chatListBox::chatListBox}"></main>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="inner foot-inner">
+      <footer th:replace="~{fragment/footer::footer}"></footer>
+    </div>
+  </div>
+</div>
+</body>
+</html>

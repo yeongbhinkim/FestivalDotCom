@@ -20,11 +20,11 @@ public class ChatService {
     }
 
     // 방의 메세지를 불러옴
-    public List<ChatMessage> getMessagesByChatroomId(String roomId) {
+    public List<ChatMessage> getMessagesByChatroomId(Long roomId) {
         return chatMessageRepository.findByRoomIdOrderBySentAtAsc(roomId);
     }
 
-    public List<RoomLastMessageProjection> getLastMessage(String userId) {
+    public List<RoomLastMessageProjection> getLastMessage(Long userId) {
         return chatMessageRepository.findLastMessagesByUserId(userId);
     }
 

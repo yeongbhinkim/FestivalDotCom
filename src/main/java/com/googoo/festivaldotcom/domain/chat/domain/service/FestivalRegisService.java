@@ -26,4 +26,9 @@ public class FestivalRegisService {
             throw new IllegalStateException("등록 중 오류가 발생했습니다.", e);
         }
     }
+
+    public long getRegistrationCount(RegisDTO regisDTO) {
+        return chatRoomMapper.selectRegistrationCount(regisDTO);
+    }
+
 }

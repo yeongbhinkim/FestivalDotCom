@@ -25,7 +25,7 @@ function sendMessage() {
             senderId: sessionId,
             content: messageContent
         };
-        stompClient.send("/chat/chat.sendMessage", {}, JSON.stringify(chatMessage));
+        stompClient.send("/chat/view/chat.sendMessage", {}, JSON.stringify(chatMessage));
         document.getElementById("message").value = '';
     }
 }
@@ -61,7 +61,7 @@ function showMessage(message) {
 }
 
 function loadChatHistory() {
-    fetch('/chat/chatRooms/' + currentChatRoomId + '/messages')
+    fetch('/chat/view/chatRooms/' + currentChatRoomId + '/messages')
         .then(response => response.json())
         .then(messages => {
             messages.forEach(message => {

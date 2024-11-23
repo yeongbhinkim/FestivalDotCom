@@ -1,42 +1,43 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="chatRoom(title,styles,scripts,style,script,header,main,footer)">
 <head>
-    <meta charset="UTF-8">
-    <title>Chat Room</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/chat/chatRoomStyle.css}">
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.4.0/dist/sockjs.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
-    <script src="/js/chatRoom.js"></script>
-    <!-- 서버에서 전달된 sessionId와 roomId를 JS 변수로 설정 -->
-    <script th:inline="javascript">
-        var sessionId = [[${userId}]] || 'default-session-id';
-        var currentChatRoomId = [[${roomId}]] || 'default-room-id';
-    </script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:fragment=${title}>Chat Room List</title>
+
+  <!-- 공통 스타일을 불러오기 위한 링크 -->
+  <link rel="stylesheet" href="" th:href="@{/css/common.css}">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.4.0/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+
 </head>
 <body>
-<div class="chat-room-container">
-    <div class="chat-header">
-        <h2>Chat Room: <span th:text="${roomName}"></span></h2>
+<div class="global-wrap">
+  <div class="hdr">
+    <div class="inner hdr-inner" th:insert="${header}">
+      header
     </div>
-    <div class="chat-body">
-        <ul id="chat-items">
-            <!-- 타임리프를 사용하여 서버에서 전달된 기존 메시지를 렌더링 -->
-            <li th:each="message : ${messages}" class="chat-item"
-                th:classappend="${message.senderId == sessionId} ? 'my-message' : 'other-message'">
-                <i class="fas fa-user-circle chat-icon"></i>
-                <div class="chat-info">
-                    <div class="chat-name" th:text="${message.sender}">User</div>
-                    <div class="chat-message" th:text="${message.content}">Message</div>
-                </div>
-            </li>
-        </ul>
+  </div>
+
+  <div class="main">
+    <div class="inner main-inner" th:insert="${main}">
+      main
     </div>
-    <div class="message-input">
-        <input type="text" id="message" placeholder="Type a message...">
-        <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <div class="foot">
+    <div class="inner foot-inner" th:insert="${footer}">
+      foot
     </div>
+  </div>
 </div>
 
+<th:block th:replace="${script}"></th:block>
 </body>
 </html>

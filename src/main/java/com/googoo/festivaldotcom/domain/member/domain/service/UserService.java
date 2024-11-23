@@ -22,7 +22,7 @@ public interface UserService {
 	String getOauthId(Long userId);
 
 	/* 회원 프로필 수정 */
-	UserProfileResponse setUser(UpdateUserRequest updateUserRequest, Long userId) throws IOException;
+	UserProfileResponse modifyUser(UpdateUserRequest updateUserRequest, Long userId) throws IOException;
 
 	/* 회원 탈퇴 */
 	void removeUser(HttpServletRequest request, HttpServletResponse response, Long userId, String oauthId, String refreshToken);
