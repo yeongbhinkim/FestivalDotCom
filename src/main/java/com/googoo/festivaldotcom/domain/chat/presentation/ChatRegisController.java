@@ -3,6 +3,8 @@ package com.googoo.festivaldotcom.domain.chat.presentation;
 
 import com.googoo.festivaldotcom.domain.chat.application.dto.request.RegisDTO;
 import com.googoo.festivaldotcom.domain.chat.domain.service.FestivalRegisService;
+import com.googoo.festivaldotcom.domain.member.application.dto.response.Gender;
+import com.googoo.festivaldotcom.domain.member.domain.service.DefaultUserService;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
@@ -24,18 +26,26 @@ public class ChatRegisController {
 
 
     private final FestivalRegisService festivalRegisService;
+    private final DefaultUserService defaultUserService;
 
     @PostMapping("/setRegis")
     public ResponseEntity<String> setRegis(
             @RequestBody RegisDTO regisDTO,
             @Parameter(description = "인증된 사용자 정보") @AuthenticationPrincipal JwtAuthentication user) {
 
-        //regisDTO 값 셋팅을 프론트에서?백? ID 축제 ID 중복체크는?
         regisDTO = RegisDTO.builder()
                 .id(user.id())
                 .festivalId(regisDTO.getFestivalId()) // 기존의 festivalId 값 유지
                 .build();
 
+        // 성별 선택 검증
+        String gender = defaultUserService.getGender(user.id());
+
+        if (Gender.valueOf(gender) == Gender.NONE) {
+            return new ResponseEntity<>("성별을 작성해주세요.", HttpStatus.CONFLICT);
+        }
+
+        // 축제 중복 체크
         long registrationCount = festivalRegisService.getRegistrationCount(regisDTO);
 
         if (registrationCount > 0) {

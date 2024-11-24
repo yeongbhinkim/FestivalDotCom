@@ -8,10 +8,11 @@
     <!--    select    -->
     <select id="selectChatRoomsByUserId" resultType="Rooms">
         SELECT *
-        FROM rooms
-        JOIN room_members
-            ON rooms.room_id = room_members.room_id
+        FROM rooms JOIN room_members
+          ON rooms.room_id = room_members.room_id
         WHERE room_members.id = #{userId}
+        AND rooms.deleted = 0
+        AND room_members.deleted = 0
         ORDER BY rooms.last_message_at DESC
     </select>
 
@@ -20,6 +21,7 @@
         SELECT count(id)
         FROM room_members
         WHERE room_members.id = #{userId}
+          AND room_members.deleted = 0
     </select>
 
 <!--    <select id="findChatRoomById" resultType="ChatRoom">
@@ -28,16 +30,24 @@
 
     <!--    insert    -->
     <insert id="insertRoom" useGeneratedKeys="true" keyProperty="roomId" parameterType="Rooms">
-        INSERT INTO rooms (festival_id, room_name, created_at, deleted, last_message_at)
-        VALUES (#{festivalId}, #{roomName}, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP)
+        INSERT INTO rooms (
+              festival_id,
+              room_name
+        ) VALUES (
+              #{festivalId},
+              #{roomName}
+         )
     </insert>
 
     <insert id="insertRoomMember">
-        INSERT INTO room_members (room_id, id, created_at, deleted)
-        VALUES
-            <foreach collection="userIds" item="userId" separator=",">
-            (#{roomId}, #{userId}, CURRENT_TIMESTAMP, 0)
-            </foreach>
+        INSERT INTO room_members (
+              room_id,
+              id
+        ) VALUES
+        <foreach collection="userIds" item="userId" separator=","> (
+             #{roomId},
+             #{userId}
+        ) </foreach>
     </insert>
 
     <!-- 축제 신청 중복 체크  -->
@@ -49,8 +59,13 @@
     </select>
 
     <insert id="insertRegistration">
-        INSERT INTO registration (festival_id, id, created_at)
-        VALUES (#{festivalId}, #{id}, CURRENT_TIMESTAMP)
+        INSERT INTO registration (
+            festival_id,
+            id
+        ) VALUES (
+            #{festivalId},
+            #{id}
+        )
     </insert>
 
     <!--    update    -->
@@ -60,4 +75,46 @@
         WHERE room_id = #{roomId}
     </update>
     <!--    delete    -->
+
+
+    <!-- 특정 축제의 참가 신청 조회 -->
+    <select id="findRegistrationByFestivalId" resultType="com.googoo.festivaldotcom.domain.chat.application.dto.request.SchedulerRoomDTO">
+        SELECT registration.festival_id, registration.id, users.gender
+        FROM registration
+            JOiN users ON registration.id = users.id
+        WHERE registration.festival_id = #{festivalId}
+    </select>
+
+    <!-- 채팅방 생성 -->
+    <insert id="insertChatRoom" useGeneratedKeys="true" keyProperty="roomId">
+        INSERT INTO rooms (
+            festival_id,
+            room_name
+        ) VALUES (
+            #{festivalId},
+            #{roomName}
+        )
+    </insert>
+
+    <!-- 채팅 멤버 추가 -->
+    <insert id="insertChatMember">
+        INSERT INTO room_members (
+            room_id,
+            id
+        ) VALUES (
+            #{roomId},
+            #{id}
+        )
+    </insert>
+
+    <!-- 축제 채팅 나가기  -->
+    <update id="deleteChatMember">
+        UPDATE room_members
+        SET deleted = 1
+        WHERE room_id = #{roomId}
+        AND id = #{id}
+        AND deleted = 0
+    </update>
+
+
 </mapper>

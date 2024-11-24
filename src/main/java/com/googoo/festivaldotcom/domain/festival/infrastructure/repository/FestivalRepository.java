@@ -1,5 +1,6 @@
 package com.googoo.festivaldotcom.domain.festival.infrastructure.repository;
 
+import com.googoo.festivaldotcom.domain.chat.application.dto.request.SchedulerRoomDTO;
 import com.googoo.festivaldotcom.domain.festival.application.dto.response.FestivalApi;
 import com.googoo.festivaldotcom.domain.festival.application.dto.response.GetFestival;
 import com.googoo.festivaldotcom.domain.festival.domain.model.Festival;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -35,6 +37,11 @@ public class FestivalRepository implements FestivalService {
     @Override
     public String getFestivalUpdateAt() {
         return festivalMapper.selectFestivalUpdateAt();
+    }
+
+    @Override
+    public List<SchedulerRoomDTO> getFestivalByDate(@Param("date") LocalDate date) {
+        return festivalMapper.selectFestivalByDate(date);
     }
 
 }

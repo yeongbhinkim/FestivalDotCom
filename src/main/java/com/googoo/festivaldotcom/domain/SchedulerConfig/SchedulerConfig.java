@@ -1,5 +1,7 @@
 package com.googoo.festivaldotcom.domain.SchedulerConfig;
 
+import com.googoo.festivaldotcom.domain.chat.application.dto.request.SchedulerRoomDTO;
+import com.googoo.festivaldotcom.domain.chat.domain.service.FestivalRegisService;
 import com.googoo.festivaldotcom.domain.festival.application.applicationService.ApiExplorer;
 import com.googoo.festivaldotcom.domain.festival.application.applicationService.FestivalApplicationService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j // 로깅을 위한 Lombok 어노테이션
 @Configuration // 스프링의 설정 클래스를 나타내는 어노테이션
@@ -23,6 +27,8 @@ public class SchedulerConfig {
 
     private final ApiExplorer apiExplorer; // API에서 데이터를 가져오는 역할
     private final FestivalApplicationService festivalApplicationService; // 데이터를 파싱하고 저장하는 역할
+    private final FestivalRegisService festivalRegisService; // 채팅방 생성 서비스
+
 
     /**
      * 스케줄러 메서드. 매일 새벽 1시에 실행됩니다.
@@ -95,10 +101,22 @@ public class SchedulerConfig {
     /**
      * 해당날짜 축제, 채팅방 생성 스케줄러
      */
-//    @Scheduled(cron = "0 0 0 * * ?")  // 매일 자정에 실행
-//    public void scheduleChatRoomCreation() {
-//
-//    }
+    @Scheduled(cron = "0 0 0 * * ?")  // 매일 자정에 실행
+//    @Scheduled(cron = "0 08 18 * * *")
+    public void scheduleChatRoomCreation() {
+
+        // Mock LocalDate(2024-11-30)
+//        LocalDate testDate = LocalDate.of(2024, 11, 30);
+
+        // 오늘 날짜로 축제 ID 조회
+        List<SchedulerRoomDTO> schedulerRoomDTOS = festivalApplicationService.getFestivalByDate(LocalDate.now());
+//        List<SchedulerRoomDTO> schedulerRoomDTOS = festivalApplicationService.getFestivalByDate(testDate);
+
+        for (SchedulerRoomDTO schedulerRoomDTO : schedulerRoomDTOS) {
+            festivalRegisService.createChatRoomsForTodayFestivals(schedulerRoomDTO);
+        }
+
+    }
 
 
 }

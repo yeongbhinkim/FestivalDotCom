@@ -6,26 +6,28 @@
     <!-- festival 등록 -->
     <insert id="insertFestival"
             parameterType="com.googoo.festivaldotcom.domain.festival.application.dto.response.FestivalApi">
-        INSERT INTO festival (festival_name,
-                              location,
-                              start_at,
-                              end_at,
-                              festival_content,
-                              main_corp,
-                              open_corp,
-                              support_corp,
-                              tel_number,
-                              website,
-                              related_info,
-                              road_address,
-                              lot_address,
-                              latitude,
-                              longitude,
-                              update_at,
-                              provider_code,
-                              provider_name,
-                              festival_img_url)
-        VALUES (#{fstvlNm},
+        INSERT INTO festival (
+                  festival_name,
+                  location,
+                  start_at,
+                  end_at,
+                  festival_content,
+                  main_corp,
+                  open_corp,
+                  support_corp,
+                  tel_number,
+                  website,
+                  related_info,
+                  road_address,
+                  lot_address,
+                  latitude,
+                  longitude,
+                  update_at,
+                  provider_code,
+                  provider_name,
+                  festival_img_url
+        ) VALUES (
+                #{fstvlNm},
                 #{opar},
                 #{fstvlStartDate},
                 #{fstvlEndDate},
@@ -51,27 +53,27 @@
     <select id="selectFestival" resultType="com.googoo.festivaldotcom.domain.festival.domain.model.Festival"
             parameterType="com.googoo.festivaldotcom.domain.festival.application.dto.response.GetFestival">
         SELECT
-        festival_id,
-        festival_name,
-        location,
-        start_at,
-        end_at,
-        festival_content,
-        main_corp,
-        open_corp,
-        support_corp,
-        tel_number,
-        website,
-        related_info,
-        road_address,
-        lot_address,
-        latitude,
-        longitude,
-        update_at,
-        provider_code,
-        provider_name,
-        festival_img_url,
-        canceled
+            festival_id,
+            festival_name,
+            location,
+            start_at,
+            end_at,
+            festival_content,
+            main_corp,
+            open_corp,
+            support_corp,
+            tel_number,
+            website,
+            related_info,
+            road_address,
+            lot_address,
+            latitude,
+            longitude,
+            update_at,
+            provider_code,
+            provider_name,
+            festival_img_url,
+            canceled
         FROM festival
         WHERE end_at > CURDATE()
         <if test="festivalName != null and festivalName != ''">
@@ -84,34 +86,45 @@
 
     <!--  축제 상세 조회  -->
     <select id="selectFestivalDetail" resultType="com.googoo.festivaldotcom.domain.festival.domain.model.Festival">
-        SELECT festival_id,
-               festival_name,
-               location,
-               start_at,
-               end_at,
-               festival_content,
-               main_corp,
-               open_corp,
-               support_corp,
-               tel_number,
-               website,
-               related_info,
-               road_address,
-               lot_address,
-               latitude,
-               longitude,
-               update_at,
-               provider_code,
-               provider_name,
-               festival_img_url,
-               canceled
+        SELECT
+           festival_id,
+           festival_name,
+           location,
+           start_at,
+           end_at,
+           festival_content,
+           main_corp,
+           open_corp,
+           support_corp,
+           tel_number,
+           website,
+           related_info,
+           road_address,
+           lot_address,
+           latitude,
+           longitude,
+           update_at,
+           provider_code,
+           provider_name,
+           festival_img_url,
+           canceled
         FROM festival
         WHERE festival_id = #{festivalId}
     </select>
 
     <!-- 축제 최신 등록 날짜 조회 -->
     <select id="selectFestivalUpdateAt" resultType="string">
-        SELECT update_at FROM festival ORDER BY update_at DESC LIMIT 1
+        SELECT update_at
+        FROM festival
+        ORDER BY update_at
+        DESC LIMIT 1
+    </select>
+
+    <!-- 특정 날짜의 축제 조회 -->
+    <select id="selectFestivalByDate" resultType="com.googoo.festivaldotcom.domain.chat.application.dto.request.SchedulerRoomDTO">
+        SELECT festival_id, festival_name
+        FROM festival
+        WHERE DATE(start_at) = #{date}
     </select>
 
 

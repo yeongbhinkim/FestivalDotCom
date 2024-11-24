@@ -1,5 +1,6 @@
 package com.googoo.festivaldotcom.domain.festival.application.applicationService;
 
+import com.googoo.festivaldotcom.domain.chat.application.dto.request.SchedulerRoomDTO;
 import com.googoo.festivaldotcom.domain.festival.application.dto.response.FestivalApi;
 import com.googoo.festivaldotcom.domain.festival.application.dto.response.GetFestival;
 import com.googoo.festivaldotcom.domain.festival.domain.model.Festival;
@@ -18,6 +19,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -235,6 +237,15 @@ public class FestivalApplicationService {
 
     public String getFestivalUpdateAt() {
         return festivalService.getFestivalUpdateAt();
+    }
+
+    /**
+     * 특정 날짜의 축제 조회
+     * @param date
+     * @return
+     */
+    public List<SchedulerRoomDTO> getFestivalByDate(LocalDate date) {
+        return festivalService.getFestivalByDate(date);
     }
 
 }

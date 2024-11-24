@@ -21,6 +21,8 @@ public interface UserService {
 
 	String getOauthId(Long userId);
 
+	String getGender(Long userId);
+
 	/* 회원 프로필 수정 */
 	UserProfileResponse modifyUser(UpdateUserRequest updateUserRequest, Long userId) throws IOException;
 

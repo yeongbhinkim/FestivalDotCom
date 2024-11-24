@@ -83,6 +83,11 @@ public class DefaultUserService implements UserService {
         return userRepository.getOauthId(userId);
     }
 
+    @Override
+    public String getGender(Long userId) {
+        return userRepository.selectGender(userId);
+    }
+
     /* [회원 프로필 수정] UpdateUserRequest DTO를 사용해서 사용자의 프로필(닉네임, 프로필 이미지, 자기소개)를 한번에 수정합니다. */
 
     @Override

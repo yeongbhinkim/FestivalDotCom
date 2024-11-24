@@ -13,6 +13,8 @@ public interface UserRepository {
 
     Optional<User> selectId(@Param("id") Long id);
 
+    String selectGender(@Param("id") Long id);
+
     void insertUser(User user);
 
     int updateUser(@Param("nickName") String nickName, @Param("profileImgUrl") String profileImgUrl, @Param("introduction") String introduction, @Param("gender") Gender gender, @Param("companyEmail") String companyEmail, @Param("id") Long id);
