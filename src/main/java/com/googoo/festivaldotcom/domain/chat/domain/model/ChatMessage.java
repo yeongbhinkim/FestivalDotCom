@@ -11,14 +11,19 @@ import java.util.Date;
 @Document(collection = "chat_messages")
 public class ChatMessage {
 
+//    private ObjectId id; // MongoDB의 기본 ID 타입
     private final Long id;
     private final Long roomId;
     private final Long senderId;
     private final String content;
     private final Date sentAt;
-    private final MessageType type;
+    private final String typeMessages;
 
-    public enum MessageType {
-        SENT, RECEIVED
-    }
+//    @Field("type")
+//    @Enumerated(EnumType.STRING) // Enum을 문자열로 저장
+//    private final MessageType type;
+//
+//    public enum MessageType {
+//        SENT, RECEIVED, UNKNOWN
+//    }
 }

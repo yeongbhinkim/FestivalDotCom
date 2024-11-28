@@ -5,7 +5,9 @@ import com.googoo.festivaldotcom.domain.chat.application.dto.request.SchedulerRo
 import com.googoo.festivaldotcom.domain.chat.infrastructure.mapper.ChatRoomMapper;
 import com.googoo.festivaldotcom.domain.member.application.dto.response.Gender;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +18,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FestivalRegisService {
 
-//    @Value("${url.stable_diffusion}")
-//    private String STABLE_DIFFUSION_URL;
+    @Value("${size.group}")
+    private int GROUP_SIZE;
 
     private final ChatRoomMapper chatRoomMapper;
+    private final MongoTemplate mongoTemplate;
 
     @Transactional
     public void festivalRegisInsert(RegisDTO regisDTO) {
@@ -71,7 +74,7 @@ public class FestivalRegisService {
         double femaleRatio = (double) femaleMembers.size() / totalMembers;
 
         // 한 채팅방의 인원 수 설정 (예: 4명)
-        int groupSize = 4;
+        int groupSize = GROUP_SIZE;
 
         // 그룹 내 남녀 비율에 따른 인원수 계산
         int maleCount = (int) Math.round(groupSize * maleRatio);
@@ -106,6 +109,21 @@ public class FestivalRegisService {
                         .build();
                 chatRoomMapper.insertChatMember(chatMember);
             }
+
+//            // MongoDB에 시스템 메시지 삽입
+//            ChatMessage systemMessage = ChatMessage.builder()
+//                    .id(null) // MongoDB는 고유 ID를 자동 생성
+////                    .userId(null)
+//                    .roomId(chatRoomId)
+//                    .senderId(null) // 시스템 메시지
+//                    .content("채팅방이 생성되었습니다.")
+//                    .sentAt(new Date())
+////                    .type(ChatMessage.MessageType.SENT)
+//                    .typeMessages("UNKNOWN")
+//                    .build();
+//
+//            // MongoTemplate을 사용하여 MongoDB에 저장
+//            mongoTemplate.insert(systemMessage, "chat_messages");
 
             // 생성된 멤버 제거
             maleMembers = maleMembers.subList(maleCount, maleMembers.size());

@@ -101,16 +101,16 @@ public class SchedulerConfig {
     /**
      * 해당날짜 축제, 채팅방 생성 스케줄러
      */
-    @Scheduled(cron = "0 0 0 * * ?")  // 매일 자정에 실행
-//    @Scheduled(cron = "0 08 18 * * *")
+//    @Scheduled(cron = "0 0 0 * * ?")  // 매일 자정에 실행
+    @Scheduled(cron = "0 45 21 * * *")
     public void scheduleChatRoomCreation() {
 
         // Mock LocalDate(2024-11-30)
-//        LocalDate testDate = LocalDate.of(2024, 11, 30);
+        LocalDate testDate = LocalDate.of(2024, 11, 30);
 
         // 오늘 날짜로 축제 ID 조회
-        List<SchedulerRoomDTO> schedulerRoomDTOS = festivalApplicationService.getFestivalByDate(LocalDate.now());
-//        List<SchedulerRoomDTO> schedulerRoomDTOS = festivalApplicationService.getFestivalByDate(testDate);
+//        List<SchedulerRoomDTO> schedulerRoomDTOS = festivalApplicationService.getFestivalByDate(LocalDate.now());
+        List<SchedulerRoomDTO> schedulerRoomDTOS = festivalApplicationService.getFestivalByDate(testDate);
 
         for (SchedulerRoomDTO schedulerRoomDTO : schedulerRoomDTOS) {
             festivalRegisService.createChatRoomsForTodayFestivals(schedulerRoomDTO);

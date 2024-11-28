@@ -1,13 +1,16 @@
 package com.googoo.festivaldotcom.domain.chat.domain.service;
 
-import com.googoo.festivaldotcom.domain.chat.application.projection.RoomLastMessageProjection;
+import com.googoo.festivaldotcom.domain.chat.application.projection.RoomLastMessage;
 import com.googoo.festivaldotcom.domain.chat.domain.model.ChatMessage;
 import com.googoo.festivaldotcom.domain.chat.infrastructure.repository.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatService {
@@ -24,8 +27,13 @@ public class ChatService {
         return chatMessageRepository.findByRoomIdOrderBySentAtAsc(roomId);
     }
 
-    public List<RoomLastMessageProjection> getLastMessage(Long userId) {
-        return chatMessageRepository.findLastMessagesByUserId(userId);
+    public List<RoomLastMessage> getLastMessage(Long userId) {
+        List<RoomLastMessage> results = chatMessageRepository.findLastMessagesByUserId(userId);
+        if (results == null || results.isEmpty()) {
+            log.info("No chat messages found for userId: {}", userId);
+            return Collections.emptyList(); // 빈 리스트 반환
+        }
+        return results;
     }
 
     }

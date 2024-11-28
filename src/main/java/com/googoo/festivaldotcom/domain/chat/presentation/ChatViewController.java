@@ -1,6 +1,6 @@
 package com.googoo.festivaldotcom.domain.chat.presentation;
 
-import com.googoo.festivaldotcom.domain.chat.application.projection.RoomLastMessageProjection;
+import com.googoo.festivaldotcom.domain.chat.application.projection.RoomLastMessage;
 import com.googoo.festivaldotcom.domain.chat.domain.model.ChatMessage;
 import com.googoo.festivaldotcom.domain.chat.domain.model.Rooms;
 import com.googoo.festivaldotcom.domain.chat.domain.service.ChatRoomService;
@@ -19,7 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Collections;
 import java.util.Date;
@@ -45,20 +45,20 @@ public class ChatViewController {
 
         long chatRoomsByUserIdCount = chatRoomService.getChatRoomsByUserIdCount(user.id());
         if (chatRoomsByUserIdCount == 0) {
-            model.addAttribute("messageList", "메시지가 없습니다.");
+            model.addAttribute("messageList", Collections.emptyList());
             model.addAttribute("roomList", Collections.emptyList());
             return "chat/chatListPage";
         }
 
         try {
-            List<RoomLastMessageProjection> lastMessage = chatService.getLastMessage(user.id());
+            List<RoomLastMessage> lastMessage = chatService.getLastMessage(user.id());
             List<Rooms> roomsList = chatRoomService.getChatRoomsByUserId(user.id());
 
             model.addAttribute("messageList", lastMessage);
             model.addAttribute("roomList", roomsList);
         } catch (Exception e) {
             log.error("채팅 목록 조회 중 오류 발생: ", e);
-            model.addAttribute("messageList", "채팅 목록을 가져오는 중 오류가 발생했습니다. 다시 시도해주세요.");
+            model.addAttribute("messageList", Collections.emptyList());
             model.addAttribute("roomList", Collections.emptyList());
         }
 
@@ -75,30 +75,32 @@ public class ChatViewController {
                 .sentAt(new Date())
                 .build();
 
-        chatService.saveMessage(chatMessage);
-        chatRoomService.modifyLastMessageTime(chatMessage.getRoomId());
-        messagingTemplate.convertAndSend("/topic/" + chatMessage.getRoomId(), chatMessage);
-        messagingTemplate.convertAndSend("/topic/chatRooms", "updated");
-    }
+        chatService.saveMessage(chatMessage); // 메시지 저장
+        chatRoomService.modifyLastMessageTime(chatMessage.getRoomId()); // 최근 메시지 시간 업데이트
 
+        messagingTemplate.convertAndSend("/topic/" + chatMessage.getRoomId(), chatMessage);
+    }
 
     @GetMapping("/chatRooms/{chatRoomId}/messages")
+    @ResponseBody
     public List<ChatMessage> getAllMessages(@PathVariable Long chatRoomId) {
-        return chatService.getMessagesByChatroomId(chatRoomId);
+        return chatService.getMessagesByChatroomId(chatRoomId); // 해당 채팅방의 메시지 반환
     }
 
-    @Operation(summary = "채팅방", description = "사용자 채팅방 / 화면")
-    @GetMapping("/chatRoom/{chatRoomId}")
+    @GetMapping("/chatRoom/{roomId}/{roomName}")
     public String getChatRoom(
-            HttpServletRequest request,
-            ModelAndView modelAndView,
-            @PathVariable Long chatRoomId,
-            @Parameter(description = "인증된 사용자 정보") @AuthenticationPrincipal JwtAuthentication user) {
+            @PathVariable Long roomId,
+            @PathVariable String roomName,
+            @AuthenticationPrincipal JwtAuthentication user,
+            Model model) {
 
         String userId = user.id().toString();
-
-        modelAndView.addObject("sessionId", userId);
-        modelAndView.addObject("currentChatRoomId", chatRoomId);
+        log.info("Chat Room ID: {}, Chat Room Name: {}", roomId, roomName);
+        // 모델에 데이터 추가
+        model.addAttribute("sessionId", userId);
+        model.addAttribute("currentChatRoomId", roomId);
+        model.addAttribute("roomName", roomName);
+        model.addAttribute("messages", chatService.getMessagesByChatroomId(roomId));
 
         return "chat/chatRoomPage";
     }

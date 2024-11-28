@@ -7,25 +7,26 @@ function connect() {
     stompClient.connect({}, function(frame) {
         console.log('Connected: ' + frame);
 
-        // 현재 채팅방의 주제 구독
+        // 현재 채팅방 구독
         stompClient.subscribe('/topic/' + currentChatRoomId, function(message) {
             showMessage(JSON.parse(message.body));
         });
 
-        // 기존 채팅 메시지 로드
+        // 채팅 메시지 로드
         loadChatHistory();
     });
 }
 
 function sendMessage() {
-    var messageContent = document.getElementById("message").value;
+    var messageContent = document.getElementById("message").value.trim();
     if (messageContent && stompClient) {
         var chatMessage = {
             roomId: currentChatRoomId,
             senderId: sessionId,
             content: messageContent
         };
-        stompClient.send("/chat/view/chat.sendMessage", {}, JSON.stringify(chatMessage));
+
+        stompClient.send("/chat/sendMessage", {}, JSON.stringify(chatMessage));
         document.getElementById("message").value = '';
     }
 }
@@ -36,9 +37,13 @@ function showMessage(message) {
     var messageContainer = document.createElement('li');
     messageContainer.classList.add('chat-item');
 
+    // 메시지 작성자 구분
     if (message.senderId === sessionId) {
-        messageContainer.classList.add('my-message');  // 본인이 보낸 메시지일 경우 스타일 추가
+        messageContainer.classList.add('my-message');
+    } else {
+        messageContainer.classList.add('other-message');
     }
+
     var iconElement = document.createElement('i');
     iconElement.classList.add('fas', 'fa-user-circle', 'chat-icon');
 
@@ -62,11 +67,19 @@ function showMessage(message) {
 
 function loadChatHistory() {
     fetch('/chat/view/chatRooms/' + currentChatRoomId + '/messages')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch chat history');
+            }
+            return response.json();
+        })
         .then(messages => {
             messages.forEach(message => {
                 showMessage(message);
             });
+        })
+        .catch(error => {
+            console.error('Error loading chat history:', error);
         });
 }
 
