@@ -39,7 +39,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authz -> authz
 						.requestMatchers(HttpMethod.OPTIONS, "/api/*").permitAll()
 						.requestMatchers(HttpMethod.OPTIONS, "/ws").permitAll()
-						.requestMatchers(HttpMethod.OPTIONS, "/ws/**").permitAll()
+						.requestMatchers("/ws/**").permitAll() // WebSocket 요청 허용
 						.requestMatchers("/docs/**", "/oauth2/**", "/favicon.ico").permitAll()
 						.requestMatchers("/api/v1/tokens").permitAll()
 						.requestMatchers("/img/**").permitAll()
@@ -50,7 +50,6 @@ public class SecurityConfig {
 						.requestMatchers("/profileImgUrl/**").permitAll()
 						.requestMatchers("/").permitAll()
 						.requestMatchers("/api/v1/user/verify").permitAll()
-//						.requestMatchers("/chat/**").permitAll()  //추후 삭제해야함 테스트용으로 넣어둠
 						.requestMatchers("/api/v1/festival/**").permitAll()
 						.requestMatchers("/festivalImg/**").permitAll()
 

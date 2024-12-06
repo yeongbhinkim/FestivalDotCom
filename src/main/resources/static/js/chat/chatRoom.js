@@ -1,75 +1,72 @@
-var stompClient = null;
+let stompClient = null;
 
 function connect() {
-    var socket = new SockJS('/ws');
+    const socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, function(frame) {
+    stompClient.connect({}, frame => {
         console.log('Connected: ' + frame);
 
         // 현재 채팅방 구독
-        stompClient.subscribe('/topic/' + currentChatRoomId, function(message) {
+        stompClient.subscribe(`/topic/${currentChatRoomId}`, message => {
             showMessage(JSON.parse(message.body));
         });
 
         // 채팅 메시지 로드
         loadChatHistory();
+    }, error => {
+        console.error('WebSocket connection failed:', error);
+        reconnect();
     });
 }
 
 function sendMessage() {
-    var messageContent = document.getElementById("message").value.trim();
+    const messageInput = document.getElementById("message");
+    const messageContent = messageInput.value.trim();
+
     if (messageContent && stompClient) {
-        var chatMessage = {
+        const chatMessage = {
             roomId: currentChatRoomId,
             senderId: sessionId,
             content: messageContent
         };
 
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
-        document.getElementById("message").value = '';
-        scrollToBottom(); // 입력 후 자동 스크롤
+        messageInput.value = '';
+        scrollToBottom(); // 메시지 전송 후 스크롤
     }
 }
 
 function showMessage(message) {
-    var chatItems = document.getElementById('chat-items');
+    const chatItems = document.getElementById('chat-items');
 
-    var messageContainer = document.createElement('li');
+    const messageContainer = document.createElement('li');
     messageContainer.classList.add('chat-item');
+    messageContainer.classList.add(message.senderId === sessionId ? 'my-message' : 'other-message');
 
-    // 메시지 작성자 구분
-    if (message.senderId === sessionId) {
-        messageContainer.classList.add('my-message');
-    } else {
-        messageContainer.classList.add('other-message');
-    }
-
-    var iconElement = document.createElement('i');
+    const iconElement = document.createElement('i');
     iconElement.classList.add('fas', 'fa-user-circle', 'chat-icon');
 
-    var chatInfoElement = document.createElement('div');
+    const chatInfoElement = document.createElement('div');
     chatInfoElement.classList.add('chat-info');
 
-    var nameElement = document.createElement('div');
+    const nameElement = document.createElement('div');
     nameElement.classList.add('chat-name');
     nameElement.textContent = message.senderId;
 
-    var messageElement = document.createElement('div');
+    const messageElement = document.createElement('div');
     messageElement.classList.add('chat-message');
     messageElement.textContent = message.content;
 
-    chatInfoElement.appendChild(nameElement);
-    chatInfoElement.appendChild(messageElement);
-    messageContainer.appendChild(iconElement);
-    messageContainer.appendChild(chatInfoElement);
+    chatInfoElement.append(nameElement, messageElement);
+    messageContainer.append(iconElement, chatInfoElement);
     chatItems.appendChild(messageContainer);
 
     scrollToBottom(); // 새로운 메시지 추가 후 스크롤
 }
 
 function loadChatHistory() {
-    fetch('/chat/view/chatRooms/' + currentChatRoomId + '/messages')
+    fetch(`/chat/view/chatRooms/${currentChatRoomId}/messages`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to fetch chat history');
@@ -77,9 +74,10 @@ function loadChatHistory() {
             return response.json();
         })
         .then(messages => {
-            messages.forEach(message => {
-                showMessage(message);
-            });
+            const chatItems = document.getElementById('chat-items');
+            chatItems.innerHTML = ''; // 기존 메시지 초기화
+
+            messages.forEach(message => showMessage(message));
             scrollToBottom(); // 메시지 로드 후 스크롤
         })
         .catch(error => {
@@ -88,11 +86,17 @@ function loadChatHistory() {
 }
 
 function scrollToBottom() {
-    var chatBody = document.querySelector('.main');
+    const chatBody = document.getElementById('chat-body');
     chatBody.scrollTop = chatBody.scrollHeight;
 }
 
-window.onload = function() {
+function reconnect() {
+    console.log('Reconnecting WebSocket...');
+    setTimeout(connect, 5000); // 5초 후 다시 연결 시도
+}
+
+// 페이지 로드 시 WebSocket 연결
+window.onload = function () {
     connect();
-    scrollToBottom(); // 페이지 로드 시 스크롤
+    scrollToBottom(); // 페이지 로드 후 스크롤
 };

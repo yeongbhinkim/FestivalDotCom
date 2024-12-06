@@ -8,7 +8,7 @@
         </div>
 
         <!-- 채팅 메시지 영역 -->
-        <div class="chat-body">
+        <div class="chat-body" id="chat-body">
             <ul id="chat-items">
                 <!-- 서버에서 전달된 기존 메시지 렌더링 -->
                 <li th:each="message : ${messages}" class="chat-item"
@@ -34,6 +34,5 @@
     <script defer th:inline="javascript">
         var sessionId = [[${sessionId}]] || 'default-session-id';
         var currentChatRoomId = [[${currentChatRoomId}]] || 'default-room-id';
-        console.log("Session ID:", sessionId);
     </script>
 </main>
