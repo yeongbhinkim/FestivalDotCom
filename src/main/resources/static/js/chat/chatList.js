@@ -2,7 +2,7 @@ let stompClient = null;
 
 function connectChatRooms() {
     const socket = new SockJS('/ws'); // WebSocket 연결 엔드포인트
-    stompClient = Stomp.over(socket);
+    stompClient = StompJs.Stomp.over(socket);
 
     stompClient.connect({}, frame => {
         console.log('Connected: ' + frame);

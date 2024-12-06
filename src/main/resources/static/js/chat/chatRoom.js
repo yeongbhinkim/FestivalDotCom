@@ -2,7 +2,7 @@ let stompClient = null;
 
 function connect() {
     const socket = new SockJS('/ws');
-    stompClient = Stomp.over(socket);
+    stompClient = StompJs.Stomp.over(socket);
 
     stompClient.connect({}, frame => {
         console.log('Connected: ' + frame);
