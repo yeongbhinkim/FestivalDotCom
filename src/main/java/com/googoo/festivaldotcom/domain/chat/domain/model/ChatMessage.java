@@ -2,6 +2,7 @@ package com.googoo.festivaldotcom.domain.chat.domain.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -11,19 +12,13 @@ import java.util.Date;
 @Document(collection = "chat_messages")
 public class ChatMessage {
 
-//    private ObjectId id; // MongoDB의 기본 ID 타입
-    private final Long id;
-    private final Long roomId;
-    private final Long senderId;
-    private final String content;
-    private final Date sentAt;
-    private final String typeMessages;
+    @Id
+    private String mongoId; // MongoDB의 기본 식별자 (자동 생성됨)
 
-//    @Field("type")
-//    @Enumerated(EnumType.STRING) // Enum을 문자열로 저장
-//    private final MessageType type;
-//
-//    public enum MessageType {
-//        SENT, RECEIVED, UNKNOWN
-//    }
+    private Long id; // 사용자 ID
+    private Long roomId; // 채팅방 ID
+    private String senderId; // 발신자 ID
+    private String content; // 메시지 내용
+    private Date sentAt; // 전송 시간
+    private String typeMessages; // 메시지 타입
 }

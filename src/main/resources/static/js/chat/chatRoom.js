@@ -26,8 +26,9 @@ function sendMessage() {
             content: messageContent
         };
 
-        stompClient.send("/chat/sendMessage", {}, JSON.stringify(chatMessage));
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
         document.getElementById("message").value = '';
+        scrollToBottom(); // 입력 후 자동 스크롤
     }
 }
 
@@ -52,7 +53,7 @@ function showMessage(message) {
 
     var nameElement = document.createElement('div');
     nameElement.classList.add('chat-name');
-    nameElement.textContent = message.sender;
+    nameElement.textContent = message.senderId;
 
     var messageElement = document.createElement('div');
     messageElement.classList.add('chat-message');
@@ -63,6 +64,8 @@ function showMessage(message) {
     messageContainer.appendChild(iconElement);
     messageContainer.appendChild(chatInfoElement);
     chatItems.appendChild(messageContainer);
+
+    scrollToBottom(); // 새로운 메시지 추가 후 스크롤
 }
 
 function loadChatHistory() {
@@ -77,12 +80,19 @@ function loadChatHistory() {
             messages.forEach(message => {
                 showMessage(message);
             });
+            scrollToBottom(); // 메시지 로드 후 스크롤
         })
         .catch(error => {
             console.error('Error loading chat history:', error);
         });
 }
 
+function scrollToBottom() {
+    var chatBody = document.querySelector('.main');
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+
 window.onload = function() {
     connect();
+    scrollToBottom(); // 페이지 로드 시 스크롤
 };

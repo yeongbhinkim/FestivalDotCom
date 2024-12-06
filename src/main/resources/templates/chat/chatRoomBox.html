@@ -15,7 +15,7 @@
                     th:classappend="${message.senderId == sessionId} ? 'my-message' : 'other-message'">
                     <i class="fas fa-user-circle chat-icon"></i>
                     <div class="chat-info">
-                        <div class="chat-name" th:text="${message.sender}">User</div>
+                        <div class="chat-name" th:text="${message.senderId}">User</div>
                         <div class="chat-message" th:text="${message.content}">Message</div>
                     </div>
                 </li>
@@ -34,5 +34,6 @@
     <script defer th:inline="javascript">
         var sessionId = [[${sessionId}]] || 'default-session-id';
         var currentChatRoomId = [[${currentChatRoomId}]] || 'default-room-id';
+        console.log("Session ID:", sessionId);
     </script>
 </main>

@@ -95,7 +95,7 @@ public class ChatViewController {
             Model model) {
 
         String userId = user.id().toString();
-        log.info("Chat Room ID: {}, Chat Room Name: {}", roomId, roomName);
+//        log.info("Chat Room ID: {}, Chat Room Name: {} Chat User ID: {}", roomId, roomName, userId);
         // 모델에 데이터 추가
         model.addAttribute("sessionId", userId);
         model.addAttribute("currentChatRoomId", roomId);

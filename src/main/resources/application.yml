@@ -140,6 +140,9 @@ springdoc:
     url: /api-docs   # Swagger UI가 사용할 API 문서 경로를 /api-docs로 설정
     path: /api-docs/ui  # Swagger UI 경로를 /api-docs/ui로 설정
 
+size:
+  group: ${GROUP_SIZE}
+
 blocked:
   domains:
     - gmail.com

@@ -1,147 +1,126 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
 
-.app-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-.header-title {
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.header-settings {
-    font-size: 20px;
-    cursor: pointer;
-}
-
-footer {
-    background-color: #ffffff;
-    padding: 15px 0;
-    border-top: 1px solid #ddd;
-    position: relative;
-}
-
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: space-around;
-    border-top: 1px solid #ddd;
-}
-
-nav li {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    border-left: 1px solid #ddd;
-    flex: 1;
-}
-
-nav li:first-child {
-    border-left: none;
-}
-
-nav li i {
-    font-size: 24px;
-}
-
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
-
-.phone-screen {
-    width: 375px;
-    height: 667px;
-    background-color: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-}
-
+/* 채팅방 헤더 */
 .chat-header {
-    background-color: #f7f7f7;
+    text-align: center;
     padding: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background-color: #f5f5f5;
     border-bottom: 1px solid #ddd;
 }
 
+.chat-header h2 {
+    font-size: 20px;
+    margin: 0;
+    color: #333;
+}
+
+.chat-header span {
+    color: #007bff;
+}
+
+/* 채팅 메시지 영역 */
 .chat-body {
-    overflow-y: auto;
     flex: 1;
-    border-bottom: 1px solid #ddd;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 10px;
+    scroll-behavior: smooth; /* 부드러운 스크롤 */
 }
 
+/* 메시지 입력 영역 */
+.message-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    position: sticky; /* 하단 고정 */
+    bottom: 0;
+}
+
+.message-input input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+}
+
+.message-input input[type="text"]:focus {
+    border-color: #007bff;
+}
+
+.message-input button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.message-input button:hover {
+    background-color: #0056b3;
+}
+
+/* 채팅 메시지 스타일 */
 .chat-item {
     display: flex;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+    align-items: flex-start;
+    margin-bottom: 10px;
 }
 
-.chat-item:last-child {
-    border-bottom: none;
+/* 내 메시지 스타일 */
+.my-message {
+    justify-content: flex-end; /* 오른쪽 정렬 */
+}
+
+/* 상대방 메시지 스타일 */
+.other-message {
+    justify-content: flex-start; /* 왼쪽 정렬 */
 }
 
 .chat-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    font-size: 30px;
     margin-right: 10px;
+    color: #007bff;
 }
 
 .chat-info {
     display: flex;
     flex-direction: column;
+    max-width: 70%;
 }
 
 .chat-name {
     font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 5px;
+    color: #555;
 }
 
 .chat-message {
-    color: #888;
     font-size: 14px;
-}
-
-/* 본인 메시지와 타인 메시지를 구분하는 스타일 */
-.my-message {
-    justify-content: flex-end; /* 본인 메시지는 오른쪽 정렬 */
-}
-
-.my-message .chat-info {
-    background-color: #dcf8c6; /* 본인 메시지의 배경색 */
-    border-radius: 10px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    background-color: #f1f1f1;
     padding: 10px;
-    margin-left: 10px;
+    border-radius: 10px;
+    max-width: 70%;
 }
 
-.other-message .chat-info {
-    background-color: #eaeaea; /* 타인의 메시지 배경색 */
-    border-radius: 10px;
-    padding: 10px;
-    margin-right: 10px;
+.my-message .chat-message {
+    background-color: #d1e7dd; /* 나의 메시지 */
+    text-align: right;
+}
+
+.other-message .chat-message {
+    background-color: #f8d7da; /* 상대방 메시지 */
+    text-align: left;
 }
