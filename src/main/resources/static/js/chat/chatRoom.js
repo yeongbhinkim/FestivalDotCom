@@ -2,7 +2,7 @@ let stompClient = null;
 
 function connect() {
     const socket = new SockJS('/ws');
-    stompClient = StompJs.Stomp.over(socket);
+    stompClient = Stomp.over(socket);
 
     stompClient.connect({}, frame => {
         console.log('Connected: ' + frame);
@@ -86,7 +86,7 @@ function loadChatHistory() {
 }
 
 function scrollToBottom() {
-    const chatBody = document.getElementById('chat-body');
+    const chatBody = document.querySelector('.main');
     chatBody.scrollTop = chatBody.scrollHeight;
 }
 
