@@ -39,7 +39,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authz -> authz
 						.requestMatchers(HttpMethod.OPTIONS, "/api/*").permitAll()
 //						.requestMatchers(HttpMethod.OPTIONS, "/ws").permitAll()
-//						.requestMatchers(HttpMethod.OPTIONS, "/ws/*").permitAll()
+						.requestMatchers(HttpMethod.OPTIONS, "/ws/**").permitAll()
 						.requestMatchers("/docs/**", "/oauth2/**", "/favicon.ico").permitAll()
 						.requestMatchers("/api/v1/tokens").permitAll()
 						.requestMatchers("/img/**").permitAll()
