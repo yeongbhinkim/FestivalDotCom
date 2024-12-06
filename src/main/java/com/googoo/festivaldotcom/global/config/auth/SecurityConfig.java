@@ -38,7 +38,7 @@ public class SecurityConfig {
 				// 요청에 대한 보안을 구성합니다.
 				.authorizeHttpRequests(authz -> authz
 						.requestMatchers(HttpMethod.OPTIONS, "/api/*").permitAll()
-//						.requestMatchers(HttpMethod.OPTIONS, "/ws").permitAll()
+						.requestMatchers(HttpMethod.OPTIONS, "/ws").permitAll()
 						.requestMatchers(HttpMethod.OPTIONS, "/ws/**").permitAll()
 						.requestMatchers("/docs/**", "/oauth2/**", "/favicon.ico").permitAll()
 						.requestMatchers("/api/v1/tokens").permitAll()
