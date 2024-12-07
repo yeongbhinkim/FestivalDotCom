@@ -53,8 +53,12 @@ function updateChatRoomList() {
 
                 const lastMessage = document.createElement('span');
                 lastMessage.classList.add('last-message');
-                lastMessage.textContent = ' ' +
-                    chatData.messageList[index]?.lastMessage || ' 메시지가 없습니다.';
+
+                const lastMessageContent = chatData.messageList[index]?.lastMessage;
+                lastMessage.textContent = (lastMessageContent && lastMessageContent !== 'undefined')
+                    ? ' ' + lastMessageContent
+                    : ' 메시지가 없습니다.';
+
 
                 const joinButton = document.createElement('a');
                 joinButton.classList.add('join-button');
