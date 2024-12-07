@@ -25,4 +25,9 @@ public class ChatRoomService {
     public long getChatRoomsByUserIdCount(Long userId) {
         return chatRoomMapper.selectChatRoomsByUserIdCount(userId);
     }
+
+
+    public List<Long> getRoomsByUserId(Long userId) {
+        return chatRoomMapper.selectRoomsByUserId(userId);
+    }
 }

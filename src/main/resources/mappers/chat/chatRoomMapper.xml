@@ -24,6 +24,14 @@
           AND room_members.deleted = 0
     </select>
 
+    <!--  참가한 체팅방 ID  -->
+    <select id="selectRoomsByUserId" resultType="long">
+        SELECT room_id
+        FROM room_members
+        WHERE room_members.id = #{userId}
+          AND room_members.deleted = 0
+    </select>
+
 <!--    <select id="findChatRoomById" resultType="ChatRoom">
         SELECT * FROM chat_rooms WHERE room_id = #{roomId}
     </select>-->

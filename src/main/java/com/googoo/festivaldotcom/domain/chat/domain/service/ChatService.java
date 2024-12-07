@@ -27,10 +27,10 @@ public class ChatService {
         return chatMessageRepository.findByRoomIdOrderBySentAtAsc(roomId);
     }
 
-    public List<RoomLastMessage> getLastMessage(Long userId) {
-        List<RoomLastMessage> results = chatMessageRepository.findLastMessagesByUserId(userId);
+    public List<RoomLastMessage> getLastMessage(List<Long> roomIds) {
+        List<RoomLastMessage> results = chatMessageRepository.findLastMessagesByRoomIds(roomIds);
         if (results == null || results.isEmpty()) {
-            log.info("No chat messages found for userId: {}", userId);
+            log.info("No chat messages found for roomIds: {}", roomIds);
             return Collections.emptyList(); // 빈 리스트 반환
         }
         return results;

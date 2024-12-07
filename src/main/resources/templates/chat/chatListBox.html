@@ -3,26 +3,7 @@
 
     <div class="chat-room-list">
         <ul id="chat-room-list">
-            <!-- roomList가 비어 있을 때 메시지 표시 -->
-            <li th:if="${#lists.isEmpty(roomList)}" class="chat-room-item empty">
-                <span>현재 채팅방이 없습니다. 새로운 방을 만들어보세요!</span>
-            </li>
 
-            <!-- roomList가 있을 때 각 방 정보와 메시지 출력 -->
-            <li th:each="room, iterStat : ${roomList}" class="chat-room-item">
-                <div class="chat-room-info">
-                    <!-- 방 이름 -->
-                    <span class="room-name" th:text="${room.roomName}">Room Name Placeholder</span>
-                    <!-- 해당 방의 마지막 메시지 -->
-                    <span class="last-message"
-                          th:text="${#lists.size(messageList) > iterStat.index ? messageList[iterStat.index]?.lastMessage : '메시지가 없습니다.'}">
-                        Message Placeholder
-                    </span>
-                </div>
-                <!-- 방 입장 버튼 -->
-                <a th:href="@{/chat/view/chatRoom/{roomId}/{roomName}(roomId=${room.roomId}, roomName=${room.roomName})}"
-                   class="join-button">입장</a>
-            </li>
         </ul>
     </div>
 

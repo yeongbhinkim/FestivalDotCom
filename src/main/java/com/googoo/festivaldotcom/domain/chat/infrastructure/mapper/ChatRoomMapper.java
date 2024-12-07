@@ -25,4 +25,6 @@ public interface ChatRoomMapper {
     void insertChatMember(SchedulerRoomDTO schedulerRoomDTO);
     void deleteChatMember(SchedulerRoomDTO schedulerRoomDTO);
 
+
+    List<Long> selectRoomsByUserId(Long userId);
 }

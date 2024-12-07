@@ -7,8 +7,6 @@ import com.googoo.festivaldotcom.domain.chat.domain.service.ChatRoomService;
 import com.googoo.festivaldotcom.domain.chat.domain.service.ChatService;
 import com.googoo.festivaldotcom.global.auth.token.dto.jwt.JwtAuthentication;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -21,9 +19,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -33,37 +32,76 @@ public class ChatViewController {
 
     private final ChatService chatService;
     private final ChatRoomService chatRoomService;
-
     private final SimpMessagingTemplate messagingTemplate;
 
-    @Operation(summary = "채팅 목록", description = "사용자 채팅 목록 / 화면")
-    @GetMapping("/chatList")
-    public String chatList(
-            HttpServletRequest request,
-            Model model,
-            @Parameter(description = "인증된 사용자 정보") @AuthenticationPrincipal JwtAuthentication user) {
-
-        long chatRoomsByUserIdCount = chatRoomService.getChatRoomsByUserIdCount(user.id());
-        if (chatRoomsByUserIdCount == 0) {
-            model.addAttribute("messageList", Collections.emptyList());
-            model.addAttribute("roomList", Collections.emptyList());
-            return "chat/chatListPage";
-        }
-
-        try {
-            List<RoomLastMessage> lastMessage = chatService.getLastMessage(user.id());
-            List<Rooms> roomsList = chatRoomService.getChatRoomsByUserId(user.id());
-
-            model.addAttribute("messageList", lastMessage);
-            model.addAttribute("roomList", roomsList);
-        } catch (Exception e) {
-            log.error("채팅 목록 조회 중 오류 발생: ", e);
-            model.addAttribute("messageList", Collections.emptyList());
-            model.addAttribute("roomList", Collections.emptyList());
-        }
-
+    @GetMapping("/chatListView")
+    public String chatList(Model model) {
+        model.addAttribute("pageTitle", "채팅 목록");
         return "chat/chatListPage";
     }
+
+    @Operation(summary = "채팅방 목록", description = "사용자 채팅방 목록을 JSON으로 반환")
+    @ResponseBody
+    @GetMapping("/chatList")
+    public Map<String, Object> getChatList(@AuthenticationPrincipal JwtAuthentication user) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            long chatRoomsByUserIdCount = chatRoomService.getChatRoomsByUserIdCount(user.id());
+            if (chatRoomsByUserIdCount == 0) {
+                response.put("roomList", List.of());
+                response.put("messageList", List.of());
+                return response;
+            }
+
+            List<Long> roomIds = chatRoomService.getRoomsByUserId(user.id());
+
+            List<RoomLastMessage> lastMessages = chatService.getLastMessage(roomIds);
+            List<Rooms> roomsList = chatRoomService.getChatRoomsByUserId(user.id());
+
+            response.put("roomList", roomsList);
+            response.put("messageList", lastMessages);
+        } catch (Exception e) {
+            log.error("채팅 목록 조회 중 오류 발생: ", e);
+            response.put("roomList", List.of());
+            response.put("messageList", List.of());
+        }
+        return response;
+    }
+
+    @MessageMapping("/chat.updateList")
+    public void broadcastChatRoomUpdate() {
+        messagingTemplate.convertAndSend("/topic/chatList", "updated");
+    }
+
+
+//    @Operation(summary = "채팅 목록", description = "사용자 채팅 목록 / 화면")
+//    @GetMapping("/chatList")
+//    public String chatList(
+//            HttpServletRequest request,
+//            Model model,
+//            @Parameter(description = "인증된 사용자 정보") @AuthenticationPrincipal JwtAuthentication user) {
+//
+//        long chatRoomsByUserIdCount = chatRoomService.getChatRoomsByUserIdCount(user.id());
+//        if (chatRoomsByUserIdCount == 0) {
+//            model.addAttribute("messageList", Collections.emptyList());
+//            model.addAttribute("roomList", Collections.emptyList());
+//            return "chat/chatListPage";
+//        }
+//
+//        try {
+//            List<RoomLastMessage> lastMessage = chatService.getLastMessage(user.id());
+//            List<Rooms> roomsList = chatRoomService.getChatRoomsByUserId(user.id());
+//
+//            model.addAttribute("messageList", lastMessage);
+//            model.addAttribute("roomList", roomsList);
+//        } catch (Exception e) {
+//            log.error("채팅 목록 조회 중 오류 발생: ", e);
+//            model.addAttribute("messageList", Collections.emptyList());
+//            model.addAttribute("roomList", Collections.emptyList());
+//        }
+//
+//        return "chat/chatListPage";
+//    }
 
 
     @MessageMapping("/chat.sendMessage")
@@ -106,4 +144,3 @@ public class ChatViewController {
     }
 
 }
-                                                
