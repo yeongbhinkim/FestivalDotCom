@@ -11,7 +11,6 @@ import java.util.List;
 @Mapper
 public interface ChatRoomMapper {
 
-
     List<Rooms> selectChatRoomsByUserId(Long userId);
     long selectChatRoomsByUserIdCount(Long userId);
     long insertRoom(Rooms room);
@@ -24,7 +23,6 @@ public interface ChatRoomMapper {
     void insertChatRoom(SchedulerRoomDTO schedulerRoomDTO);
     void insertChatMember(SchedulerRoomDTO schedulerRoomDTO);
     void deleteChatMember(SchedulerRoomDTO schedulerRoomDTO);
-
 
     List<Long> selectRoomsByUserId(Long userId);
 }

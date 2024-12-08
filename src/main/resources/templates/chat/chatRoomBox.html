@@ -1,4 +1,4 @@
-<main th:fragment="chatRoomBox">
+<main th:fragment="chatRoomBox" class="scroll">
     <link rel="stylesheet" type="text/css" th:href="@{/css/chat/chatRoomStyle.css}">
 
     <div class="chat-room-container">
@@ -13,7 +13,6 @@
                 <!-- 서버에서 전달된 기존 메시지 렌더링 -->
                 <li th:each="message : ${messages}" class="chat-item"
                     th:classappend="${message.senderId == sessionId} ? 'my-message' : 'other-message'">
-                    <i class="fas fa-user-circle chat-icon"></i>
                     <div class="chat-info">
                         <div class="chat-name" th:text="${message.senderId}">User</div>
                         <div class="chat-message" th:text="${message.content}">Message</div>
@@ -24,7 +23,8 @@
 
         <!-- 메시지 입력 -->
         <div class="message-input">
-            <input type="text" id="message" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendMessage()">
+            <input type="text" id="message" placeholder="Type a message...">
+
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>

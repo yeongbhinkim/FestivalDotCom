@@ -73,37 +73,6 @@ public class ChatViewController {
         messagingTemplate.convertAndSend("/topic/chatList", "updated");
     }
 
-
-//    @Operation(summary = "채팅 목록", description = "사용자 채팅 목록 / 화면")
-//    @GetMapping("/chatList")
-//    public String chatList(
-//            HttpServletRequest request,
-//            Model model,
-//            @Parameter(description = "인증된 사용자 정보") @AuthenticationPrincipal JwtAuthentication user) {
-//
-//        long chatRoomsByUserIdCount = chatRoomService.getChatRoomsByUserIdCount(user.id());
-//        if (chatRoomsByUserIdCount == 0) {
-//            model.addAttribute("messageList", Collections.emptyList());
-//            model.addAttribute("roomList", Collections.emptyList());
-//            return "chat/chatListPage";
-//        }
-//
-//        try {
-//            List<RoomLastMessage> lastMessage = chatService.getLastMessage(user.id());
-//            List<Rooms> roomsList = chatRoomService.getChatRoomsByUserId(user.id());
-//
-//            model.addAttribute("messageList", lastMessage);
-//            model.addAttribute("roomList", roomsList);
-//        } catch (Exception e) {
-//            log.error("채팅 목록 조회 중 오류 발생: ", e);
-//            model.addAttribute("messageList", Collections.emptyList());
-//            model.addAttribute("roomList", Collections.emptyList());
-//        }
-//
-//        return "chat/chatListPage";
-//    }
-
-
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(ChatMessage message) {
         ChatMessage chatMessage = ChatMessage.builder()

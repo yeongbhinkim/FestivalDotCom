@@ -1,14 +1,4 @@
 <main th:fragment="memberModifyBox">
-<!--    <script th:inline="javascript">-->
-<!--        document.addEventListener("DOMContentLoaded", function () {-->
-<!--            const successMessage = /*[[${successMessage != null ? "'" + successMessage + "'" : "null"}]]*/ null;-->
-<!--            if (successMessage && successMessage !== 'null') {-->
-<!--                alert(successMessage);-->
-<!--            }-->
-<!--        });-->
-<!--    </script>-->
-
-
     <link rel="stylesheet" href="" th:href="@{/css/member/memberModify.css}">
     <div class="main-sub">
         <form action="/api/v1/user/modify" id="modifyForm" method="post" th:object="${modifyForm}"
@@ -16,28 +6,21 @@
             <div class="container">
                 <div class="container-body">
                     <div class="inputInfo">
+
                         <div class="member_profileImgUrl">
-                            <div style="position: relative; display: block; text-align: center;">
-                                <input type="file" id="file" name="file" accept="image/*" onchange="showImage(this)"
-                                       style="display: none;">
-                                <img id="profileImgUrl"
-                                     th:src="*{profileImgUrl}"
-                                     alt="Selected Image"
-                                     style="max-width: 300px; max-height: 300px; display: block; margin: auto; object-fit: contain;">
-                                <button type="button" onclick="deleteImage();"
-                                        style="position: absolute; top: 0; right: 0; padding: 5px;">X
-                                </button>
-                                <button type="button" onclick="document.getElementById('file').click();"
-                                        style="display: block; margin: 10px auto 0;">사진 수정
-                                </button>
+                            <div class="profile-container">
+                                <input type="file" id="file" name="file" accept="image/*" onchange="showImage(this)" class="hidden-input">
+                                <img id="profileImgUrl" th:src="*{profileImgUrl}" alt="Selected Image" class="profile-image">
+                                <button type="button" class="close-button" onclick="deleteImage();">X</button>
+                                <button type="button" class="edit-button" onclick="document.getElementById('file').click();">사진 수정</button>
                             </div>
-                            <input type="hidden" id="hiddenProfileImgUrl" name="profileImgUrl"
-                                   th:value="*{profileImgUrl}"/>
+                            <input type="hidden" id="hiddenProfileImgUrl" name="profileImgUrl" th:value="*{profileImgUrl}"/>
                         </div>
+
 
                         <div class="member_nickname">
                             <li>
-                                <label for="nickName">사용자명:</label>
+                                <label for="nickName" class="bold-label">사용자명</label>
                                 <input type="text" name="nickName" id="nickName" th:field="*{nickName}"
                                        placeholder="이름을 입력해주세요."/>
                                 <p th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"
@@ -47,7 +30,7 @@
 
                         <div class="member_manner_score">
                             <li>
-                                <label for="mannerScore">매너점수:</label>
+                                <label for="mannerScore" class="bold-label">매너점수</label>
                                 <input type="text" name="mannerScore" id="mannerScore" th:field="*{mannerScore}"
                                        readonly="readonly"/>
                             </li>
@@ -55,7 +38,7 @@
 
                         <div class="member_introduction">
                             <li>
-                                <label for="introduction">자기소개:</label>
+                                <label for="introduction" class="bold-label">자기소개</label>
                                 <input type="text" name="introduction" id="introduction" th:field="*{introduction}"
                                        placeholder="자기소개를 작성해주세요."/>
                                 <p th:if="${#fields.hasErrors('introduction')}" th:errors="*{introduction}"
@@ -65,36 +48,38 @@
 
                         <div class="member_gender">
                             <li>
-                                <label>성별:</label>
-                                <label for="male">남자</label>
+                                <label class="bold-label">성별</label>
+                                <label for="male">남자
                                 <input type="radio" id="male" name="gender" value="MALE" th:field="*{gender}"/>
-                                <label for="female">여자</label>
+                                </label>
+                                <label for="female">여자
                                 <input type="radio" id="female" name="gender" value="FEMALE" th:field="*{gender}"/>
-                                <label for="none">선택 안 함</label>
+                                </label>
+                                <label for="none">선택
                                 <input type="radio" id="none" name="gender" value="NONE" th:field="*{gender}"/>
+                                </label>
                             </li>
                         </div>
 
                         <div class="member_email_verification">
                             <li>
-                                <label for="companyEmail">회사 이메일:</label>
+                                <label for="companyEmail" class="bold-label">회사 이메일</label>
                                 <input type="text" name="companyEmail" id="companyEmail" th:field="*{companyEmail}"
                                        placeholder="회사 이메일을 입력해주세요."/>
                                 <button type="button" onclick="verifyEmail();">이메일 인증</button>
                                 <p id="emailVerificationStatus"></p>
                             </li>
                         </div>
-                        <p th:if="${successMessage}" th:text="${successMessage}" id="flashMessage" style="display:none;"></p>
+                        <p th:if="${successMessage}" th:text="${successMessage}" id="flashMessage"
+                           style="display:none;"></p>
                     </div>
 
                     <div class="Btn">
                         <a th:href="@{/api/v1/user/myPageRemove}">탈퇴</a>
                         <button type="button" id="modifyBtn">수정</button>
-                    </div>
-
-                    <div class="Btn">
                         <a href="#" id="logoutButton" role="button">로그아웃</a>
                     </div>
+
                 </div>
             </div>
         </form>

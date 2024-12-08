@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // name 속성을 사용하여 festivalId 값을 가져오기
             const festivalIdElement = document.querySelector('[name="festivalId"]'); // name 속성이 'festivalId'인 요소 선택
             const festivalId = festivalIdElement ? festivalIdElement.value : null;
-
             if (!festivalId) {
                 alert('축제 ID를 찾을 수 없습니다.');
                 return;
@@ -36,6 +35,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(regisDTO)
             });
 
+            if (response.headers.get('content-type')?.includes('text/html')) {
+                // HTML 응답이 온 경우
+                alert('로그인 하세요.');
+                return;
+            }
+
             // 응답 상태 확인
             if (!response.ok) {
                 const errorMessage = await response.text(); // 서버에서 반환한 에러 메시지
@@ -50,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // 성공 메시지 처리
             const data = await response.text();
-            alert(data); // 성공 시 서버에서 보내온 메시지를 사용자에게 알림
+            alert(data);
         } catch (error) {
             console.error('오류:', error);
             alert(error.message); // 에러 메시지를 사용자에게 알림

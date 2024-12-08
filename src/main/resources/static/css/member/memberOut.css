@@ -9,25 +9,25 @@ main .container {
 }
 
 main {
+  overflow: auto;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center;    /* 세로 중앙 정렬 */
   height: 100%;
+  width: 100%;
+  background-color: #f5f5f5; /* 부드러운 배경색 */
 }
 
-main form {
-  /*position: relative;*/
-  top: 135px;
-  left: 235px;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  padding: 10px;
-  box-shadow: 0 15px 10px -7px #eee;
-  /*width: 700px;*/
+form {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* 요소를 세로로 정렬 */
+  background: #ffffff;     /* 폼 배경 */
+  border-radius: 15px;     /* 부드러운 모서리 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
 }
 
 main li {

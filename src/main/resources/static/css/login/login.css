@@ -1,55 +1,65 @@
 @charset "utf-8";
 
-main .container {
+/* 기본 스타일 설정 */
+main {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center;    /* 세로 중앙 정렬 */
   height: 100%;
+  width: 100%;
+  background-color: #f5f5f5; /* 부드러운 배경색 */
 }
 
-main .container-body {
+form {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* 요소를 세로로 정렬 */
+  background: #ffffff;     /* 폼 배경 */
+  border-radius: 15px;     /* 부드러운 모서리 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+}
+
+.container {
   text-align: center;
 }
 
-main {
+.container-body ul {
+  list-style: none; /* 기본 리스트 스타일 제거 */
+  padding: 0;
+  margin: 0;
+}
+
+.container-body li {
+  margin: 15px 0; /* 리스트 항목 간격 */
+  cursor: pointer; /* 클릭 가능한 포인터 모양 */
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  transition: transform 0.2s ease; /* 확대 효과 */
 }
 
-main form {
-  /*position: relative;*/
-  top: 135px;
-  left: 235px;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  padding: 10px;
-  box-shadow: 0 15px 10px -7px #eee;
-  width: 99%;
+.container-body li:hover {
+  transform: scale(1.05); /* 마우스 호버 시 확대 */
 }
 
-main li {
-  list-style: none;
+.container-body li img {
+  width: 250px; /* 이미지의 너비 증가 */
+  height: auto; /* 높이는 자동으로 비율 유지 */
+  border-radius: 10px; /* 이미지 둥근 모서리 */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* 애니메이션 추가 */
+  margin: 0;
 }
 
-main ul {
-  padding: 0px;
+.container-body li img:hover {
+  transform: scale(1.1); /* 이미지 개별 확대 효과 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 그림자 강조 */
 }
 
-main img {
-  padding: 10px 15px;
-  /*width: 250px;*/
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  margin: 20px 10px 0;
-  letter-spacing: 1px;
-  font-size: 16px;
-  width: 185px;
-  height: 40px;
+.container-body a img:active {
+  transform: scale(0.95);  /* 클릭 시 이미지 축소 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 축소 */
 }

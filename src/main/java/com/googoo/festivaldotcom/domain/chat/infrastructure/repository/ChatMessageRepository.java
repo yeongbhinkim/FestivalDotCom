@@ -13,7 +13,6 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
 
     List<ChatMessage> findByRoomIdOrderBySentAtAsc(Long roomId);
 
-
     @Aggregation(pipeline = {
             "{ '$match': { 'roomId': { '$in': ?0 } } }", // 사용자가 참여한 방만 필터링
             "{ '$sort': { 'roomId': 1, 'sentAt': -1 } }", // 모든 메시지 정렬
@@ -24,21 +23,5 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
                     "} }"
     })
     List<RoomLastMessage> findLastMessagesByRoomIds(List<Long> roomIds);
-
-
-
-//    @Aggregation(pipeline = {
-//            "{ '$match': { 'id': ?0 } }",
-//            "{ '$sort': { 'roomId': 1, 'sentAt': -1 } }",
-//            "{ '$group': { '_id': '$roomId', 'lastMessage': { '$first': '$$ROOT' } } }",
-//            "{ '$project': { " +
-//                    "   'roomId': { '$ifNull': ['$_id', null] }, " +
-//                    "   'lastMessage': { '$ifNull': ['$lastMessage.content', 'No messages yet'] }, " +
-//                    "   'typeMessages': { '$ifNull': ['$lastMessage.typeMessages', 'UNKNOWN'] } " +
-//                    "} }"
-//    })
-//    List<RoomLastMessage> findLastMessagesByUserId(Long userId);
-
-
 
 }

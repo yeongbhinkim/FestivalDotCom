@@ -2,7 +2,7 @@
 
 let page = 1; // 페이지 번호 초기화
 const size = 10; // 페이지 크기 설정
-const scrollContainer = document.querySelector('.main'); // 스크롤이 있는 요소 선택
+const scrollContainer = document.querySelector('.container-body'); // 스크롤이 있는 요소 선택
 
 // 스크롤 이벤트 리스너 추가
 scrollContainer.addEventListener('scroll', function () {

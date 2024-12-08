@@ -1,19 +1,31 @@
 @charset "utf-8";
 
+.global-wrap {
+    height: 100%;
+    width: 100%;
+}
+
+.hdr {
+    height: 6%;
+    width: 100%;
+    min-height: 50px;
+}
+
+.foot {
+    height: 8%;
+    width: 100%;
+    min-height: 50px;
+}
+
+.foot-inner {
+    height: 100%;
+    width: 100%;
+}
+
 .globalError, .fieldError {
     color: red;
     font-size: 0.8em;
     font-weight: bold;
-}
-
-.globalError {
-
-}
-
-input.fieldError {
-    color: inherit;
-    font-weight: normal;
-    border: 1px solid red;
 }
 
 .fieldSuccess {
@@ -22,103 +34,179 @@ input.fieldError {
     font-weight: bold;
 }
 
+input.fieldError {
+    color: inherit;
+    font-weight: normal;
+    border: 1px solid red;
+}
+
 input.fieldSuccess {
     color: inherit;
     font-weight: normal;
     border: 1px solid green;
 }
 
-
+/* 기본 레이아웃 */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
+    flex-direction: column; /* 상단에서 하단으로 배치 */
+    height: 100vh; /* 화면 전체 높이 */
 }
 
 .app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #f1f1f1;
-    padding: 10px;
+    background-color: #ffffff;
+    padding: 15px 20px;
     border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .header-title {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: bold;
-}
-
-@media (max-width: 550px) {
-    .responsive-text {
-        font-size: 9px;
-    }
+    color: #333;
 }
 
 .responsive-text {
-    font-size: 16px;
+    font-size: 14px;
+    color: #555;
 }
 
 .header-settings {
-    font-size: 20px;
+    font-size: 14px;
     cursor: pointer;
 }
 
-
-.global-wrap {
-    height: 100%;
-    width: 100%;
-}
-
-.hdr {
-    height: 10%;
-    width: 100%;
-}
-
-.inner.hdr-inner {
-    height: 100%;
-}
-
-header {
-    height: 100%;
-}
-
-.app-header {
-    height: 70%;
-}
-
-
+/* 메인 섹션 */
 .main {
-    height: 77%;
+    flex: 1 0 auto; /* 유동적으로 영역을 차지 */
     width: 100%;
-    overflow-y: auto;
-    display: grid;
+    height: 86%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #f1f1f1;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05); /* 부드러운 내부 그림자 */
+    border-radius: 8px;
 }
 
-.inner.main-inner {
+.main-inner {
+    height: 100%;
+    width: 100%;
+}
+
+/* 푸터 */
+footer {
+    flex: 0 0 auto; /* 고정 크기 */
+    background-color: #ffffff;
+
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
     height: 100%;
 }
 
-.main-sub {
-    width: 100%;
+.footer-icons {
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-
-.foot {
-    height: 13%;
-    width: 100%;
-}
-
-footer {
-    background-color: #ffffff;
-    padding: 15px 0; /* 여유 공간을 위해 패딩을 증가 */
-    border-top: 1px solid #ddd;
+.footer-icons li a,
+.footer-icons li span {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    color: #007bff;
+    font-size: 18px;
     position: relative;
+}
+
+.icon-bars::before {
+    content: "";
+    display: block;
+    width: 15px;
+    height: 2px;
+    background: #007bff;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 4px #007bff, 0 8px #007bff;
+}
+
+.icon-chat::before {
+    content: "";
+    display: block;
+    width: 18px;
+    height: 15px;
+    border: 2px solid #007bff;
+    border-radius: 3px;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.icon-chat::after {
+    content: "";
+    display: block;
+    width: 8px;
+    height: 8px;
+    background: #007bff;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.icon-question::before {
+    content: "?";
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    color: #007bff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.icon-user::before {
+    content: "";
+    display: block;
+    width: 12px;
+    height: 12px;
+    background: #007bff;
+    border-radius: 50%;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.icon-user::after {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 10px;
+    border: 2px solid #007bff;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 footer ul {
@@ -127,22 +215,87 @@ footer ul {
     margin: 0;
     display: flex;
     justify-content: space-around;
-    border-top: 1px solid #ddd; /* 구분선을 추가 */
 }
 
 footer li {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    border-left: 1px solid #ddd; /* 아이콘 사이에 구분선 추가 */
-    flex: 1; /* 아이콘 간 간격을 균일하게 만듦 */
+    flex: 1;
+    border-left: 1px solid #ddd;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 footer li:first-child {
-    border-left: none; /* 첫 번째 아이콘의 좌측 구분선 제거 */
+    border-left: none;
 }
+
 
 footer li i {
     font-size: 24px;
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+
+footer li i:hover {
+    color: #0056b3;
+}
+
+.bold-label {
+    font-weight: bold; /* 글자를 두껍게 */
+}
+
+
+/* 이미지 및 리스트 */
+.main ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.main li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.main li img {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+    border-radius: 5px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.main li a {
+    text-decoration: none;
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.main li a:hover {
+    color: #007bff;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .header-title {
+        font-size: 18px;
+    }
+
+    footer li i {
+        font-size: 20px;
+    }
+
+    .main li img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .main li a {
+        font-size: 14px;
+    }
 }

@@ -5,7 +5,7 @@ function connect() {
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, frame => {
-        console.log('Connected: ' + frame);
+        // console.log('Connected: ' + frame);
 
         // 현재 채팅방 구독
         stompClient.subscribe(`/topic/${currentChatRoomId}`, message => {
@@ -86,7 +86,7 @@ function loadChatHistory() {
 }
 
 function scrollToBottom() {
-    const chatBody = document.querySelector('.main');
+    const chatBody = document.querySelector('.scroll');
     chatBody.scrollTop = chatBody.scrollHeight;
 }
 
@@ -100,3 +100,9 @@ window.onload = function () {
     connect();
     scrollToBottom(); // 페이지 로드 후 스크롤
 };
+
+document.getElementById('message').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+});

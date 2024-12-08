@@ -6,10 +6,8 @@
         <form id="frm" action="/api/v1/festival/search" method="get" th:object="${getFestival}">
             <div class="container">
                 <div class="festival_festivalName">
-                    <li>
-                        <input type="text" name="festivalName" id="festivalName" th:field="*{festivalName}"
-                               placeholder="축제명을 입력해주세요."/>
-                    </li>
+                    <input type="text" name="festivalName" id="festivalName" th:field="*{festivalName}"
+                           placeholder="축제명을 입력해주세요."/>
                 </div>
                 <div class="Btn">
                     <button type="submit" id="getBtn">조회</button>

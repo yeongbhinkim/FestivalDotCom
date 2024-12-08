@@ -3,43 +3,39 @@
       xmlns:th="http://www.thymeleaf.org"
       th:fragment="chatRoom(title,styles,scripts,style,script,header,main,footer)">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title th:fragment=${title}>Chat Room List</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:fragment=${title}>Chat Room List</title>
 
-  <!-- 공통 스타일을 불러오기 위한 링크 -->
-  <link rel="stylesheet" href="" th:href="@{/css/common.css}">
+    <!-- 공통 스타일을 불러오기 위한 링크 -->
+    <link rel="stylesheet" href="" th:href="@{/css/common.css}">
+    <script defer src="" th:src="@{/js/common.js}"></script>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <script defer th:src="@{/js/chat/stomp.min.js}"></script>
-  <script defer th:src="@{/js/chat/sockjs.min.js}"></script>
-
-<!--  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>-->
-<!--  <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@6.1.2/umd/stomp.min.js"></script>-->
+    <script defer th:src="@{/js/chat/stomp.min.js}"></script>
+    <script defer th:src="@{/js/chat/sockjs.min.js}"></script>
 
 
 </head>
 <body>
 <div class="global-wrap">
-  <div class="hdr">
-    <div class="inner hdr-inner" th:insert="${header}">
-      header
+    <div class="hdr">
+        <div class="inner hdr-inner" th:insert="${header}">
+            header
+        </div>
     </div>
-  </div>
 
-  <div class="main">
-    <div class="inner main-inner" th:insert="${main}">
-      main
+    <div class="main">
+        <div class="inner main-inner" th:insert="${main}">
+            main
+        </div>
     </div>
-  </div>
 
-  <div class="foot">
-    <div class="inner foot-inner" th:insert="${footer}">
-      foot
+    <div class="foot">
+        <div class="inner foot-inner" th:insert="${footer}">
+            foot
+        </div>
     </div>
-  </div>
 </div>
 
 <th:block th:replace="${script}"></th:block>

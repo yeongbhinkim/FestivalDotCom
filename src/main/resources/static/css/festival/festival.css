@@ -1,75 +1,235 @@
 @charset "utf-8";
 
+/* 검색 입력 필드 스타일 */
+input[type="text"] {
+    width: 100%; /* 입력 필드가 부모 요소의 너비를 채움 */
+    max-width: 400px; /* 최대 너비 설정 */
+    padding: 12px 20px; /* 입력 필드 내부 여백 */
+    margin: 10px 0; /* 입력 필드 외부 여백 */
+    box-sizing: border-box; /* 패딩과 테두리를 포함한 박스 크기 설정 */
+    border: 2px solid #ccc; /* 기본 테두리 색상 */
+    border-radius: 8px; /* 둥근 모서리 */
+    font-size: 16px; /* 글자 크기 */
+    font-family: Arial, sans-serif; /* 글꼴 설정 */
+    transition: border-color 0.3s, box-shadow 0.3s; /* 포커스 시 애니메이션 */
+}
+
+/* 입력 필드에 포커스 시 스타일 */
+input[type="text"]:focus {
+    border-color: #4CAF50; /* 테두리 색 변경 */
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.2); /* 부드러운 그림자 */
+    outline: none; /* 기본 아웃라인 제거 */
+}
+
+/* 입력 필드 안의 placeholder 스타일 */
+input[type="text"]::placeholder {
+    color: #aaa; /* placeholder 글자 색상 */
+    font-size: 14px; /* placeholder 글자 크기 */
+}
+
+
+/* 공통 컨테이너 */
 main .container {
     display: flex;
     flex-direction: row; /* 가로 정렬 */
     justify-content: center;
     align-items: center;
-    height: 100%;
-    padding: 10px;
+    gap: 10px; /* 요소 간 간격 */
 }
 
+/* 검색 폼 */
 main .festival_festivalName {
     display: inline-block;
-    margin-right: 10px; /* 버튼과 입력 필드 사이에 여백 추가 */
+    margin-right: 10px; /* 버튼과 입력 필드 사이 간격 */
 }
 
 main .Btn {
     display: inline-block;
 }
 
-main .container-body {
-    text-align: center;
-}
-
+/* 메인 스타일 */
 main {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     height: 100%;
+    width: 100%;
+    box-sizing: border-box; /* 패딩 포함 */
+    background-color: #f9f9f9; /* 배경색 */
+    border-radius: 10px; /* 부드러운 모서리 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
 }
 
+/* 리스트 컨테이너 */
 main .festival {
-    border: 1px solid transparent;
-    border-radius: 10px;
-    background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #8cc841, #29aeec 50%);
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-    padding: 10px; /* 패딩 추가 */
-    box-shadow: 0 15px 10px -7px #eee;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #e3e3e3;
+    border-radius: 12px; /* 둥근 테두리 */
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+    transition: transform 0.3s, box-shadow 0.3s; /* 부드러운 애니메이션 */
 }
 
+main .festival:hover {
+    transform: translateY(-5px); /* 살짝 위로 떠오르는 효과 */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 그림자 강조 */
+}
+
+main .festival form {
+    height: 10%;
+}
+
+/* 리스트 스타일 */
+main ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto; /* 리스트를 중앙으로 정렬 */
+    width: 100%; /* 리스트의 너비를 채우도록 설정 */
+    max-width: 800px; /* 최대 너비 제한 */
+}
+
+/* 리스트 항목 */
 main li {
     list-style: none;
+    padding: 15px;
+    border-bottom: 1px solid #e3e3e3; /* 항목 구분선 */
+    display: flex;
+    align-items: center; /* 이미지와 텍스트 정렬 */
+    justify-content: space-between;
+    gap: 10px;
+    transition: background-color 0.3s, box-shadow 0.3s; /* 항목에 애니메이션 추가 */
 }
 
-main ul {
-    padding: 0;
+main li:hover {
+    background-color: #f8f8f8; /* 마우스를 올렸을 때 배경 강조 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* 이미지 스타일 */
 main img {
-    padding: 0;
-    letter-spacing: 1px;
-    font-size: 16px;
-    width: 100%;
-    max-width: 600px;
-    height: auto;
+    max-width: 100%;
+    width: 150px; /* 이미지 크기 고정 */
+    height: 100px;
+    object-fit: cover; /* 이미지 크기 조정 */
+    border-radius: 8px; /* 둥근 모서리 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+    border: 1px solid #ddd; /* 테두리 */
 }
 
+/* 이미지 컨테이너 */
 .image-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-top: 1px solid #ccc;
+    flex-direction: column; /* 세로 정렬 */
+    align-items: center; /* 중앙 정렬 */
+    gap: 10px; /* 이미지와 텍스트 간격 */
+    width: 100%;
+}
+
+/* 이미지 스타일 */
+.image-container img {
+    max-width: 100%;
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .image-content {
+    text-align: center; /* 텍스트 중앙 정렬 */
     width: 100%;
     max-width: 600px;
-    text-align: center;
-    padding: 0;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .image-content p {
     margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333; /* 텍스트 색상 */
+}
+
+/* 버튼 스타일 */
+main .Btn button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+main .Btn button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+main .Btn button:active {
+    background-color: #3e8e41;
+    transform: scale(0.95);
+}
+
+.container-body {
+    display: flex; /* Flexbox 사용 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    width: 100%; /* 컨테이너 전체 너비 */
+    height: 90%;
+    margin: 0 auto; /* 수평 가운데 정렬 */
+    overflow: auto;
+}
+
+/* ul 중앙 정렬 */
+.container-body ul {
+    height: 100%;
+    width: 100%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; /* 목록 너비를 채움 */
+    max-width: 800px; /* 최대 너비 제한 */
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    gap: 20px; /* 항목 간 간격 */
+    align-items: center; /* 중앙 정렬 */
+}
+
+/* li 스타일 */
+.container-body li {
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    align-items: center; /* 항목 중앙 정렬 */
+    width: 100%; /* 항목 전체 너비 */
+    max-width: 600px; /* 항목 최대 너비 */
+    border-bottom: 1px solid #e3e3e3; /* 구분선 */
+}
+
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    main {
+        padding: 15px;
+    }
+
+    main li {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    main img {
+        width: 100px;
+        height: 80px;
+    }
+
+    main .Btn button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .image-content p {
+        font-size: 14px;
+    }
 }
