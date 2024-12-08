@@ -7,7 +7,16 @@ body {
     background-color: #f9f9f9;
     color: #333;
 }
-
+/* 메인 스타일 */
+main {
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box; /* 패딩 포함 */
+    background-color: #f9f9f9; /* 배경색 */
+    border-radius: 10px; /* 부드러운 모서리 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+}
 /* 메인 컨테이너 */
 .festival-detail-container {
     display: flex;
