@@ -99,7 +99,7 @@ public class UserController {
     public String myPageRemove(OutForm outForm,
                                Model model) {
         model.addAttribute("outForm", outForm);
-        return "memberJoin/memberDelpage";
+        return "memberJoin/memberDelPage";
     }
 
     @Operation(summary = "회원 탈퇴 처리", description = "회원 탈퇴를 처리하고, 관련 토큰을 무효화합니다.")
