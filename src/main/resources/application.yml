@@ -40,10 +40,6 @@ spring:
       - db # 데이터베이스 관련 설정을 포함합니다.
       - security # 보안 관련 설정을 포함합니다.
 
-      # 클라우드 설정 포함 여부 (비활성화 상태)
-      # - cloud
-
-
   # ResourceHandler 설정 (Static Resource Mapping)
   web:
     resources:
